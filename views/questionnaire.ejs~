@@ -1,0 +1,5 @@
+<% include header.ejs %>
+  <div class="page-header">
+    <h1>Questionnaire</h1>
+  </div>
+<% include footer.ejs %>

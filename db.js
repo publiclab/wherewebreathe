@@ -1,11 +1,11 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var Cat = new Schema({
+var CatSchema = new Schema({
     name : String
 });
 
-mongoose.model( 'Cat', Cat );
+mongoose.model( 'Cat', CatSchema );
 
 //Image.schema.path('desc').validate(function (value) {
   // example: //return /blue|green|white|red|orange|periwinkle/i.test(value);

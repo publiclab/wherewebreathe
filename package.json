@@ -7,8 +7,9 @@
   },
   "dependencies": {
     "express": "3.4.8",
-    "ejs": "*", 
+    "ejs": "*",
     "mongodb": ">= 0.9.6-7",
-    "mongoose": "3.8.1"
+    "mongoose": "3.8.1",
+    "ejs-locals": "^1.0.2"
   }
 }

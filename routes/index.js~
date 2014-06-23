@@ -9,6 +9,9 @@ exports.index = function(req, res){
 exports.test = function(req, res){
   res.render('test', { title: 'teest', cats: ['a', 'b']});
 };
+exports.testLayout = function(req, res){
+  res.render('testLayout', { title: 'teest', what: 'best'});
+};
 exports.questionnaire = function(req, res){
-  res.render('questionnaire', { title: 'Questions']});
+  res.render('questionnaire', { title: 'Questions'});
 };

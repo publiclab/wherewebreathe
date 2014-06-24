@@ -10,7 +10,6 @@ var routes = require('./routes');
 var http = require('http');
 var path = require('path');
 var engine = require('ejs-locals');
-var d3 = require("d3");
 
 var app = express();
 

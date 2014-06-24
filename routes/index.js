@@ -28,7 +28,7 @@ exports.questionnaire = function ( req, res ){
             Cat.find( function ( err, cats){
               //console.log(cats);
               res.render( 'questionnaire', {
-                title : 'Questionnaire',
+                title : 'Testing',
                 cats : cats,
                 aveWeight : aveWeight
                 

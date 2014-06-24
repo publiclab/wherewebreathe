@@ -17,7 +17,7 @@ exports.index = function(req, res){
 exports.questionnaire = function ( req, res ){
   Cat.aggregate([
         { $group: {
-            breed: '$breed',
+            _id: '$breed',
             weightAvg: { $avg: '$weight'}
         }}
     ], function (err, aveWeight) {

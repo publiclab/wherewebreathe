@@ -1,5 +1,5 @@
 <% layout('layout') -%>
-<% script('http://d3js.org/d3.v3.min.js') -%>
+<% script('/javascripts/flot/jquery.flot.min.js'), script('/javascripts/flot/jquery.flot.categories.min.js') -%>
 <% stylesheet -%>
 <div class="panel panel-default">
   <div class="panel-heading">
@@ -22,12 +22,38 @@
     <% cats.forEach( function( cat ){ %>
   <p><%= cat.name %>, <%= cat.weight %>, <%= cat.breed %></p>
 <% }); %>
-<% aveWeight.forEach( function( breed ){ %>
-  <p><%= breed._id %>, <%= breed.weightAvg %>kgs</p>
-<% }); %>
-  <script>console.log("<%= aveWeight %>");
-  var aveW = "fds";
-  </script>
   </div>
 </div>
-
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Average Weight by Cat Breed</h3>
+  </div>
+  <div class="panel-body"> 
+    <div id="chrtWeight" style="width:600px;height:300px"><div>
+  </div>
+</div>
+  <script>
+    var chartData = [];
+    <% aveWeight.forEach( function( breed ){ %>
+    chartData.push(['<%= breed._id %>', '<%= breed.weightAvg %>']);
+    <%});%>
+    console.log(chartData);
+    		$.plot("#chrtWeight", [ chartData ], {
+			series: {
+				bars: {
+					show: true,
+					barWidth: 0.6,
+					align: "center"
+				}
+			},
+			xaxis: {
+				mode: "categories",
+				tickLength: 0
+			},
+			yaxis: {
+			//a work-around for the fact that Flot doesnt have an option for axis label
+        tickFormatter: function(val, axis) { return val < axis.max ? val.toFixed(2) : axis.max+" kg";}
+      }
+		});
+    
+  </script>

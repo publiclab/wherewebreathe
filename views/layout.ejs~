@@ -18,7 +18,8 @@
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-
+    <%-scripts%>
+    <%-stylesheets%>
   </head>
   <body>
     <!-- Fixed navbar -->
@@ -57,6 +58,9 @@
       </div>
     </div>
   <div class="container theme-showcase" role="main">
+    <div class="page-header">
+    <h1><%= title %></h1>
+  </div>
   <%-body -%>
   </div><!--/.container theme-showcase -->
   </body>

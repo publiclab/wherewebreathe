@@ -2,9 +2,8 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var QuestionSchema = new Schema({
-  _id: Number,
+  order: Number,
   type: String,
-  set: String,
   label: String,
   answers: Array,
   question: String,
@@ -13,6 +12,7 @@ var QuestionSchema = new Schema({
   
 mongoose.model( 'Question', QuestionSchema );
 mongoose.connect( 'mongodb://localhost/wherewebreathe' );
+
 
 //var CatSchema = new Schema({
    // name : String,

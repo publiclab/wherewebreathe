@@ -15,19 +15,26 @@ exports.index = function(req, res){
 //};
 // query db for all todo items
 exports.questionnaire = function ( req, res ){
-            Question.find(function ( err, questions){
-              console.log(questions[0].answers);
-              res.render( 'questionnaire', {
-                title : 'Cats Test',
-                question: questions[0].question, 
-                instruction: questions[0].label,
-                answers: questions[0].answers            
-              });
-              });
-
-            
-
-  
+  var qnum = 1;//question # to start at
+  //deal with if there is get param for qnum or not
+  if (req.params.qnum){
+   qnum = parseInt(req.params.qnum);     
+  } 
+  console.log(typeof qnum);        
+  Question.find({order: qnum}, function ( err, questions){
+    var question = questions[0];
+    //console.log(question);
+    pageOptions = {
+      title: 'Questionnaire',
+      question: question.question, 
+      instruction: question.label,
+      answers: question.answers, 
+      type: question.type,
+      qnum: question.order           
+    }
+    
+    res.render( 'questionnaire', pageOptions);
+    });
 };
 //exports.questionnaire_cat = function ( req, res ){
 //  Cat.aggregate([

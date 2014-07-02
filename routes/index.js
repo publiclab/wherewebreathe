@@ -19,18 +19,21 @@ exports.questionnaire = function ( req, res ){
   //deal with if there is get param for qnum or not
   if (req.params.qnum){
    qnum = parseInt(req.params.qnum);     
-  } 
-  console.log(typeof qnum);        
+  }       
   Question.find({order: qnum}, function ( err, questions){
     var question = questions[0];
-    //console.log(question);
+    console.log(question);
     pageOptions = {
       title: 'Questionnaire',
       question: question.question, 
-      instruction: question.label,
-      answers: question.answers, 
+      label: question.label,
       type: question.type,
-      qnum: question.order           
+      qnum: question.order,
+      qid: question._id           
+    }
+    //append suggested answers if they exist (mongoose creates empty array it seems even if query returns nothing for answers key)
+    if (typeof question.answers !== 'undefined' && question.answers.length > 0){
+      pageOptions['answers']= question.answers; 
     }
     
     res.render( 'questionnaire', pageOptions);

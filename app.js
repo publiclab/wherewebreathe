@@ -35,10 +35,11 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/questionnaire', routes.questionnaire);
+//app.get('/questionnaire_cat', routes.questionnaire_cat);
 //app.get('/users', user.list);
 
 //api
-app.post( '/create', routes.create );
+//app.post( '/create', routes.create );
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

@@ -1,64 +1,22 @@
 <% layout('layout') -%>
 <% script('/javascripts/flot/jquery.flot.min.js'), script('/javascripts/flot/jquery.flot.categories.min.js') -%>
 <% stylesheet -%>
+<h1><%= question %></h1>
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title">Enter a new cat</h3>
+    <h3 class="panel-title"><%= instruction %></h3>
   </div>
   <div class="panel-body"> 
     <form action="/create" method="post" accept-charset="utf-8">
-      Name<input type="text" name="txtName" />
-      Weight<input type="number" name="numWeight" />
-      Breed<input type="text" name="txtBreed" />
+        <select>
+            <% for(var i=0; i<answers.length; i++) {%>
+            <option value=<%= answers[i] %>></option>
+            <% } %>
+        </select>
       <input type="submit" value="Submit">
     </form>
   </div>
 </div>
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">List of Cats</h3>
-  </div>
-  <div class="panel-body"> 
-    <% cats.forEach( function( cat ){ %>
-  <p><%= cat.name %>, <%= cat.weight %>, <%= cat.breed %></p>
-<% }); %>
-  </div>
-</div>
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">Average Weight by Cat Breed</h3>
-  </div>
-  <div class="panel-body"> 
-    <div id="chrtWeight" style="width:600px;height:300px">
-      <div class='flot-y-axis flot-y1-axis'>
-        <div class='flot-tick-label'>January 2013</div>
-      </div>
-    <div>
-  </div>
-  </div>
-</div>
   <script>
-    var chartData = [];
-    <% aveWeight.forEach( function( breed ){ %>
-    chartData.push(['<%= breed._id %>', '<%= breed.weightAvg %>']);
-    <%});%>
-    console.log(chartData);
-    		$.plot("#chrtWeight", [ chartData ], {
-			series: {
-				bars: {
-					show: true,
-					barWidth: 0.6,
-					align: "center"
-				}
-			},
-			xaxis: {
-				mode: "categories",
-				tickLength: 0
-			},
-			yaxis: {
-			//a work-around for the fact that Flot doesnt have an option for axis label
-        tickFormatter: function(val, axis) { return val < axis.max ? val.toFixed(2) : axis.max+" kg";}
-      }
-		});
     
   </script>

@@ -10,7 +10,6 @@ var routes = require('./routes');
 var http = require('http');
 var path = require('path');
 var engine = require('ejs-locals');
-var d3 = require("d3");
 
 var app = express();
 
@@ -36,6 +35,7 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/questionnaire', routes.questionnaire);
+//app.get('/questionnaire_cat', routes.questionnaire_cat);
 //app.get('/users', user.list);
 
 //api

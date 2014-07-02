@@ -1,31 +1,32 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var CatSchema = new Schema({
-    name : String,
-    weight : Number,
-    breed : String
+var QuestionSchema = new Schema({
+  _id: Number,
+  type: String,
+  set: String,
+  label: String,
+  answers: Array,
+  question: String
 });
+  
+mongoose.model( 'Question', QuestionSchema );
+mongoose.connect( 'mongodb://localhost/wherewebreathe' );
 
-var catModel = mongoose.model( 'Cat', CatSchema );
+//var CatSchema = new Schema({
+   // name : String,
+   // weight : Number,
+   // breed : String
+//});
 
-catModel.aggregate([
-        { $group: {
-            _id: '$breed',
-            weightAvg: { $avg: '$weight'}
-        }}
-    ], function (err, results) {
-        if (err) {
-            console.error(err);
-        } else {
-            console.log(results);
-        }
-    }
-);
+//mongoose.model( 'Cat', CatSchema );
+
 
 //Image.schema.path('desc').validate(function (value) {
   // example: //return /blue|green|white|red|orange|periwinkle/i.test(value);
   //return (value.split(' ').length > 1000);
 //}, 'Description must be less than 1000 words');
 
-mongoose.connect( 'mongodb://localhost/wherewebreathe_test' );
+//mongoose.connect( 'mongodb://localhost/wherewebreathe_test' );
+
+

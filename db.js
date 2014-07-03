@@ -9,8 +9,25 @@ var QuestionSchema = new Schema({
   question: String,
   answers: Array
 });
+var UserResponseSchema = new Schema({
+  uId: Number,
+  a: String
+});  
+
+var AnswerSchema = new Schema({
+  _id: Schema.Types.ObjectId,
+  graph_type: String,
+  userResponses: [UserResponseSchema]
   
+}); 
+
+ 
 mongoose.model( 'Question', QuestionSchema );
+mongoose.model( 'Answer', AnswerSchema );
+
+
+
+mongoose.set('debug', true);
 mongoose.connect( 'mongodb://localhost/wherewebreathe' );
 
 

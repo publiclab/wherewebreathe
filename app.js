@@ -41,6 +41,7 @@ app.get('/questionnaire/:qnum', routes.questionnaire);
 
 //api
 //app.post( '/create', routes.create );
+app.post( '/answer', routes.answer );
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

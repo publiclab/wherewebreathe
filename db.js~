@@ -3,14 +3,33 @@ var Schema = mongoose.Schema;
 
 var QuestionSchema = new Schema({
   order: Number,
-  type: String,
+  qType: String,
   label: String,
   answers: Array,
   question: String,
   answers: Array
 });
+var UserResponseSchema = new Schema({ name: 'string' });  
+
+var AnswerSchema = new Schema({
+  _id: Schema.Types.ObjectId,
+  graph_type: String,
+  userResponses: [UserResponseSchema]
   
+}); 
+
+var childSchema = new Schema({ name: 'string' });
+
+var parentSchema = new Schema({
+  children: [childSchema]
+})
+mongoose.model('Parent', parentSchema); 
 mongoose.model( 'Question', QuestionSchema );
+mongoose.model( 'Answer', AnswerSchema );
+
+
+
+mongoose.set('debug', true);
 mongoose.connect( 'mongodb://localhost/wherewebreathe' );
 
 

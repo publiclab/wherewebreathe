@@ -1,5 +1,7 @@
 var mongoose = require( 'mongoose' );
+var Schema = mongoose.Schema;
 var Question = mongoose.model( 'Question' );
+var Answer = mongoose.model( 'Answer' );
 /*
  * GET home page.
  */
@@ -22,7 +24,7 @@ exports.questionnaire = function ( req, res ){
   }       
   Question.find({order: qnum}, function ( err, questions){
     var question = questions[0];
-    console.log(question);
+    //console.log(question);
     pageOptions = {
       title: 'Questionnaire',
       question: question.question, 
@@ -38,6 +40,34 @@ exports.questionnaire = function ( req, res ){
     
     res.render( 'questionnaire', pageOptions);
     });
+};
+//append answers into answers collection
+exports.answer = function ( req, res ){
+  Answer.findByIdAndUpdate(req.body.qid, { $push: { userResponses: {
+            uId: 1,
+            a: req.body.answer
+          } }}, function (err, results) {
+    if (err) console.log(err);
+    console.log("findandupdate response : "+results)
+    if(!results){
+      var ans = new Answer({
+        _id: req.body.qid
+      });
+        ans.userResponses.push({
+            uId: 1,
+            a: req.body.answer
+          });
+        ans.save( function( err, data){
+          if (err){console.log(err);}
+          console.log("enter new " +data)
+          res.redirect('/questionnaire/'+req.body.nextq);
+      });
+      
+    }
+    else{
+      res.redirect('/questionnaire/'+req.body.nextq);
+    }
+  });
 };
 //exports.questionnaire_cat = function ( req, res ){
 //  Cat.aggregate([

@@ -28,7 +28,7 @@
             <label class="radio">
               <input type="radio" name="answer" value="<%= answers[i].text %>">
               <%= answers[i].text %>
-              <%if(answers[i] =="Other:"){%>
+              <%if(answers[i].text =="Other:"){%>
                 <input type="text" name="othAns">
               <% } %>
             </label>
@@ -45,5 +45,5 @@
   </div>
 </div>
   <script>
-    //console.log("<%= qType %>");
+    //console.log("<%= qid %>");
   </script>

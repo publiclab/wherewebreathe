@@ -8,27 +8,27 @@
   <div class="panel-body"> 
     <form action="/answer" method="post" accept-charset="utf-8">
       <div class="form-group">
-        <%if (type == "drop"){%>
+        <%if (qType == "drop"){%>
         <select class="form-control" name="answer">
             <% for(var i=0; i<answers.length; i++) {%>
-            <option value="<%= answers[i] %>"><%= answers[i] %></option>
+            <option value="<%= answers[i].text %>"><%= answers[i].text %></option>
             <% } %>
         </select>
         <% } 
-        if (type == "text"){%>
+        if (qType == "text"){%>
           <label for="answer"><%= label %></label> 
           <input class="form-control" type="text" name="answer">
         <% } 
-        if (type == "num"){%>
+        if (qType == "num"){%>
           <label for="answer"><%= label %></label> 
           <input class="form-control" type="text" name="answer">
         <% } 
-        if (type == "radio"){%>
+        if (qType == "radio"){%>
           <% for(var i=0; i<answers.length; i++) {%>
             <label class="radio">
-              <input type="radio" name="answer" value="<%= answers[i] %>">
-              <%= answers[i] %>
-              <%if(answers[i] =="Other:"){%>
+              <input type="radio" name="answer" value="<%= answers[i].text %>">
+              <%= answers[i].text %>
+              <%if(answers[i].text =="Other:"){%>
                 <input type="text" name="othAns">
               <% } %>
             </label>
@@ -39,11 +39,11 @@
       <div class="pull-right">
         <input  class="btn btn-primary" type="submit" value="Submit">
         <!--skip doesnt currently keep track of questions skipped-->
-        <input class="btn btn-default" type="button" value="Skip" onclick="window.location.href ='./<%= qnum + 1%>';"> 
+        <input class="btn btn-default" type="button" value="Skip" onclick="window.location.href ='/questionnaire/<%= qnum + 1%>';"> 
       </div>
     </form>
   </div>
 </div>
   <script>
-    //console.log("<%= type %>");
+    //console.log("<%= qType %>");
   </script>

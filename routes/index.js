@@ -27,7 +27,7 @@ exports.questionnaire = function ( req, res ){
       title: 'Questionnaire',
       question: question.question, 
       label: question.label,
-      type: question.type,
+      qType: question.qType,
       qnum: question.order,
       qid: question._id           
     }

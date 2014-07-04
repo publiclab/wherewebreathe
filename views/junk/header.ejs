@@ -11,15 +11,14 @@
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <!-- styles -->
     <link rel="stylesheet" href="/stylesheets/style.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
-    <%-scripts%>
-    <%-stylesheets%>
+
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
   </head>
   <body>
     <!-- Fixed navbar -->
@@ -43,30 +42,10 @@
             <li><a href="#">Knowledge base</a></li> 
           </ul>
           <ul class="nav navbar-nav navbar-right"> 
-            <li class="dropdown">
-              <!--<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                <i class="fa fa-user fa-fw"></i>
-                Log in
-                <b class="caret"></b>
-                </a>-->
-                <!--<form action="#">
+            <li>
+                <form action="#">
                     <button class="btn btn-default navbar-btn">Login</button>
-                    
-                </form>-->
-                <!--Default buttons with dropdown menu-->
-                <div class="btn-group">
-                    <button data-toggle="dropdown" class="btn btn-default dropdown-toggle navbar-btn">
-                      <i class="fa fa-user fa-fw"></i>
-                      Login 
-                      <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">Separated link</a></li>
-                    </ul>
-                </div>                
+                </form>
             </li>  
             <li>
                 <form action="#">
@@ -77,11 +56,5 @@
         </div><!--/.nav-collapse -->
       </div>
     </div>
-  <div class="container theme-showcase" role="main">
-    <div class="page-header">
-    <h1><%= title %></h1>
-  </div>
-  <%-body -%>
-  </div><!--/.container theme-showcase -->
-  </body>
-</html>
+    <div class="container theme-showcase" role="main">
+

@@ -6,8 +6,7 @@ var QuestionSchema = new Schema({
   qType: String,
   label: String,
   answers: Array,
-  question: String,
-  answers: Array
+  question: String
 });
 var UserResponseSchema = new Schema({
   uId: Number,

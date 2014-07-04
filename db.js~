@@ -9,7 +9,10 @@ var QuestionSchema = new Schema({
   question: String,
   answers: Array
 });
-var UserResponseSchema = new Schema({ name: 'string' });  
+var UserResponseSchema = new Schema({
+  uId: Number,
+  a: String
+});  
 
 var AnswerSchema = new Schema({
   _id: Schema.Types.ObjectId,
@@ -18,12 +21,7 @@ var AnswerSchema = new Schema({
   
 }); 
 
-var childSchema = new Schema({ name: 'string' });
-
-var parentSchema = new Schema({
-  children: [childSchema]
-})
-mongoose.model('Parent', parentSchema); 
+ 
 mongoose.model( 'Question', QuestionSchema );
 mongoose.model( 'Answer', AnswerSchema );
 

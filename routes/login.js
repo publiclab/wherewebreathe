@@ -1,10 +1,11 @@
 var passport = require('passport');
-var Account = require('../models/account');
+var Account = require('../models/account').account;
 
 exports.register_get = function(req, res) {
       var pageOptions = { title: "Join WhereWeBreathe", user : req.user, message: [] };
       res.render('register', pageOptions);
 };
+//add new user to DB
 exports.register_post = function(req, res) {
     Account.register(new Account({ username : req.body.username }), req.body.password, function(err, account) {
         if (err) {

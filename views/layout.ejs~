@@ -20,6 +20,8 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
     <%-scripts%>
     <%-stylesheets%>
+    <%-blocks.head%>
+    <script>console.log('client2');</script>
   </head>
   <body>
     <!-- Fixed navbar -->
@@ -85,7 +87,7 @@
     <div class="page-header">
     <h1><%= title %></h1>
   </div>
-          <% if(!user){ %>
+    <% if(!user){ %>
       Not logged in
     <% } %>
      <% if(user){ %>

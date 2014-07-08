@@ -40,7 +40,7 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 // passport config
-var Account = require('./models/account');
+var Account = require('./models/account').new_account;
 passport.use(new LocalStrategy(Account.authenticate()));
 passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());

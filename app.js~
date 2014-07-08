@@ -40,7 +40,7 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 // passport config
-var Account = require('./models/account');
+var Account = require('./models/account').account;
 passport.use(new LocalStrategy(Account.authenticate()));
 passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
@@ -48,7 +48,6 @@ passport.deserializeUser(Account.deserializeUser());
 //login routes
 //require('./routes/loginBK')(app);
 app.get('/register', login.register_get);
-//app.get('/register/:err', login.register_get);
 app.post('/register', login.register_post);
 app.get('/login', login.login_get);
 app.post('/login',passport.authenticate('local'), login.login_post);

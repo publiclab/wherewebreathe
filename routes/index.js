@@ -1,7 +1,5 @@
 var mongoose = require( 'mongoose' );
 var Schema = mongoose.Schema;
-//var Question = mongoose.model( 'Question' );
-//var Answer = mongoose.model( 'Answer' );
 var Question = require('../models/question');
 var Answer = require('../models/answer');
 

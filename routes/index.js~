@@ -10,6 +10,7 @@ exports.index = function(req, res){
 };
 exports.questionnaire = function ( req, res ){
   if (!req.user){
+    req.session.returnTo = req.path;
     res.redirect('Register');
   }
   else{

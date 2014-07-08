@@ -6,8 +6,7 @@ var QuestionSchema = new Schema({
   qType: String,
   label: String,
   answers: Array,
-  question: String,
-  answers: Array
+  question: String
 });
 var UserResponseSchema = new Schema({
   uId: Number,
@@ -22,13 +21,13 @@ var AnswerSchema = new Schema({
 }); 
 
  
-mongoose.model( 'Question', QuestionSchema );
-mongoose.model( 'Answer', AnswerSchema );
+//mongoose.model( 'Question', QuestionSchema );
+//mongoose.model( 'Answer', AnswerSchema );
 
 
 
-mongoose.set('debug', true);
-mongoose.connect( 'mongodb://localhost/wherewebreathe' );
+//mongoose.set('debug', true);
+//mongoose.connect( 'mongodb://localhost/wherewebreathe' );
 
 
 //var CatSchema = new Schema({

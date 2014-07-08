@@ -1,0 +1,4 @@
+<% layout('layout') -%>
+<% script('/javascripts/flot/jquery.flot.min.js'), script('/javascripts/flot/jquery.flot.categories.min.js') -%>
+<% stylesheet -%>
+

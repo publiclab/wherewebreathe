@@ -1,4 +1,4 @@
-require('./db');
+//require('./db');
 /**
  * Module dependencies.
  */
@@ -6,10 +6,13 @@ require('./db');
 
 var express = require('express');
 var routes = require('./routes');
+var login = require('./routes/login')
 //var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
 var engine = require('ejs-locals');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 
 var app = express();
 
@@ -25,6 +28,10 @@ app.use( express.bodyParser());
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
+app.use(express.cookieParser('unicorns'));
+app.use(express.session());
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -32,6 +39,20 @@ app.use(express.static(path.join(__dirname, 'public')));
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
+// passport config
+var Account = require('./models/account');
+passport.use(new LocalStrategy(Account.authenticate()));
+passport.serializeUser(Account.serializeUser());
+passport.deserializeUser(Account.deserializeUser());
+
+//login routes
+//require('./routes/loginBK')(app);
+app.get('/register', login.register_get);
+//app.get('/register/:err', login.register_get);
+app.post('/register', login.register_post);
+app.get('/login', login.login_get);
+app.post('/login',passport.authenticate('local'), login.login_post);
+app.get('/logout', login.logout);
 
 app.get('/', routes.index);
 app.get('/questionnaire', routes.questionnaire);
@@ -41,6 +62,7 @@ app.get('/questionnaire/:qnum', routes.questionnaire);
 
 //api
 //app.post( '/create', routes.create );
+app.post( '/answer', routes.answer );
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

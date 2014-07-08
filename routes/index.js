@@ -1,45 +1,44 @@
 var mongoose = require( 'mongoose' );
 var Schema = mongoose.Schema;
-var Question = mongoose.model( 'Question' );
-var Answer = mongoose.model( 'Answer' );
-/*
- * GET home page.
- */
+//var Question = mongoose.model( 'Question' );
+//var Answer = mongoose.model( 'Answer' );
+var Question = require('../models/question');
+var Answer = require('../models/answer');
 
 exports.index = function(req, res){
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'Express', user : req.user  });
 };
-//exports.test = function(req, res){
-//  res.render('test', { title: 'teest', cats: ['a', 'b']});
-//};
-//exports.questionnaire = function(req, res){
-//  res.render('questionnaire', { title: 'Questions'});
-//};
-// query db for all todo items
 exports.questionnaire = function ( req, res ){
-  var qnum = 1;//question # to start at
-  //deal with if there is get param for qnum or not
-  if (req.params.qnum){
-   qnum = parseInt(req.params.qnum);     
-  }       
-  Question.find({order: qnum}, function ( err, questions){
-    var question = questions[0];
-    //console.log(question);
-    pageOptions = {
-      title: 'Questionnaire',
-      question: question.question, 
-      label: question.label,
-      qType: question.qType,
-      qnum: question.order,
-      qid: question._id           
-    }
-    //append suggested answers if they exist (mongoose creates empty array it seems even if query returns nothing for answers key)
-    if (typeof question.answers !== 'undefined' && question.answers.length > 0){
-      pageOptions['answers']= question.answers; 
-    }
-    
-    res.render( 'questionnaire', pageOptions);
-    });
+  if (!req.user){
+    req.session.returnTo = req.path;
+    res.redirect('Register');
+  }
+  else{
+    var qnum = 1;//question # to start at
+    //deal with if there is get param for qnum or not
+    if (req.params.qnum){
+     qnum = parseInt(req.params.qnum);     
+    }       
+    Question.find({order: qnum}, function ( err, questions){
+      var question = questions[0];
+      console.log(question);
+      pageOptions = {
+        user : req.user,
+        title: 'Questionnaire',
+        question: question.question, 
+        label: question.label,
+        qType: question.qType,
+        qnum: question.order,
+        qid: question._id           
+      }
+      //append suggested answers if they exist (mongoose creates empty array it seems even if query returns nothing for answers key)
+      if (typeof question.answers !== 'undefined' && question.answers.length > 0){
+        pageOptions['answers']= question.answers; 
+      }
+      
+      res.render( 'questionnaire', pageOptions);
+      });
+  }
 };
 //append answers into answers collection
 exports.answer = function ( req, res ){

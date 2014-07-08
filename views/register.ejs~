@@ -1,0 +1,89 @@
+<% layout('layout') -%>
+<% stylesheet('stylesheets/register.css') -%>
+<h1>Register</h1>
+
+<form role="form" action="/register" method="post" style="max-width: 300px;">
+<% if(message.length > 0){ %>
+<div class="alert alert-danger" role="alert">
+<%= message %>
+</div>
+<% } %>
+  <div class="form-group">
+    <label >Desired Username:</label>
+    <input type="text" name="username" placeholder="Enter Username" class="form-control">
+  </div>
+  <div class="form-group">
+  <label for="password">Password:</label>
+    <input type="password" name="password" placeholder="Password" class="form-control">
+  </div>
+  <div class="form-group">
+    <input type="password" name="password2" placeholder="Re-type Password" class="form-control">
+  </div>
+  <div class="form-group">
+  <label for="username">Email:</label>
+    <input type="email" name="email" placeholder="you@email.com" class="form-control">
+  </div>
+  <label for="username">Are you human? (sorry: spam filtering!)</label>
+  <fieldset>
+    <div class="radio">
+      <label>
+        <input type="radio" name="human1" value="food">
+        I eat food
+      </label>
+    </div>
+    <div class="radio">
+      <label>
+        <input type="radio" name="human1" value="robot">
+        I am a robot
+      </label>
+    </div>
+  </fieldset>
+  <fieldset>
+    <div class="radio">
+      <label>
+        <input type="radio" name="human2" value="earth">
+        I live on Earth
+      </label>
+    </div>
+    <div class="radio">
+      <label>
+        <input type="radio" name="human2"value="cpu">
+        I am a central processing unit
+      </label>
+    </div>
+  </fieldset>
+  <fieldset>
+    <div class="radio">
+      <label>
+        <input type="radio" name="human3" value="water">
+        I drink water
+      </label>
+    </div>
+    <div class="radio">
+      <label>
+        <input type="radio" name="human3" value="computer">
+        I am a computer
+      </label>
+    </div>
+  </fieldset> 
+  <fieldset>
+    <div class="radio">
+      <label>
+        <input type="radio" name="human4" id="optionsRadios1" value="heart">
+        I have a heart
+      </label>
+    </div>
+    <div class="radio">
+      <label>
+        <input type="radio" name="human4" id="optionsRadios2" value="robot">
+        I am a central processing unit
+      </label>
+    </div>
+  </fieldset> 
+  <div class="form-group">
+  <label for="empty">Don't write anything here if you're a real person:</label>
+    <textarea name="empty" class="form-control"></textarea>
+  </div>
+  <button type="submit" class="btn btn-default">Submit</button>&nbsp;<a href="/">
+    <button type="button" class="btn btn-primary">Cancel</button></a>
+</form>

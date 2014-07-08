@@ -7,7 +7,11 @@ exports.register_get = function(req, res) {
 };
 //add new user to DB
 exports.register_post = function(req, res) {
-    Account.register(new Account({ username : req.body.username }), req.body.password, function(err, account) {
+    Account.register(new Account({ 
+      username : req.body.username,
+      email: req.body.email,
+      HID: req.body.HID 
+    }), req.body.password, function(err, account) {
         if (err) {
             console.log("user registration error: " +err);
             var pageOptions = { title: "Join WhereWeBreathe", user : req.user, message: [err] };
@@ -16,7 +20,13 @@ exports.register_post = function(req, res) {
           //grab returnTo pabe grom cookie
           res.redirect('/login');        
     });      
-}; 
+};
+exports.verify_get =  function(req, res) {
+  res.render('verifyUser', { title: 'New Account Verification', user : req.user, message: [] });
+}
+exports.verify_post =  function(req, res) {
+  console.log("verify post");
+}
 exports.login_post = function(req, res) {
     Account.register(new Account({ username : req.body.username }), req.body.password, function(err, account) {
         if (err) {

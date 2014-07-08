@@ -1,9 +1,7 @@
 <% layout('layout') -%>
-<% script('bootstrap-switch-master/bootstrap-switch.min.js') -%>
 <% stylesheet('stylesheets/register.css') -%>
-<% stylesheet('bootstrap-switch-master/bootstrap-switch.css') -%>
 <h1>Register</h1>
-<form role="form" action="/register" method="post" style="max-width: 300px;">
+<form role="form" action="/register" method="post">
 <% if(message.length > 0){ %>
 <div class="alert alert-danger" role="alert">
 <%= message %>
@@ -31,13 +29,11 @@
   <label for="HID">VIN or HUD:</label>
     <input type="text" name="HID" placeholder="E.g. " class="form-control" required pattern="(^((?=[^iIoOqQ])\w){17}$)|(^\w{3}[0-9]{6,7}$)" title="What you entered does not look like a VIN or HUD">
   </div>
-  <div class="form-group">
-  <label for="empty">Your data["individual answers"?] can be seen by<strong> anyone on the internet?</strong></label>
-    <input type="checkbox" name="my-checkbox" checked>
-  </div>
   <button type="submit" class="btn btn-default">Submit</button>&nbsp;<a href="/">
     <button type="button" class="btn btn-primary">Cancel</button></a>
 </form>
+
+
   <!--<label for="username">Are you human? (sorry: spam filtering!)</label>
   <fieldset>
     <div class="radio">
@@ -100,13 +96,4 @@
     <textarea name="empty" class="form-control"></textarea>
   </div>
   -->
-
-<script>
-$.fn.bootstrapSwitch.defaults.onColor = 'success';
-$.fn.bootstrapSwitch.defaults.offColor = 'danger';
-$.fn.bootstrapSwitch.defaults.onText = 'Yes';
-$.fn.bootstrapSwitch.defaults.offText = 'No';
-$.fn.bootstrapSwitch.defaults.state = 'skip';
-$("[name='my-checkbox']").bootstrapSwitch();
-</script>
 

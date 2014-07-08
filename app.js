@@ -2,8 +2,6 @@
 /**
  * Module dependencies.
  */
-
-
 var express = require('express');
 var routes = require('./routes');
 var login = require('./routes/login')
@@ -52,6 +50,8 @@ app.post('/register', login.register_post);
 app.get('/login', login.login_get);
 app.post('/login',passport.authenticate('local'), login.login_post);
 app.get('/logout', login.logout);
+app.get('/verify', login.verify_get);
+app.post('/verify', login.verify_post);
 
 app.get('/', routes.index);
 app.get('/questionnaire', routes.questionnaire);

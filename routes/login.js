@@ -9,18 +9,23 @@ exports.register_get = function(req, res) {
 //add new user to DB
 exports.register_post = function(req, res) {
   //server-side validation
-  var errorMsgs = ["foo"];
+  var errorMsgs = ["];
   var txtUsername = req.body.username;
-  
+ 
   Account.find({username: txtUsername}, function ( err, username){
     if (username.length > 0){
     //if username exists, return error message
     errorMsgs.push("The username, '"+txtUsername+"', already exists, please try another");
-      console.log("exists");
+    console.log("exists");
 
     }
+    if (errorMsgs.length > 0){
+      //there are errors
+      var pageOptions = { title: "Join WhereWeBreathe", user : req.user, messages: errorMsgs};
+      return res.render('login/register', pageOptions);
+    }
     //if no errors
-   if (errorMsgs.length >0){
+   else{
         //username doesnt already exist
           require('crypto').randomBytes(48, function(ex, buf) {
             var token = buf.toString('hex');
@@ -40,11 +45,7 @@ exports.register_post = function(req, res) {
         });
       });//end rendomBytes  
     }//end if no errors
-    else{
-      //there are errors
-      var pageOptions = { title: "Join WhereWeBreathe", user : req.user, messages: errorMsgs};
-      return res.render('login/register', pageOptions);
-    }
+
   });//end Account.find()
     
 };

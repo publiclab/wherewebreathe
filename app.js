@@ -39,7 +39,8 @@ if ('development' == app.get('env')) {
 }
 // passport config
 var Account = require('./models/account').new_account;
-passport.use(new LocalStrategy(Account.authenticate()));
+//use next line instead of 'passport.use(new LocalStrategy(Account.authenticate()));' in conjuction with usernameField option (in account.js) to use email input from frontend to use email instead of username. 
+passport.use(Account.createStrategy());
 passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
 
@@ -50,7 +51,7 @@ app.post('/register', login.register_post);
 app.get('/login', login.login_get);
 app.get('/login/:err', login.login_get);
 app.post('/login',passport.authenticate('local', { failureRedirect: '/login/err' }), login.login_post);
-app.get('/logout', login.logout);
+app.post('/logout', login.logout);
 app.get('/verify', login.verify_get);
 app.post('/verify', login.verify_post);
 

@@ -81,6 +81,7 @@
                     <div class="dropdown-menu">
                         TO DO: change password
                         privacy settings
+                        <button type="button" class="btn btn-primary" onclick="logout()">logout</button>
                     </div>                           
                 <% } %>
                      
@@ -99,16 +100,21 @@
     <div class="page-header">
     <h1><%= title %></h1>
   </div>
-    <% if(!user){ %>
-      Not logged in
-    <% } %>
-     <% if(user){ %>
-      Logged in as <%= user.username %>
-    <% } %>
   <%-body -%>
   </div><!--/.container theme-showcase -->
   </body>
   <script>
   $('#btnJoin').click(function() { window.location = '/register'; })
+  function logout(){
+    $.post('/logout', function(status){
+    if(status == "logged out"){
+      location.reload();
+    }
+    else{
+    console.error("logout failed");
+    }
+    
+    });
+  }
   </script>
 </html>

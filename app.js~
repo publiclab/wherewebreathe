@@ -39,7 +39,7 @@ if ('development' == app.get('env')) {
 }
 // passport config
 var Account = require('./models/account').new_account;
-passport.use(new LocalStrategy(Account.authenticate()));
+passport.use(Account.createStrategy());
 passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
 
@@ -49,8 +49,8 @@ app.get('/register', login.register_get);
 app.post('/register', login.register_post);
 app.get('/login', login.login_get);
 app.get('/login/:err', login.login_get);
-app.post('/login',passport.authenticate('local', { successRedirect: '/',failureRedirect: '/login/err' }), login.login_post);
-app.get('/logout', login.logout);
+app.post('/login',passport.authenticate('local', { failureRedirect: '/login/err' }), login.login_post);
+app.post('/logout', login.logout);
 app.get('/verify', login.verify_get);
 app.post('/verify', login.verify_post);
 

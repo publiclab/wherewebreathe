@@ -55,12 +55,11 @@ exports.verify_post =  function(req, res) {
   console.log("verify post");
 }
 exports.login_post = function(req, res) {
+//if session variable has redirect info
     if(req.session.returnTo){
-      var redirect = req.session.returnTo;
       res.redirect(req.session.returnTo);
+      //clear redirect info
       delete req.session.returnTo
-      console.log("hereeee"+req.session.returnTo);
-
     }
     else{
       res.redirect('/');
@@ -76,7 +75,8 @@ exports.login_get = function(req, res) {
 }; 
 exports.logout =  function(req, res) {
       req.logout();
-      res.redirect('/');
+      res.send("logged out")
+      //res.redirect('/');
   };
 
 

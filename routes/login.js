@@ -75,7 +75,7 @@ exports.login_get = function(req, res) {
 }; 
 exports.logout =  function(req, res) {
       req.logout();
-      res.redirect('/');
+      res.send("logged out")
   };
 
 

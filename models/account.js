@@ -11,10 +11,8 @@ var NewAccount = new Schema({
     password: String, 
     email: String,
     HID: String, 
-    privacy: String,
     token: String
 });
-
 NewAccount.plugin(passportLocalMongoose, {usernameField: "email"});
 
 //module.exports = userDB.model('Account', Account);

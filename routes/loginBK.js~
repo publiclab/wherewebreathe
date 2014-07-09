@@ -19,7 +19,6 @@ module.exports = function (app) {
   });
 
   app.get('/login', function(req, res) {
-  console.log(req.flash('error'));
       res.render('login', { user : req.user });
   });
 

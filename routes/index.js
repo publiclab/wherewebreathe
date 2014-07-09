@@ -3,15 +3,21 @@ var Schema = mongoose.Schema;
 var Question = require('../models/question');
 var Answer = require('../models/answer');
 
-exports.index = function(req, res){
-  res.render('index', { title: 'Express', user : req.user  });
-};
-exports.questionnaire = function ( req, res ){
+function authenticateUser(req, res, success){
   if (!req.user){
     req.session.returnTo = req.path;
     res.redirect('Register');
   }
   else{
+    success();
+  }
+}
+
+exports.index = function(req, res){
+  res.render('index', { title: 'Express', user : req.user  });
+};
+exports.questionnaire = function ( req, res ){
+  authenticateUser(req, res, function(){
     var qnum = 1;//question # to start at
     //deal with if there is get param for qnum or not
     if (req.params.qnum){
@@ -36,7 +42,7 @@ exports.questionnaire = function ( req, res ){
       
       res.render( 'questionnaire', pageOptions);
       });
-  }
+    });//end auth user
 };
 //append answers into answers collection
 exports.answer = function ( req, res ){

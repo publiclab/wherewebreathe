@@ -2,7 +2,7 @@ var passport = require('passport');
 var Account = require('../models/account').new_account;
 
 exports.register_get = function(req, res) {
-    console.log(req.session.returnTo);
+    //console.log(req.session.returnTo);
       var pageOptions = { title: "Join WhereWeBreathe", user : req.user, messages: [] };
       res.render('login/register', pageOptions);
 };
@@ -55,8 +55,11 @@ exports.verify_post =  function(req, res) {
   console.log("verify post");
 }
 exports.login_post = function(req, res) {
+//if session variable has redirect info
     if(req.session.returnTo){
-    res.redirect(req.session.returnTo);
+      res.redirect(req.session.returnTo);
+      //clear redirect info
+      delete req.session.returnTo
     }
     else{
       res.redirect('/');

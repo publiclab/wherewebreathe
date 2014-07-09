@@ -2,7 +2,7 @@ var passport = require('passport');
 var Account = require('../models/account').new_account;
 
 exports.register_get = function(req, res) {
-    console.log(req.session.returnTo);
+    //console.log(req.session.returnTo);
       var pageOptions = { title: "Join WhereWeBreathe", user : req.user, messages: [] };
       res.render('login/register', pageOptions);
 };
@@ -55,11 +55,18 @@ exports.verify_post =  function(req, res) {
   console.log("verify post");
 }
 exports.login_post = function(req, res) {
-    console.log(req.session.returnTo);
-      //res.redirect('/');
+    if(req.session.returnTo){
+      var redirect = req.session.returnTo;
+      res.redirect(req.session.returnTo);
+      delete req.session.returnTo
+      console.log("hereeee"+req.session.returnTo);
+
+    }
+    else{
+      res.redirect('/');
+    }
   };
 exports.login_get = function(req, res) {
-    console.log(req.session.returnTo);
   var message;
   //used url paramater for error, next phase could use flash message
   if (req.params.err){

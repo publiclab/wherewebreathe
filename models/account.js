@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 //mongoose.set('debug', true);
-var userDB = mongoose.connect('mongodb://localhost/passport_local_mongoose');
+var userDB = mongoose.connect('mongodb://localhost/users');
 
 var Schema = mongoose.Schema;
 var passportLocalMongoose = require('passport-local-mongoose');

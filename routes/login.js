@@ -1,9 +1,6 @@
 var passport = require('passport');
 var Account = require('../models/account').new_account;
-
-function addNewUser(){
-
-}//end function addNewUser
+var nodemailer = require("nodemailer");
 
 exports.register_get = function(req, res) {
     //console.log(req.session.returnTo);
@@ -39,7 +36,7 @@ exports.register_post = function(req, res) {
     //email
     if(! /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(txtEmail)){ errorMsgs.push("Please make sure the email address you have entered is valid.")};       
     //VIN/HUD
-    if(! /(^((?=[^iIoOqQ])\w){17}$)|(^\w{3}[0-9]{6,7}$)/.test(txtHID)){ errorMsgs.push("What you entered does not look like a VIN or HUD. Please double check your records and try removing spaces.")}; 
+    if(! /(^((?=[^iIoOqQ])\w){17}$)|(^\w{3}[0-9]{6,7}$)/.test(txtHID)){ errorMsgs.push("'"+txtHID+ "' does not look like a VIN or HUD. Please double check your records and try removing spaces.")}; 
     //password
     if(! /^[A-Za-z0-9_-]{3,30}/.test(txtPass)){ errorMsgs.push("Your password must be 3 to 30 characters in length and may contain letters, numbers, hyphens, or underscores.")};      
     if (errorMsgs.length > 0){
@@ -52,8 +49,8 @@ exports.register_post = function(req, res) {
         var token = buf.toString('hex');
         Account.register(new Account({ 
           username : txtUsername,
-          email: req.body.email,
-          HID: req.body.HID,
+          email: txtEmail,
+          HID: txtHID,
           token: token 
         }), txtPass, function(err, account) {
           if (err) {
@@ -61,8 +58,23 @@ exports.register_post = function(req, res) {
             var pageOptions = { title: "Join WhereWeBreathe", user : req.user, messages: [err] };
             return res.render('login/register', pageOptions);
           }
-          //grab returnTo page from cookie
-          res.redirect('/login');        
+          else{
+            //grab returnTo page from cookie
+            //res.redirect('/login'); 
+            // this emailing solution is temporary for phase 1 development!!!! nodemailer has better options that require existing emails/domains
+            var mailText = "Your registration with WhereWeBreathe requires that you verify your email address before registration is complete. \r\n";
+            mailText += "Please click the link below to finish your registration. \r\n\r\n";
+            mailText += "http://localhost:3000/verify/"+token;
+            var transport = nodemailer.createTransport("direct", {debug: true});
+            var   mailOptions = {
+              from: "noreply@wherewebreathe.org",
+              to: "nunes.melissa.m@gmail.com",
+              subject: "[TESTING] user verification email",
+              text: mailText
+            };
+            var mail = require("nodemailer").mail;
+            mail(mailOptions);
+          }//end else       
         });
       });//end rendomBytes  
      }//end else
@@ -70,7 +82,7 @@ exports.register_post = function(req, res) {
   });//end username Account.find()
 };//end exports.register_post
 exports.verify_get =  function(req, res) {
-  res.render('login/verifyUser', { title: 'New Account Verification', user : req.user, messages: [] });
+  res.render('login/verifyUser', { title: 'New Account Verification', user : req.user, message: ["Your email address has been verified. Please continue to edit your privacy preferences before continuing to the rest of the website."] });
 }
 exports.verify_post =  function(req, res) {
   console.log("verify post");
@@ -97,7 +109,7 @@ exports.login_get = function(req, res) {
 exports.logout =  function(req, res) {
       req.logout();
       res.send("logged out")
-  };
+};
 
 
 

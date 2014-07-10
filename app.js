@@ -52,7 +52,7 @@ app.get('/login', login.login_get);
 app.get('/login/:err', login.login_get);
 app.post('/login',passport.authenticate('local', { failureRedirect: '/login/err' }), login.login_post);
 app.post('/logout', login.logout);
-app.get('/verify', login.verify_get);
+app.get('/verify/:token', login.verify_get);
 app.post('/verify', login.verify_post);
 
 app.get('/', routes.index);

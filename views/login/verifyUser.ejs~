@@ -1,15 +1,14 @@
-<% layout('layout') -%>
-<% script('bootstrap-switch-master/bootstrap-switch.min.js') -%>
-<% stylesheet('stylesheets/register.css') -%>
-<% stylesheet('bootstrap-switch-master/bootstrap-switch.css') -%>
+<% layout('../layout') -%>
+<% script('../bootstrap-switch-master/bootstrap-switch.min.js') -%>
+<% stylesheet('../stylesheets/register.css') -%>
+<% stylesheet('../bootstrap-switch-master/bootstrap-switch.css') -%>
+<% if(message.length > 0){ %>
+<div class="alert alert-success" role="alert">
+<%= message %>
+</div>
+<% } %>
 <h1>Publicly share your data?</h1> 
-Only your username will be shown with it.
 <form role="form" action="/verify" method="post">
-  <% if(message.length > 0){ %>
-  <div class="alert alert-danger" role="alert">
-  <%= message %>
-  </div>
-  <% } %>
   <div class="form-group">
     <input type="checkbox" name="public"  value="public">
     <span id="lblPub"></strong>
@@ -24,7 +23,7 @@ Only your username will be shown with it.
 <script>
 function checkLblPub(state){
 if(state){  
-    $('#lblPub').html('Your data["individual answers"?] can be seen by <strong>anyone on the internet</strong>');
+    $('#lblPub').html('Your data["individual answers"?] can be seen by <strong>anyone on the internet</strong>. (Only your chosen username will be shown).');
   }
   else{
     $('#lblPub').html('Your data["individual answers"?]<strong> will not be visible publicly</strong>');

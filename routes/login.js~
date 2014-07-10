@@ -1,5 +1,6 @@
 var passport = require('passport');
-var Account = require('../models/account').new_account;
+var User = require('../models/account').user;
+var NewUser = require('../models/account').newuser;
 var nodemailer = require("nodemailer");
 
 exports.register_get = function(req, res) {
@@ -17,19 +18,30 @@ exports.register_post = function(req, res) {
   var txtPass = req.body.password.trim();
  
  //check if username is taken
-  Account.find({username: txtUsername}, function ( err, username){
+  User.find({username: txtUsername}, function ( err, username){
+  var usernameErr = "The username, '"+txtUsername+"', already exists, please try another.";
+  var emailErr ="The email, '"+txtEmail+"', is already being used.";
     if (username.length > 0){
-    //if username exists, return error message
-    errorMsgs.push("The username, '"+txtUsername+"', already exists, please try another.");
-    console.log("username exists");
+      //if username exists, return error message
+      errorMsgs.push(usernameErr);
     }
     //check if email is taken
-    Account.find({email: txtEmail}, function ( err, email){
+    User.find({email: txtEmail}, function ( err, email){
     if (email.length > 0){
       //if email exists, return error message
-      errorMsgs.push("The email, '"+txtEmail+"', is already being used.");
-      console.log(" email exists");
+      errorMsgs.push(emailErr);
       }
+
+      NewUser.find({username: txtUsername}, function ( err, newusername){
+        if (newusername.length > 0){
+          errorMsgs.push(usernameErr);
+        }
+        NewUser.find({email: txtEmail}, function ( err, newemail){
+          if (newemail.length > 0){
+            //if email exists, return error message
+            errorMsgs.push(emailErr);
+          }
+      
       //check form input again serve-side
       //username
     if(! /^[A-Za-z0-9_.-@]{3,30}$/.test(txtUsername)){ errorMsgs.push("Your username must be 3 to 30 characters in length and may contain letters, numbers, or . - @ _ characters.")}; 
@@ -47,12 +59,12 @@ exports.register_post = function(req, res) {
      else{
       require('crypto').randomBytes(48, function(ex, buf) {
         var token = buf.toString('hex');
-        Account.register(new Account({ 
+        User.register(new NewUser({ 
           username : txtUsername,
           email: txtEmail,
           HID: txtHID,
           token: token 
-        }), txtPass, function(err, account) {
+        }), txtPass, function(err, user) {
           if (err) {
             console.log("user registration error: " +err);
             var pageOptions = { title: "Join WhereWeBreathe", user : req.user, messages: [err] };
@@ -78,11 +90,26 @@ exports.register_post = function(req, res) {
         });
       });//end rendomBytes  
      }//end else
-    });//end email Account.find()
-  });//end username Account.find()
+             });//end newusers find email
+      });//end newusers find username
+    });//end email User.find()
+  });//end username User.find()
 };//end exports.register_post
 exports.verify_get =  function(req, res) {
-  res.render('login/verifyUser', { title: 'New Account Verification', user : req.user, message: ["Your email address has been verified. Please continue to edit your <strong>privacy preferences</strong> before continuing to the rest of the website."] });
+  User.findOne({token: req.params.token}, function ( err, user){
+    if (err){console.log(err);}
+    console.log(user);
+    if (user){
+      User.findByIdAndUpdate(user._id, { token: 'verified' }, function(err, results){
+        res.send("ok");
+      });
+    }
+    else{
+      res.send("no user");
+    }
+  });
+  //res.render('login/verifyUser', { title: 'New Account Verification', user : req.user, message: ["Your email address has been verified. Please continue to edit your privacy preferences before continuing to the rest of the website."] });
+
 }
 exports.verify_post =  function(req, res) {
   console.log("verify post");

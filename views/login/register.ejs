@@ -26,7 +26,7 @@ There were the following errors:
   </div>  
   <div class="form-group">
     <label for="username">Desired Username:</label>
-    <input type="text" name="username" placeholder="Enter Username (min. 3 characters)" class="form-control" pattern="^[A-Za-z0-9_. -@]{3,30}$" required  autofocus maxlength="30" title="Your username must be 3 to 30 characters in length and may contain letters, numbers, spaces, or . - @ _ characters.">
+    <input type="text" name="username" placeholder="Enter Username (min. 3 characters)" class="form-control" pattern="^[A-Za-z0-9_.-@]{3,30}$" required  autofocus maxlength="30" title="Your username must be 3 to 30 characters in length and may contain letters, numbers, or . - @ _ characters.">
   </div>
   <div class="form-group">
     <label for="password">Password:</label>
@@ -34,7 +34,7 @@ There were the following errors:
   </div>
   <div class="form-group">
     <label for="password2">Re-type Password:</label>
-    <input type="password" name="password2" placeholder="Re-type Password" class="form-control" required pattern="^[A-Za-z0-9_-]{3,30}$" title="Your password must be 3 to 30 characters in length and may contain letters, numbers, hyphens, or underscores" oninput="validate(this, 'password', 'The two passwords must match.')">
+    <input type="password" name="password2" placeholder="Re-type Password" class="form-control" required pattern="^[A-Za-z0-9_-]{3,30}$" title="Your password must be 3 to 30 characters in length and may contain letters, numbers, hyphens, or underscores." oninput="validate(this, 'password', 'The two passwords must match.')">
   </div>
   <div class="form-group">
     <label for="HID">VIN or HUD:</label>

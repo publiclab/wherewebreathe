@@ -23,7 +23,7 @@
 <script>
 function checkLblPub(state){
 if(state){  
-    $('#lblPub').html('Your data["individual answers"?] can be seen by <strong>anyone on the internet</strong>. (Only your chosen username will be shown).');
+    $('#lblPub').html('Your data["individual answers"?] can be seen by <strong>anyone on the internet</strong>. (Only your chosen username will be shown along with your answers).');
   }
   else{
     $('#lblPub').html('Your data["individual answers"?]<strong> will not be visible publicly</strong>');
@@ -43,8 +43,8 @@ $(function(){
   $.fn.bootstrapSwitch.defaults.offColor = 'danger';
   $.fn.bootstrapSwitch.defaults.onText = 'Yes';
   $.fn.bootstrapSwitch.defaults.offText = 'No';
-  $.fn.bootstrapSwitch.defaults.state = true;
-  $("[name='researchers'], [name='public']").bootstrapSwitch()
+ // $.fn.bootstrapSwitch.defaults.state = true;
+  $("[name='researchers'], [name='public']").bootstrapSwitch('state', true)
   //set according to switch state
   checkLblPub($("[name='public']").bootstrapSwitch('state'));
   checkLblResearch($("[name='researchers']").bootstrapSwitch('state'));

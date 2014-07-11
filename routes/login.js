@@ -3,8 +3,19 @@ var User = require('../models/account').user;
 var NewUser = require('../models/account').newuser;
 var nodemailer = require("nodemailer");
 
+function returnTo(res, req){
+  //if session variable has redirect info
+  if(req.session.returnTo){
+    res.redirect(req.session.returnTo);
+    //clear redirect info
+    delete req.session.returnTo
+  }
+  else{
+    res.render('/');
+  }
+}
+
 exports.register_get = function(req, res) {
-    //console.log(req.session.returnTo);
       var pageOptions = { title: "Join WhereWeBreathe", user : req.user, regErr: []};
       res.render('login/register', pageOptions);
 };
@@ -120,21 +131,30 @@ exports.verify_get =  function(req, res) {
       res.render('login/message', { title: 'Oops!', user : req.user, message: {text:"That verification code has expired. If you registered more than a day ago, try registering again, and clicking the verify link that is emailed to you right away.", msgType: "alert-danger"} });
     }
   });
-  //res.render('login/verifyUser', { title: 'New Account Verification', user : req.user, message: ["Your email address has been verified. Please continue to edit your privacy preferences before continuing to the rest of the website."] });
 
 }
 
 exports.login_post = function(req, res) {
-//if session variable has redirect info
-    if(req.session.returnTo){
-      res.redirect(req.session.returnTo);
-      //clear redirect info
-      delete req.session.returnTo
-    }
-    else{
-      res.redirect('/');
-    }
-  };
+  //if user doesnt have privacy settings yet, redirect to privacy setting page, first save dafaults
+  if(!req.user.visInternet){
+  console.log(req.user._id);
+      User.findByIdAndUpdate(req.user._id, {visInternet : true, visResearch : true}, function(error, results){
+      if(error){throw err}
+      else{ 
+      console.log(results);
+        res.render('login/privacy', { 
+          title: 'Privacy Settings', 
+          user : req.user, 
+          message: 
+              {text: "Please review your privacy settings. You can always change these later by [...].", 
+              msgType: "alert-warning" }});
+       }
+      }); //end user.findbyid...    
+  }
+  else{
+    returnTo(res, req);
+  }
+};
 exports.login_get = function(req, res) {
   var message;
   //used url paramater for error, next phase could use flash message

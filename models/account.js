@@ -12,7 +12,9 @@ var User = new Schema({
     salt: String,
     hash: String, 
     email: String,
-    HID: String
+    HID: String, 
+    visInternet: Boolean,
+    visResearch: Boolean
 });
 
 var NewUser = new Schema({

@@ -21,21 +21,21 @@ exports.register_post = function(req, res) {
   User.find({username: txtUsername}, function ( err, username){
   var usernameErr = "The username, '"+txtUsername+"', already exists, please try another.";
   var emailErr ="The email, '"+txtEmail+"', is already being used.";
+  //check if username is taken
     if (username.length > 0){
-      //if username exists, return error message
       errorMsgs.push(usernameErr);
     }
     //check if email is taken
     User.find({email: txtEmail}, function ( err, email){
     if (email.length > 0){
-      //if email exists, return error message
       errorMsgs.push(emailErr);
       }
-
+      //check if username is taken in unverified accounts table
       NewUser.find({username: txtUsername}, function ( err, newusername){
         if (newusername.length > 0){
           errorMsgs.push(usernameErr);
         }
+        //check if email is taken in unverified accounts table
         NewUser.find({email: txtEmail}, function ( err, newemail){
           if (newemail.length > 0){
             //if email exists, return error message
@@ -59,7 +59,7 @@ exports.register_post = function(req, res) {
      else{
       require('crypto').randomBytes(48, function(ex, buf) {
         var token = buf.toString('hex');
-        User.register(new NewUser({ 
+        NewUser.register(new NewUser({ 
           username : txtUsername,
           email: txtEmail,
           HID: txtHID,
@@ -72,7 +72,7 @@ exports.register_post = function(req, res) {
           }
           else{
             //grab returnTo page from cookie
-            //res.redirect('/login'); 
+
             // this emailing solution is temporary for phase 1 development!!!! nodemailer has better options that require existing emails/domains
             var mailText = "Your registration with WhereWeBreathe requires that you verify your email address before registration is complete. \r\n";
             mailText += "Please click the link below to finish your registration. \r\n\r\n";
@@ -86,6 +86,7 @@ exports.register_post = function(req, res) {
             };
             var mail = require("nodemailer").mail;
             mail(mailOptions);
+            res.send("your account needs to be verified");
           }//end else       
         });
       });//end rendomBytes  
@@ -95,25 +96,34 @@ exports.register_post = function(req, res) {
     });//end email User.find()
   });//end username User.find()
 };//end exports.register_post
+
+//verify new users' emails
 exports.verify_get =  function(req, res) {
-  User.findOne({token: req.params.token}, function ( err, user){
-    if (err){console.log(err);}
-    console.log(user);
+  //remove user from newusers (unverified) table
+  NewUser.findOneAndRemove({token: req.params.token}, function ( err, user){
+    if (err) {throw err};
     if (user){
-      User.findByIdAndUpdate(user._id, { token: 'verified' }, function(err, results){
-        res.send("ok");
+      //put user in users (verified) table
+      var verified = new User({ 
+        username: user.username,
+        salt: user.salt, 
+        hash: user.hash,
+        email: user.email,
+        HID: user.HID 
       });
+      verified.save(function(err) {
+        if (err) {throw err}
+        else{res.send("ok");}
+      });      
     }
     else{
-      res.send("no user");
+      res.render('login/message', { title: 'Oops!', user : req.user, message: "That verification code has expired. If you registered more than a day ago, try registering again, and clicking the verify link that is emailed to you right away." });
     }
   });
   //res.render('login/verifyUser', { title: 'New Account Verification', user : req.user, message: ["Your email address has been verified. Please continue to edit your privacy preferences before continuing to the rest of the website."] });
 
 }
-exports.verify_post =  function(req, res) {
-  console.log("verify post");
-}
+
 exports.login_post = function(req, res) {
 //if session variable has redirect info
     if(req.session.returnTo){

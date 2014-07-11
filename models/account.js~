@@ -27,5 +27,6 @@ NewUser.plugin(passportLocalMongoose, {usernameField: "email"});
 //module.exports = userDB.model('Account', Account);
 module.exports = {
     user: userDB.model('user', User),
+    newuser: userDB.model('newuser', NewUser)
 };
 

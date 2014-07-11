@@ -37,6 +37,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
+
+
 // passport config
 var User = require('./models/account').user;
 //use next line instead of 'passport.use(new LocalStrategy(Account.authenticate()));' in conjuction with usernameField option (in account.js) to use email input from frontend to use email instead of username. 
@@ -44,6 +46,12 @@ passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+//set view defaults
+app.locals.message = null;
+app.use(function(req, res, next){
+  res.locals.user = req.user;
+  });
+  
 //login routes
 //require('./routes/loginBK')(app);
 app.get('/register', login.register_get);
@@ -53,7 +61,6 @@ app.get('/login/:err', login.login_get);
 app.post('/login',passport.authenticate('local', { failureRedirect: '/login/err' }), login.login_post);
 app.post('/logout', login.logout);
 app.get('/verify/:token', login.verify_get);
-app.post('/verify', login.verify_post);
 
 app.get('/', routes.index);
 app.get('/questionnaire', routes.questionnaire);

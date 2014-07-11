@@ -3,6 +3,8 @@ var Schema = mongoose.Schema;
 var Question = require('../models/question');
 var Answer = require('../models/answer');
 
+
+
 function authenticateUser(req, res, success){
   if (!req.user){
     req.session.returnTo = req.path;
@@ -14,7 +16,7 @@ function authenticateUser(req, res, success){
 }
 
 exports.index = function(req, res){
-  res.render('index', { title: 'Express', user : req.user  });
+  res.render('index', { title: 'Express', user : req.user});
 };
 exports.questionnaire = function ( req, res ){
   authenticateUser(req, res, function(){

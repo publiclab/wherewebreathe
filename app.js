@@ -37,6 +37,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
+
+//set view defaults
+app.locals.message = null;
+
 // passport config
 var User = require('./models/account').user;
 //use next line instead of 'passport.use(new LocalStrategy(Account.authenticate()));' in conjuction with usernameField option (in account.js) to use email input from frontend to use email instead of username. 

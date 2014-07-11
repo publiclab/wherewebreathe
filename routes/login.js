@@ -5,7 +5,7 @@ var nodemailer = require("nodemailer");
 
 exports.register_get = function(req, res) {
     //console.log(req.session.returnTo);
-      var pageOptions = { title: "Join WhereWeBreathe", user : req.user, messages: [] };
+      var pageOptions = { title: "Join WhereWeBreathe", user : req.user, regErr: []};
       res.render('login/register', pageOptions);
 };
 //add new user to DB
@@ -53,7 +53,7 @@ exports.register_post = function(req, res) {
     if(! /^[A-Za-z0-9_-]{3,30}/.test(txtPass)){ errorMsgs.push("Your password must be 3 to 30 characters in length and may contain letters, numbers, hyphens, or underscores.")};      
     if (errorMsgs.length > 0){
           //there are errors
-          var pageOptions = { title: "Join WhereWeBreathe", user : req.user, messages: errorMsgs};
+          var pageOptions = { title: "Join WhereWeBreathe", user : req.user, regErr: errorMsgs};
           return res.render('login/register', pageOptions);
         }//end if no errors
      else{
@@ -67,7 +67,7 @@ exports.register_post = function(req, res) {
         }), txtPass, function(err, user) {
           if (err) {
             console.log("user registration error: " +err);
-            var pageOptions = { title: "Join WhereWeBreathe", user : req.user, messages: [err] };
+            var pageOptions = { title: "Join WhereWeBreathe", user : req.user, regErr: [err] };
             return res.render('login/register', pageOptions);
           }
           else{
@@ -117,7 +117,7 @@ exports.verify_get =  function(req, res) {
       });      
     }
     else{
-      res.render('login/message', { title: 'Oops!', user : req.user, message: "That verification code has expired. If you registered more than a day ago, try registering again, and clicking the verify link that is emailed to you right away." });
+      res.render('login/message', { title: 'Oops!', user : req.user, message: {text:"That verification code has expired. If you registered more than a day ago, try registering again, and clicking the verify link that is emailed to you right away.", msgType: "alert-danger"} });
     }
   });
   //res.render('login/verifyUser', { title: 'New Account Verification', user : req.user, message: ["Your email address has been verified. Please continue to edit your privacy preferences before continuing to the rest of the website."] });
@@ -139,7 +139,7 @@ exports.login_get = function(req, res) {
   var message;
   //used url paramater for error, next phase could use flash message
   if (req.params.err){
-    message = 'Invalid username or password.';
+    message = { text: 'Invalid username or password.', msgType: "alert-danger"};
   }
   res.render('login/login', { title: 'Login', user : req.user, message: message });
 }; 

@@ -1,0 +1,9 @@
+ function validateMatch(input, compareField, message) {
+  console.log(compareField);
+    if (input.value != document.getElementById(compareField).value) { 
+        input.setCustomValidity(message);
+    } else {
+        // input is valid -- reset the error message
+        input.setCustomValidity('');
+    }
+  }

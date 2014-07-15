@@ -14,7 +14,8 @@ var User = new Schema({
     email: String,
     HID: String, 
     visInternet: Boolean,
-    visResearch: Boolean
+    visResearch: Boolean,
+    passReset: String
 });
 
 var NewUser = new Schema({
@@ -25,6 +26,13 @@ var NewUser = new Schema({
     token: String
 });
 User.plugin(passportLocalMongoose, {usernameField: "email"});
+
+User.methods.resetPassword = function resetPassword(id, cb){
+  //this.model('User').find({_id: id}, function(err, data){
+   cb("data");
+  //})
+ 
+};
 NewUser.plugin(passportLocalMongoose, {usernameField: "email"});
 
 //module.exports = userDB.model('Account', Account);

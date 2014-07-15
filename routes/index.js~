@@ -2,18 +2,10 @@ var mongoose = require( 'mongoose' );
 var Schema = mongoose.Schema;
 var Question = require('../models/question');
 var Answer = require('../models/answer');
+require('./authUser');
 
 
 
-function authenticateUser(req, res, success){
-  if (!req.user){
-    req.session.returnTo = req.path;
-    res.redirect('Register');
-  }
-  else{
-    success();
-  }
-}
 
 exports.index = function(req, res){
   res.render('index', { title: 'Express', user : req.user});

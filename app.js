@@ -53,16 +53,33 @@ passport.deserializeUser(User.deserializeUser());
 app.get('/register', login.register_get);
 app.post('/register', login.register_post);
 app.get('/login', login.login_get);
-app.get('/login/:err', login.login_get);
-app.post('/login',passport.authenticate('local', { failureRedirect: '/login/err' }), login.login_post);
+app.get('/login/:msg/:msgType', login.login_get);
+app.post('/login',passport.authenticate('local', { failureRedirect: '/login/Invalid username or password./alert-danger' }), login.login_post);
 app.post('/logout', login.logout);
 app.get('/verify/:token', login.verify_get);
+app.get('/forgotpass', login.forgotpass_get);
+app.post('/forgotpass', login.forgotpass_post);
+app.get('/resetpass', login.resetpass_get);
+app.get('/resetpass/:id/:token', login.resetpass_get);
+app.post('/resetpass', login.resetpass_post);
+
 
 app.get('/', routes.index);
 app.get('/questionnaire', routes.questionnaire);
 app.get('/questionnaire/:qnum', routes.questionnaire);
 //app.get('/questionnaire_cat', routes.questionnaire_cat);
 //app.get('/users', user.list);
+
+app.get('/test', login.test);
+app.post('/searching', function(req, res){
+  console.log("here");
+
+
+ res.send("yo")
+
+
+
+});
 
 //api
 //app.post( '/create', routes.create );

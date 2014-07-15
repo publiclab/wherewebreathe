@@ -61,8 +61,8 @@
                       Login 
                       <span class="caret"></span>
                     </button>
-                    <div class="dropdown-menu">
-                      <form role="form" action="/login" method="post" style="max-width: 300px;">
+                    <div class="dropdown-menu" id="divLogin">
+                      <form role="form" action="/login" method="post" >
                         <div class="form-group">
                           <label for="email">Email:</label>
                           <input type="email" name="email" placeholder="you@email.com" class="form-control">
@@ -71,8 +71,10 @@
                           <label for="password">Password:</label>
                           <input type="password" name="password" placeholder="Password" class="form-control">
                         </div>
-                        <button type="submit" class="btn btn-default">Submit</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                       </form>
+                      <br/>
+                      <a href="/forgotpass">forgotten password</a>
                     </div>                          
                 <% } %>
                 <% if(user){ %>                         
@@ -103,9 +105,7 @@
     <h1><%= title %></h1>
   </div>
   <% if(message){ %>
-    <% if(message.msgType == "error"){ %>
-      <div class="alert alert-danger" role="alert">
-    <% } %>
+    <div class="alert <%= message.msgType %>" role="alert">
       <%= message.text %>
     </div>
   <% } %>

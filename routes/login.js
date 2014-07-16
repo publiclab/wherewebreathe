@@ -13,8 +13,7 @@ function returnTo(res, req){
     delete req.session.returnTo
   }
   else{
-    //TO DO
-    res.render('index', { title: 'Login suceeded', user : req.user});
+    res.render('index', { title: 'Home', user : req.user});
   }
 }
 
@@ -247,7 +246,7 @@ exports.resetpass_get =  function(req, res) {
     });//end user.find()///    
   }//end if params...
   else if(req.user){
-    res.render('login/changepass', { title: 'Change Password', user : req.user }); 
+    res.render('login/resetpass', { title: 'Change Password', user : req.user, id: null, token: null }); 
   }
   else{
     //send 'em to the login page with a message
@@ -256,16 +255,31 @@ exports.resetpass_get =  function(req, res) {
   }
 }
 exports.resetpass_post =  function(req, res) {
-  var txtPass = req.body.pass
+  var txtPass = req.body.pass;
+  
+  //check password
+  var passErr = validate.password(txtPass);
+  if(passErr){
+    return res.send(400, passErr);
+  }
+    
+  var txtId = req.body.id;
+  var txtToken = req.body.token;
   //console.log(req.body.id + ":"+ req.body.token);
-  User.findOne({_id: req.body.id, passReset: req.body.token}, function(error, user){
+  //if not logged in, require token, if logged in use id from user to search for a user
+  var query;
+  if (!req.user){
+   if (!txtId || ! txtToken){return res.send(400, "If you arent logged in to your account, you cannot change your password without a valid password reset link (which you can obtain by clicking on the 'forgotten password' link on the login screen.")};
+   query = {_id: txtId, passReset: txtToken};
+  }
+  else{
+    query = {_id: req.user.id}
+    //console.log("id" + req.user.id);
+  }
+  //console.log(query);
+  User.findOne(query, function(error, user){
     if(error){
       return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 816)");
-    }
-    //check password
-    var passErr = validate.password(txtPass);
-    if(passErr){
-      return res.send(400, passErr);
     }
     else if(user){
       //create a new user just to get access to the mongoose-passport .setPassword function (couldnt figure out how to implememt mongoose model methods on query results, so this is the slightly convoluted workaround. 

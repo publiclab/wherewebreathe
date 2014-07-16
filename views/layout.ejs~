@@ -85,7 +85,14 @@
                     <div class="dropdown-menu">
                         TO DO: change password
                         privacy settings
-                        <button type="button" class="btn btn-primary" onclick="logout()">logout</button>
+                        <ul class="nav">
+                          <li>
+                            <a href="/changepass">Change password</a>
+                          </li>
+                          <li>
+                            <button type="button" class="btn btn-primary" onclick="logout()">logout</button>
+                          </li>
+                        </ul>
                     </div>                           
                 <% } %>
                      
@@ -102,8 +109,8 @@
     </div>
   <div class="container theme-showcase" role="main">
     <div class="page-header">
-    <h1><%= title %></h1>
-  </div>
+      <h1><%= title %></h1>
+    </div>
   <% if(message){ %>
     <div class="alert <%= message.msgType %>" role="alert">
       <%= message.text %>

@@ -23,7 +23,7 @@
       })
       .done(function(response) {
         //redirect to login with message
-        window.location.replace("/login/Your password has been changed. Please log in./alert-success ")
+        window.location.replace("/login/Your password has been changed. Please log in with your new password./alert-success ")
         
 
       });

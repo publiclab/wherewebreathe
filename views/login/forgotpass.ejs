@@ -1,7 +1,7 @@
 <% layout('../layout') -%>
 <div id="main">
   <h3>Enter your email to be sent a password reset link.</h3>
-  <form role="form" method="post" style="max-width: 300px;">
+  <form id='frmForgot' role="form" method="post" style="max-width: 300px;">
     <div class="form-group">
       <label for="email">Email:</label>
       <input type="email" name="email" id="email" placeholder="you@email.com" class="form-control" required>
@@ -11,7 +11,7 @@
   <br>
 </div>
 <script>
-$('form').submit(function(event){
+$('#frmForgot').submit(function(event){
   //prevent actual submit, but HTML5 validation triggers
   event.preventDefault();
   console.log($('#email').val());

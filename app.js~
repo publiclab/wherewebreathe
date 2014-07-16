@@ -61,7 +61,9 @@ app.get('/forgotpass', login.forgotpass_get);
 app.post('/forgotpass', login.forgotpass_post);
 app.get('/resetpass', login.resetpass_get);
 app.get('/resetpass/:id/:token', login.resetpass_get);
-app.post('/resetpass', passport.setPassword('local', { failureRedirect: '/login/wtf./alert-danger' }), login.resetpass_post);
+app.post('/resetpass', login.resetpass_post);
+app.get('/changepass', login.resetpass_get);
+
 
 app.get('/', routes.index);
 app.get('/questionnaire', routes.questionnaire);

@@ -63,7 +63,6 @@ app.get('/resetpass', login.resetpass_get);
 app.get('/resetpass/:id/:token', login.resetpass_get);
 app.post('/resetpass', login.resetpass_post);
 
-
 app.get('/', routes.index);
 app.get('/questionnaire', routes.questionnaire);
 app.get('/questionnaire/:qnum', routes.questionnaire);

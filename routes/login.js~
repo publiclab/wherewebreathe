@@ -2,6 +2,7 @@ var passport = require('passport');
 var User = require('../models/account').user;
 var NewUser = require('../models/account').newuser;
 var nodemailer = require("nodemailer");
+var validate = require('./validate');
 
 function returnTo(res, req){
   //if session variable has redirect info
@@ -25,15 +26,16 @@ exports.register_get = function(req, res) {
 exports.register_post = function(req, res) {
   //server-side validation
   var errorMsgs = [];
+  console.log( errorMsgs);
   var txtUsername = req.body.username.trim();
   var txtEmail = req.body.email.trim();
   var txtHID = req.body.HID.trim();
   var txtPass = req.body.password.trim();
- 
+ console.log( errorMsgs);
  //check if username is taken
   User.find({username: txtUsername}, function ( err, username){
   var usernameErr = "The username, '"+txtUsername+"', already exists, please try another.";
-  var emailErr ="The email, '"+txtEmail+"', is already being used.";
+  var emailErrMsg ="The email, '"+txtEmail+"', is already being used.";
   //check if username is taken
     if (username.length > 0){
       errorMsgs.push(usernameErr);
@@ -41,7 +43,7 @@ exports.register_post = function(req, res) {
     //check if email is taken
     User.find({email: txtEmail}, function ( err, email){
     if (email.length > 0){
-      errorMsgs.push(emailErr);
+      errorMsgs.push(emailErrMsg);
       }
       //check if username is taken in unverified accounts table
       NewUser.find({username: txtUsername}, function ( err, newusername){
@@ -52,18 +54,26 @@ exports.register_post = function(req, res) {
         NewUser.find({email: txtEmail}, function ( err, newemail){
           if (newemail.length > 0){
             //if email exists, return error message
-            errorMsgs.push(emailErr);
+            errorMsgs.push(emailErrMsg);
           }
       
       //check form input again serve-side
+      console.log(errorMsgs);
       //username
     if(! /^[A-Za-z0-9_.-@]{3,30}$/.test(txtUsername)){ errorMsgs.push("Your username must be 3 to 30 characters in length and may contain letters, numbers, or . - @ _ characters.")}; 
     //email
-    if(! /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(txtEmail)){ errorMsgs.push("'"+txtEmail+"' doesnt look like a valid email address to our server. Please make sure the email address you have entered is valid.")};       
+    var emailErr = validate.email(txtEmail);
+    if(emailErr){
+      errorMsgs.push(emailErr)
+    }  
     //VIN/HUD
     if(! /(^((?=[^iIoOqQ])\w){17}$)|(^\w{3}[0-9]{6,7}$)/.test(txtHID)){ errorMsgs.push("'"+txtHID+ "' does not look like a VIN or HUD. Please double check your records and try removing spaces.")}; 
     //password
-    if(! /^[A-Za-z0-9_-]{3,30}/.test(txtPass)){ errorMsgs.push("Your password must be 3 to 30 characters in length and may contain letters, numbers, hyphens, or underscores.")};      
+    var passErr = validate.password(txtPass);
+    if(passErr){
+      errorMsgs.push(passErr)
+    };  
+    //if any error messages   
     if (errorMsgs.length > 0){
           //there are errors
           var pageOptions = { title: "Join WhereWeBreathe", user : req.user, regErr: errorMsgs};
@@ -246,23 +256,29 @@ exports.resetpass_get =  function(req, res) {
   }
 }
 exports.resetpass_post =  function(req, res) {
-  console.log(req.body.id + ":"+ req.body.token);
+  var txtPass = req.body.pass
+  //console.log(req.body.id + ":"+ req.body.token);
   User.findOne({_id: req.body.id, passReset: req.body.token}, function(error, user){
     if(error){
       return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 816)");
     }
+    //check password
+    var passErr = validate.password(txtPass);
+    if(passErr){
+      return res.send(400, passErr);
+    }
     else if(user){
-      //create a new user just to get access to the mongoose-passport .setPassword function (couldnt figure out how to implememt mongoose model methods on query results. 
+      //create a new user just to get access to the mongoose-passport .setPassword function (couldnt figure out how to implememt mongoose model methods on query results, so this is the slightly convoluted workaround. 
       var tempUser = new User();
       //console.log("user_salt: "+user.salt);
       //console.log("user_hash: "+user.hash);
-      tempUser.setPassword(req.body.pass, function(err, stuff){
+      tempUser.setPassword(txtPass, function(err, stuff){
       //console.log("stuff: "+stuff.hash)
         //console.log("tmp_salt: "+tempUser.salt);
         //console.log("tmp_hash: "+tempUser.hash);
         User.findByIdAndUpdate(user.id, {$unset: {passReset: 1 },hash: tempUser.hash, salt: tempUser.salt}, function(err, results){
           if (err) {
-            return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 817)");
+            return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 817)" + err);
           }
           //console.log("result_salt: "+results.salt);
           //console.log("result_hash: "+results.hash);

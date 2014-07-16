@@ -23,10 +23,10 @@ $('form').submit(function(event){
       $( html ).insertAfter( ".page-header" );
     })
     .done(function(response) {
-      var html = '<div class="alert alert-success" role="alert">An dfsemail with a link to reset your password has been sent to your email address</div>'
+      var html = '<div class="alert alert-success" role="alert">An email with a link to reset your password has been sent to your email address</div>'
       $( ".alert, #main" ).remove();
       $( html ).insertAfter( ".page-header" );
-      $('.page-header h1').html('Please check your cccemail');
+      $('.page-header h1').html('Please check your email');
 
     });
 

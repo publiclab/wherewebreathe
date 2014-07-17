@@ -161,18 +161,14 @@ exports.login_post = function(req, res) {
   //if user doesnt have privacy settings yet, redirect to privacy setting page, first save dafaults
   if(!req.user.visInternet){
   console.log(req.user._id);
-      User.findByIdAndUpdate(req.user._id, {visInternet : false, visResearch : false}, function(error, results){
+    User.findByIdAndUpdate(req.user._id, {visInternet : false, visResearch : false}, function(error, results){
       if(error){throw err}
       else{ 
       //console.log(results);
-        res.render('login/privacy', { 
-          title: 'Privacy Settings', 
-          user : req.user, 
-          message: 
-              {text: "Please review your privacy settings. You can always change these later by [...].", 
-              msgType: "alert-warning" }});
-       }
-      }); //end user.findbyid...    
+        req.flash('info', ['It looks like this it the first time you have logged in. Please take a moment to review your privacy settings before continuing on to the rest of the site.', 'alert-warning'])
+        res.redirect('/privacy');
+      }
+    }); //end user.findbyid...    
   }//end if user has privacy settings
   else{
     returnTo(res, req);
@@ -318,7 +314,7 @@ TEST - remove later
 ***********************************************************************/
 exports.test =  function(req, res) {
       console.log('there');
-      
+      res.locals.myVar = 'fjdklfjsdkflsjfkdl';
       res.render('test', { title: 'test', user : req.user, message: null });
       //res.send("x")
       console.log('here');
@@ -328,10 +324,19 @@ PRIVACY
 *****************************************************************/
 
 exports.privacy_get = function(req, res) {
-  authenticateUser(req, res, function(){  
+  authenticateUser(req, res, function(){ 
+  var message = null;
+  //for some reason, req.flash clears once accessed
+  var temp = req.flash('info');
+  if(temp.length > 0){
+    console.log(temp[0]);
+    message =  {text: temp[0], msgType: temp[1]}
+    console.log(message);
+  }
     res.render('login/privacy', { 
             title: 'Privacy Settings', 
             user : req.user, 
+            message: message
             });
   });//end auth user
 }

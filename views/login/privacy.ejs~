@@ -2,6 +2,17 @@
 <% script('../bootstrap-switch-master/bootstrap-switch.min.js') -%>
 <% stylesheet('../stylesheets/register.css') -%>
 <% stylesheet('../bootstrap-switch-master/bootstrap-switch.css') -%>
+<div class="panel panel-info">
+  <div class="panel-heading">
+    <h3 class="panel-title">Stay Anonymous</h3>
+  </div>
+  <div class="panel-body">
+    <p>There's no reason to share your real name, address, or contact information. Share your data under a false name and be careful of the potentially identifying information you decide to share.</p>
+    <p>We work hard to keep your data secure, and don't need to know who you are.</p>
+    <p>You can decide to share privately with our team of epidemiologists and social scientists, and the information you supply will only be used for scholarly purposes and in a non-identifying manner.</p>
+    <p>If you choose to make your data public, anyone will be able to read your story to learn about indoor air contamination in mobile homes.</p>
+  </div>
+</div>
 <h1>Publicly share your data?</h1> 
 <form role="form" id='frmPriv'>
   <div class="form-group">
@@ -46,11 +57,9 @@ $(function(){
 })
 //on state change, change lbl text
 $("[name='public']").on('switchChange.bootstrapSwitch', function(event, state) {
-  console.log(state);
   checkLblPub(state);
 });
 $("[name='researchers']").on('switchChange.bootstrapSwitch', function(event, state) {
-console.log(state);
   checkLblResearch(state);
 });
 $('#frmPriv').submit(function(event){

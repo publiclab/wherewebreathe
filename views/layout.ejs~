@@ -83,9 +83,10 @@
                       <span class="caret"></span>
                     </button>
                     <div class="dropdown-menu">
-                        TO DO: change password
-                        privacy settings
                         <ul class="nav">
+                          <li>
+                            <a href="/privacy">Change privacy settings</a>
+                          </li>
                           <li>
                             <a href="/resetpass">Change password</a>
                           </li>

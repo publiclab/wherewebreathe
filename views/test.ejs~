@@ -1,15 +1,3 @@
 <% layout('/layout') -%>
 test
-<button type="submit" class="btn btn-primary" onclick="post();">Submit</button>
-   <h2 id="results"></h2>
-<script>
-function post(){
-  //$.post("/forgotpass", {email: "fdsfd"}, function(){console.log("success");}).fail(function(response, e) {
-  //    //console.log(response);
-  //    //console.log(e);
-   //   $( '<div class="alert alert-danger" role="alert">' ).insertAfter( "h3" );
-   // });
 
-   $.post( '/searching',{email: "fdsfd"}, function(data) {$('#results').html(data);});
-}
-</script>

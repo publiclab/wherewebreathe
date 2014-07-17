@@ -3,6 +3,7 @@ var User = require('../models/account').user;
 var NewUser = require('../models/account').newuser;
 var nodemailer = require("nodemailer");
 var validate = require('./validate');
+var authenticateUser = require('./authUser');
 
 function returnTo(res, req, message){
   if (message){msg = message;}
@@ -22,7 +23,9 @@ function returnTo(res, req, message){
     res.render('index', { title: 'Home', user : req.user, message: msg});
   }
 }
-
+/********************************************************************************************
+REGISTRATION AND EMAIL VERIFICAITON
+*********************************************************************************************/
 exports.register_get = function(req, res) {
       var pageOptions = { title: "Join WhereWeBreathe", user : req.user, regErr: []};
       res.render('login/register', pageOptions);
@@ -151,15 +154,17 @@ exports.verify_get =  function(req, res) {
     }
   });
 }
-
+/************************************************************************
+LOGIN
+*************************************************************************/
 exports.login_post = function(req, res) {
   //if user doesnt have privacy settings yet, redirect to privacy setting page, first save dafaults
   if(!req.user.visInternet){
   console.log(req.user._id);
-      User.findByIdAndUpdate(req.user._id, {visInternet : true, visResearch : true}, function(error, results){
+      User.findByIdAndUpdate(req.user._id, {visInternet : false, visResearch : false}, function(error, results){
       if(error){throw err}
       else{ 
-      console.log(results);
+      //console.log(results);
         res.render('login/privacy', { 
           title: 'Privacy Settings', 
           user : req.user, 
@@ -185,6 +190,9 @@ exports.logout =  function(req, res) {
       req.logout();
       res.send("logged out")
 };
+/******************************************************************
+PASSWORD RECOVERY
+******************************************************************/
 exports.forgotpass_get =  function(req, res) {
   res.render('login/forgotpass', { title: 'Forgotten Password', user : req.user, message: null });
 }
@@ -295,7 +303,7 @@ exports.resetpass_post =  function(req, res) {
         //remove passReset field, update salt and hash fields from tempUser
         User.findByIdAndUpdate(user.id, {$unset: {passReset: 1 },hash: tempUser.hash, salt: tempUser.salt}, function(err, results){
           if (err) {
-            return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 817)" + err);
+            return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 817)");
           }
           //no err, so logout and give ok status to ajax
           req.logout();          
@@ -305,6 +313,9 @@ exports.resetpass_post =  function(req, res) {
     }//end else if
   }); //end find()
 }
+/**********************************************************************
+TEST - remove later
+***********************************************************************/
 exports.test =  function(req, res) {
       console.log('there');
       
@@ -312,7 +323,30 @@ exports.test =  function(req, res) {
       //res.send("x")
       console.log('here');
 };
+/****************************************************************
+PRIVACY
+*****************************************************************/
 
+exports.privacy_get = function(req, res) {
+  authenticateUser(req, res, function(){  
+    res.render('login/privacy', { 
+            title: 'Privacy Settings', 
+            user : req.user, 
+            });
+  });//end auth user
+}
+
+exports.privacy_post = function(req, res) {
+ User.findByIdAndUpdate(req.user._id, {visInternet : req.body.visInternet, visResearch : req.body.visResearch}, function(error, results){
+      if(error){
+        return res.send(400, "There was an error saving your privacy settings. Please try again.");
+      }
+      else{ 
+      //console.log(results);
+        return res.send(200)
+      }
+  }); //end user.findbyid..
+};
 
 
 

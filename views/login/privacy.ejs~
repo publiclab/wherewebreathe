@@ -3,7 +3,7 @@
 <% stylesheet('../stylesheets/register.css') -%>
 <% stylesheet('../bootstrap-switch-master/bootstrap-switch.css') -%>
 <h1>Publicly share your data?</h1> 
-<form role="form" action="/verify" method="post">
+<form role="form" id='frmPriv'>
   <div class="form-group">
     <input type="checkbox" name="public"  value="public">
     <span id="lblPub"></strong>
@@ -39,16 +39,37 @@ $(function(){
   $.fn.bootstrapSwitch.defaults.onText = 'Yes';
   $.fn.bootstrapSwitch.defaults.offText = 'No';
  // $.fn.bootstrapSwitch.defaults.state = true;
-  $("[name='researchers'], [name='public']").bootstrapSwitch('state', true)
+  $("[name='researchers'], [name='public']").bootstrapSwitch('state', false)
   //set according to switch state
   checkLblPub($("[name='public']").bootstrapSwitch('state'));
   checkLblResearch($("[name='researchers']").bootstrapSwitch('state'));
 })
 //on state change, change lbl text
 $("[name='public']").on('switchChange.bootstrapSwitch', function(event, state) {
+  console.log(state);
   checkLblPub(state);
 });
 $("[name='researchers']").on('switchChange.bootstrapSwitch', function(event, state) {
+console.log(state);
   checkLblResearch(state);
 });
+$('#frmPriv').submit(function(event){
+    //prevent actual submit, but HTML5 validation triggers
+    event.preventDefault();
+    $.post( '/privacy',{visInternet: $("[name='public']").bootstrapSwitch('state'), visResearch: $("[name='researchers']").bootstrapSwitch('state')})
+      .fail(function(response) {
+        $( ".alert" ).remove();
+        console.log(response);
+        var html = '<div class="alert alert-danger" role="alert">'+response.responseText+'</div>'
+        $( html ).insertAfter( ".page-header" );
+      })
+      .done(function(response) {
+        //redirect to login with message
+        $( ".alert" ).remove();
+        var html = '<div class="alert alert-success" role="alert">Your privacy settings have been saved.</div>'
+        $( html ).insertAfter( ".page-header" );
+
+      });
+
+  });
 </script>

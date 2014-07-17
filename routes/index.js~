@@ -2,7 +2,7 @@ var mongoose = require( 'mongoose' );
 var Schema = mongoose.Schema;
 var Question = require('../models/question');
 var Answer = require('../models/answer');
-require('./authUser');
+var authenticateUser = require('./authUser');
 
 
 

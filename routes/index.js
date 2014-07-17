@@ -8,7 +8,7 @@ var authenticateUser = require('./authUser');
 
 
 exports.index = function(req, res){
-  res.render('index', { title: 'Express', user : req.user});
+  res.render('index', { title: 'Home', user : req.user});
 };
 exports.questionnaire = function ( req, res ){
   authenticateUser(req, res, function(){

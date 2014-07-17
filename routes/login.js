@@ -4,16 +4,22 @@ var NewUser = require('../models/account').newuser;
 var nodemailer = require("nodemailer");
 var validate = require('./validate');
 
-function returnTo(res, req){
+function returnTo(res, req, message){
+  if (message){msg = message;}
+  else if (req.session.msg){msg = req.session.msg}
+  else{msg = null;}
   //if session variable has redirect info
   if(req.session.returnTo){
     console.log(req.session.returnTo);
+    var msg;
+    //have to use redirect instead of render to make sure page variables are sent (cent find a way to access them from req...)// wanted to be able to use message
     res.redirect(req.session.returnTo);
+    console.log(req.session.returnTo);
     //clear redirect info
     delete req.session.returnTo
   }
   else{
-    res.render('index', { title: 'Home', user : req.user});
+    res.render('index', { title: 'Home', user : req.user, message: msg});
   }
 }
 
@@ -96,19 +102,19 @@ exports.register_post = function(req, res) {
             //grab returnTo page from cookie
 
             // this emailing solution is temporary for phase 1 development!!!! nodemailer has better options that require existing emails/domains
-            var mailText = "Your registration with WhereWeBreathe requires that you verify your email address before registration is complete. \r\n";
-            mailText += "Please click the link below to finish your registration. \r\n\r\n";
-            mailText += "http://localhost:3000/verify/"+token;
+            var mailText = "You have one more step before your account with WhereWeBreathe.org is registered. \r\n\r\n";
+            mailText += "Please click the link below to verify your email. \r\n\r\n";
+            mailText += "http://"+req.headers.host+"/verify/"+token;
             var transport = nodemailer.createTransport("direct", {debug: true});
             var   mailOptions = {
               from: "noreply@wherewebreathe.org",
-              to: "nunes.melissa.m@gmail.com",
+              to: txtEmail,
               subject: "[TESTING] user verification email",
               text: mailText
             };
             var mail = require("nodemailer").mail;
             mail(mailOptions);
-            res.send("your account needs to be verified");
+            res.render('login/message', { title: 'Almost done!', user : req.user, message: {text:"An email with an account verification link has been sent to you. Please follow the instructions in the email to complete your account registration", msgType: "alert-success"} });
           }//end else       
         });
       });//end rendomBytes  
@@ -135,14 +141,15 @@ exports.verify_get =  function(req, res) {
       });
       verified.save(function(err) {
         if (err) {throw err}
-        else{res.send("ok");}
+        else{
+          res.render('login/login', {title: "Login", user : req.user, message:  {text: "Your account registration in now complete. Please login.", msgType: "alert-success" }});
+        }
       });      
     }
     else{
       res.render('login/message', { title: 'Oops!', user : req.user, message: {text:"That verification code has expired. If you registered more than a day ago, try registering again, and clicking the verify link that is emailed to you right away.", msgType: "alert-danger"} });
     }
   });
-
 }
 
 exports.login_post = function(req, res) {
@@ -161,7 +168,7 @@ exports.login_post = function(req, res) {
               msgType: "alert-warning" }});
        }
       }); //end user.findbyid...    
-  }
+  }//end if user has privacy settings
   else{
     returnTo(res, req);
   }
@@ -179,18 +186,17 @@ exports.logout =  function(req, res) {
       res.send("logged out")
 };
 exports.forgotpass_get =  function(req, res) {
-  res.render('login/forgotpass', { title: 'test', user : req.user, message: null });
+  res.render('login/forgotpass', { title: 'Forgotten Password', user : req.user, message: null });
 }
 exports.forgotpass_post =  function(req, res) {
   var txtEmail = req.body.email.trim();
   console.log(txtEmail);
   //validate email address
-      //email
-    if(! /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(txtEmail)){ 
-      //return res.send('login/forgotpass', pageOptions);
-      //use 400 code to trigger ajax to fail and create error message on client
-      return res.send(400, "'"+txtEmail+"' doesnt look like a valid email address to our server. Please make sure the email address you have entered is valid.");
-    }; 
+  //email
+  var emailErr = validate.email(txtEmail);
+  if(emailErr){
+    return res.send(400, emailErr);
+  }   
   //check if user with email address exists
   User.findOne({email: txtEmail}, function ( error, user){
     if(error){throw error}
@@ -211,11 +217,12 @@ exports.forgotpass_post =  function(req, res) {
           else{ 
             var mailText = "You have requested to reset your password with WhereWeBreathe because you have forgotten your password. If you did not request this, please ignore it. It will expire and become useless in 24 hours time.  \r\n";
             mailText += "Please click the link below to finish your registration. \r\n\r\n";
-            mailText += "http://localhost:3000/resetpass/"+user._id+"/"+token;
+            //req.headers.host includes the port#, req.host will be sans port#
+            mailText += "http://"+req.headers.host+"/resetpass/"+user._id+"/"+token;
             var transport = nodemailer.createTransport("direct", {debug: true});
             var   mailOptions = {
               from: "noreply@wherewebreathe.org",
-              to: "nunes.melissa.m@gmail.com",
+              to: txtEmail,
               subject: "[TESTING] password reset email",
               text: mailText
             };
@@ -284,18 +291,14 @@ exports.resetpass_post =  function(req, res) {
     else if(user){
       //create a new user just to get access to the mongoose-passport .setPassword function (couldnt figure out how to implememt mongoose model methods on query results, so this is the slightly convoluted workaround. 
       var tempUser = new User();
-      //console.log("user_salt: "+user.salt);
-      //console.log("user_hash: "+user.hash);
       tempUser.setPassword(txtPass, function(err, stuff){
-      //console.log("stuff: "+stuff.hash)
-        //console.log("tmp_salt: "+tempUser.salt);
-        //console.log("tmp_hash: "+tempUser.hash);
+        //remove passReset field, update salt and hash fields from tempUser
         User.findByIdAndUpdate(user.id, {$unset: {passReset: 1 },hash: tempUser.hash, salt: tempUser.salt}, function(err, results){
           if (err) {
             return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 817)" + err);
           }
-          //console.log("result_salt: "+results.salt);
-          //console.log("result_hash: "+results.hash);
+          //no err, so logout and give ok status to ajax
+          req.logout();          
           res.send(200);
         });
       });//end setPassword

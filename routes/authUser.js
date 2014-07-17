@@ -1,6 +1,7 @@
 //check if user, set page for user to be returned to upon login/registration completion
 module.exports = function(req, res, success){
   if (!req.user){
+    console.log(req.headers.host);
     req.session.returnTo = req.path;
     res.redirect('Register');
   }

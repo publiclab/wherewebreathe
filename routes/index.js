@@ -13,6 +13,9 @@ exports.index = function(req, res){
 exports.about = function(req, res){
   res.render('about', { title: 'About WhereWeBreathe', user : req.user});
 };
+exports.vinhud = function(req, res){
+  res.render('vinhud', { title: 'Am I looking for a VIN or a HUD number?', user : req.user});
+};
 exports.questionnaire = function ( req, res ){
   authenticateUser(req, res, function(){
     var qnum = 1;//question # to start at

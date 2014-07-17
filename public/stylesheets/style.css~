@@ -6,5 +6,14 @@ body {
   margin-left: 5px;
 }
 #divLogin{
-  margin: 3px 7px;
+  padding:7px;
+}
+#vin, #hud {
+  max-width: 600px;
+  border: solid thin red;
+  display: inline-block;/*makes the clickable area from the parent href fit to image*/
+}
+
+figcaption{
+  font-style:italic
 }

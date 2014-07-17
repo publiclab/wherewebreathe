@@ -11,6 +11,7 @@ var path = require('path');
 var engine = require('ejs-locals');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var flash = require('connect-flash');
 
 var app = express();
 
@@ -28,6 +29,7 @@ app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(express.cookieParser('unicorns'));
 app.use(express.session());
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(app.router);
@@ -69,6 +71,7 @@ app.get('/', routes.index);
 app.get('/questionnaire', routes.questionnaire);
 app.get('/about', routes.about);
 app.get('/questionnaire/:qnum', routes.questionnaire);
+app.post('/x', routes.vinhud);
 //app.get('/questionnaire_cat', routes.questionnaire_cat);
 //app.get('/users', user.list);
 

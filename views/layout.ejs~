@@ -15,12 +15,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <!-- styles -->
-    <%-stylesheets%>
     <link rel="stylesheet" href="/stylesheets/style.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
     <%-scripts%>
-
+    <%-stylesheets%>
   </head>
   <body id="body">
     <!-- Fixed navbar -->
@@ -41,7 +40,7 @@
             <li><a href="/about">About</a></li>
             <li><a href="#">Privacy</a></li>
             <li><a href="#">Blog</a></li>
-            <li><a href="#">Knowledge base</a></li> 
+            <li><a href="/knowledge-base">Knowledge base</a></li> 
           </ul>
           <ul class="nav navbar-nav navbar-right"> 
             <li class="dropdown">

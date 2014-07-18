@@ -11,7 +11,10 @@ exports.index = function(req, res){
   res.render('index', { title: 'Home', user : req.user});
 };
 exports.about = function(req, res){
-  res.render('about', { title: 'About WhereWeBreathe', user : req.user});
+  res.render('about', { title: 'About Where We Breathe', user : req.user});
+};
+exports.knowledgebase = function(req, res){
+  res.render('knowledge-base', { title: 'Knowledge base', user : req.user});
 };
 exports.vinhud = function(req, res){
   res.render('vinhud', { title: 'Am I looking for a VIN or a HUD number?', user : req.user});

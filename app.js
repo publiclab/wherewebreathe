@@ -71,8 +71,9 @@ app.post('/privacy', login.privacy_post);
 
 app.get('/', routes.index);
 app.get('/questionnaire', routes.questionnaire);
-app.get('/about', routes.about);
 app.get('/questionnaire/:qnum', routes.questionnaire);
+app.get('/about', routes.about);
+app.get('/knowledge-base', routes.knowledgebase);
 app.get('/vinhud', routes.vinhud);
 //app.get('/questionnaire_cat', routes.questionnaire_cat);
 //app.get('/users', user.list);

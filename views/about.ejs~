@@ -1,5 +1,4 @@
 <% layout('layout') -%>
-<% stylesheet -%>
 <p> 
 Where We Breathe is a collaborative research platform investigating how the air inside manufactured housing may affect residents’ health. The project seeks to better understand the effects of on-going low-level formaldehyde exposure, create a collective conversation about indoor air quality among the residents of manufactured housing across the country, and help the exposed explore mitigation options.
 </p>
@@ -18,7 +17,7 @@ In the future we hope to establish a lending library of formaldehyde sensors tha
 <p>
 The project is run out of Public Lab, a grassroots environmental monitoring non-profit based in New Orleans, and is funded by the Passport Foundation.
 </p>
-<h2>Team</h2>
+<h2 class="anchor" id="team">Team</h2>
 <p>
 <strong>Jeffrey Warren</strong> leads the development of the WWB webtool. Warren is the creator of GrassrootsMapping.org and co-founder and Research Director for the Public Laboratory for Open Technology and Science, Warren designs mapping and civic science tools and professionally flies balloons and kites. Notable software he has created include the vector-mapping framework Cartagen and orthorectification tool MapKnitter. He is a fellow at MIT's Center for Civic Media and an advocate of open source software, hardware, and data. He co-founded Vestal Design, a graphic/interaction design firm in 2004, and directed the Cut&Paste Labs project, a year-long series of workshops on opensource tools and web design in 2006-7 with Lima designer Diego Rotalde. Jeff holds an MS from MIT and a BA in Architecture from Yale University, and spent much of that time working with artist/technologist Natalie Jeremijenko, building robotic dogs for public science investigations.
 </p>

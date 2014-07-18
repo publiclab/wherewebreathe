@@ -161,7 +161,8 @@ LOGIN
 exports.login_post = function(req, res) {
   //if user doesnt have privacy settings yet, redirect to privacy setting page, first save dafaults
   if(req.user.firstLogin){
-    User.findByIdAndUpdate(req.user._id,{$unset: {firstLogin: 1 }}, {visInternet : false, visResearch : false}, function(error, results){
+
+    User.findByIdAndUpdate(req.user._id,{$unset: {firstLogin: 1 }, visInternet : false, visResearch : false}, function(error, results){
       if(error){throw err}
       else{ 
       //console.log(results);
@@ -333,10 +334,20 @@ exports.privacy_get = function(req, res) {
     message =  {text: temp[0], msgType: temp[1]}
     console.log(message);
   }
+ var visInternet, visResearch
+ //get user privacy setting from db if they exist
+ User.findOne({_id: req.user._id}, function (err, user) {
+  if (err){
+    req.logout();
+    return res.render('login/login', {title: "Login", user : req.user, message:  {text: "Something went wrong on our side of things. Please try logging in again to edit your privacy settings. (Error ID: 818)", msgType: "alert-success" }});
+  }  
+  }); //end find one 
     res.render('login/privacy', { 
             title: 'Privacy Settings', 
             user : req.user, 
-            message: message
+            message: message, 
+            visInternet: visInternet,
+            visResearch: visResearch
             });
   });//end auth user
 }

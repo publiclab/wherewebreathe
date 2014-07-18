@@ -334,11 +334,22 @@ exports.privacy_get = function(req, res) {
     message =  {text: temp[0], msgType: temp[1]}
     console.log(message);
   }
-    res.render('login/privacy', { 
+ var visInternet, visResearch
+ //get user privacy setting from db if they exist
+ User.findOne({_id: req.user._id}, function (err, result) {
+  if (err){
+    req.logout();
+    return res.render('login/login', {title: "Login", user : req.user, message:  {text: "Something went wrong on our side of things. Please try logging in again to edit your privacy settings. (Error ID: 818)", msgType: "alert-success" }});
+  } //end if err
+  res.render('login/privacy', { 
             title: 'Privacy Settings', 
             user : req.user, 
-            message: message
-            });
+            message: message, 
+            visInternet: result.visInternet,
+            visResearch: result.visResearch
+            }); 
+  }); //end find one 
+    
   });//end auth user
 }
 

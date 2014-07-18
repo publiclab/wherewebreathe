@@ -21,9 +21,9 @@
     <%-scripts%>
     <%-stylesheets%>
   </head>
-  <body>
+  <body id="body">
     <!-- Fixed navbar -->
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -87,7 +87,7 @@
                           <li>
                             <a href="/privacy">Change privacy settings</a>
                           </li>
-                          <li>
+                          <li>examples/theme/#
                             <a href="/resetpass">Change password</a>
                           </li>
                           <li>
@@ -110,7 +110,8 @@
     </div>
   <div class="container theme-showcase" role="main">
     <div class="page-header">
-      <h1><%= title %></h1>
+    <%-blocks.header%>
+      <h1 id="title"><%= title %></h1>
     </div>
   <% if(message){ %>
     <div class="alert <%= message.msgType %>" role="alert">

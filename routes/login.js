@@ -140,7 +140,8 @@ exports.verify_get =  function(req, res) {
         salt: user.salt, 
         hash: user.hash,
         email: user.email,
-        HID: user.HID 
+        HID: user.HID, 
+        firstLogin: true
       });
       verified.save(function(err) {
         if (err) {throw err}
@@ -159,9 +160,9 @@ LOGIN
 *************************************************************************/
 exports.login_post = function(req, res) {
   //if user doesnt have privacy settings yet, redirect to privacy setting page, first save dafaults
-  if(!req.user.visInternet){
-  console.log(req.user._id);
-    User.findByIdAndUpdate(req.user._id, {visInternet : false, visResearch : false}, function(error, results){
+  if(req.user.firstLogin){
+
+    User.findByIdAndUpdate(req.user._id,{$unset: {firstLogin: 1 }, visInternet : false, visResearch : false}, function(error, results){
       if(error){throw err}
       else{ 
       //console.log(results);

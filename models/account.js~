@@ -29,7 +29,7 @@ User.plugin(passportLocalMongoose, {usernameField: "email"});
 
 User.methods.resetPassword = function resetPassword(id, cb){
   //this.model('User').find({_id: id}, function(err, data){
-   cb(data);
+   cb("data");
   //})
  
 };

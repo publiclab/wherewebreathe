@@ -1,0 +1,20 @@
+<% layout('../layout') -%>
+<% stylesheet('stylesheets/register.css') -%>
+<% script('javascripts/validateFieldMatch.js') -%>
+<div class="panel panel-info">
+  <div class="panel-heading">
+    <h3 class="panel-title">Stay Anonymous</h3>
+  </div>
+  <div class="panel-body">
+    <p>There's no reason to share your real name, address, or contact information. Share your data under a false name and be careful of the potentially identifying information you decide to share.</p>
+    <p>We work hard to keep your data secure, and don't need to know who you are.</p>
+    <p>You can decide to share privately with our team of epidemiologists and social scientists, and the information you supply will only be used for scholarly purposes and in a non-identifying manner.</p>
+    <p>If you choose to make your data public, anyone will be able to read your story to learn about indoor air contamination in mobile homes.</p>
+  </div>
+</div>
+<% include register-template %>
+<script>
+$(function(){
+    $("#comment_field").focus();
+});
+</script>

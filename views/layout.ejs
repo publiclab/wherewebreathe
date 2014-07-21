@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title><%= title %></title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <!-- styles -->
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <%-scripts%>
+    <%-stylesheets%>
+  </head>
+  <body id="body">
+    <!-- Fixed navbar -->
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">WhereWeBreathe</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="/questionnaire">Questionnaire</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="/knowledge-base">Knowledge base</a></li> 
+          </ul>
+          <ul class="nav navbar-nav navbar-right"> 
+            <li class="dropdown">
+              <!--<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <i class="fa fa-user fa-fw"></i>
+                Log in
+                <b class="caret"></b>
+                </a>-->
+                <!--<form action="#">
+                    <button class="btn btn-default navbar-btn">Login</button>
+                    
+                </form>-->
+                <!--Default buttons with dropdown menu-->
+                <div class="btn-group">
+                    <button data-toggle="dropdown" class="btn btn-default dropdown-toggle navbar-btn">
+                      <!--set login/user button accordingly-->
+                <% if(!user){ %>
+                      Login 
+                      <span class="caret"></span>
+                    </button>
+                    <div class="dropdown-menu" id="divLogin">
+                      <form role="form" action="/login" method="post" >
+                        <div class="form-group">
+                          <label for="email">Email:</label>
+                          <input type="email" name="email" placeholder="you@email.com" class="form-control">
+                        </div>
+                        <div class="form-group">
+                          <label for="password">Password:</label>
+                          <input type="password" name="password" placeholder="Password" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                      </form>
+                      <br/>
+                      <a href="/forgotpass">forgotten password</a>
+                    </div>                          
+                <% } %>
+                <% if(user){ %>                         
+                      <i class="fa fa-user"></i>
+                      <%= user.username %>
+                      <span class="caret"></span>
+                    </button>
+                    <div class="dropdown-menu">
+                        <ul class="nav">
+                          <li>
+                            <a href="/privacy">Change privacy settings</a>
+                          </li>
+                          <li>
+                            <a href="/resetpass">Change password</a>
+                          </li>
+                          <li>
+                            <a href="#" onclick="logout()">logout</a>
+                          </li>
+                        </ul>
+                    </div>                           
+                <% } %>
+                     
+                </div>                
+            </li> 
+            <% if(!user){ %> 
+            <li>
+              <button class="btn btn-primary navbar-btn pull-right" id="btnJoin">Join</button>
+            </li> 
+            <% } %>                    
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+  <div class="container theme-showcase" role="main">
+    <div class="page-header">
+    <%-blocks.header%>
+      <h1 id="title"><%= title %></h1>
+    </div>
+  <% if(message){ %>
+    <div class="alert <%= message.msgType %>" role="alert">
+      <%= message.text %>
+    </div>
+  <% } %>
+  <%-body -%>
+  </div><!--/.container theme-showcase -->
+  </body>
+  <script>
+  $('#btnJoin').click(function() { window.location = '/register'; })
+  function logout(){
+    $.post('/logout', function(status){
+    if(status == "logged out"){
+      location.reload(true);
+    }
+    else{
+    console.error("logout failed");
+    }
+    
+    });
+  }
+  </script>
+</html>

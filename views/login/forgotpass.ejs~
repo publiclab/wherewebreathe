@@ -1,0 +1,33 @@
+<% layout('../layout') -%>
+<div id="main">
+  <h3>Enter your email to be sent a password reset link.</h3>
+  <form role="form" method="post" style="max-width: 300px;">
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" name="email" id="email" placeholder="you@email.com" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>&nbsp;
+  </form>
+  <br>
+</div>
+<script>
+$('form').submit(function(event){
+  //prevent actual submit, but HTML5 validation triggers
+  event.preventDefault();
+  console.log($('#email').val());
+  $.post( '/forgotpass',{email: $('#email').val()})
+    .fail(function(response) {
+      $( ".alert" ).remove();
+      var html = '<div class="alert alert-danger" role="alert">'+response.responseText+'</div>'
+      $( html ).insertAfter( ".page-header" );
+    })
+    .done(function(response) {
+      var html = '<div class="alert alert-success" role="alert">An email with a link to reset your password has been sent to your email address</div>'
+      $( ".alert, #main" ).remove();
+      $( html ).insertAfter( ".page-header" );
+      $('.page-header h1').html('Please check your email');
+
+    });
+
+});
+</script>

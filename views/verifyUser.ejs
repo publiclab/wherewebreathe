@@ -1,0 +1,58 @@
+<% layout('layout') -%>
+<% script('bootstrap-switch-master/bootstrap-switch.min.js') -%>
+<% stylesheet('stylesheets/register.css') -%>
+<% stylesheet('bootstrap-switch-master/bootstrap-switch.css') -%>
+<h1>Publicly share your data?</h1> 
+Only your username will be shown with it.
+<form role="form" action="/verify" method="post">
+  <% if(message.length > 0){ %>
+  <div class="alert alert-danger" role="alert">
+  <%= message %>
+  </div>
+  <% } %>
+  <div class="form-group">
+    <input type="checkbox" name="public"  value="public">
+    <span id="lblPub"></strong>
+    </span>
+  </div>
+  <div class="form-group">
+    <input type="checkbox" name="researchers" value="research team">
+    <span id="lblResearch"></strong></span>
+  </div>
+  <button type="submit" class="btn btn-primary">Update Privacy Settings</button>&nbsp;<a href="/">
+</form>
+<script>
+function checkLblPub(state){
+if(state){  
+    $('#lblPub').html('Your data["individual answers"?] can be seen by <strong>anyone on the internet</strong>');
+  }
+  else{
+    $('#lblPub').html('Your data["individual answers"?]<strong> will not be visible publicly</strong>');
+  } 
+}
+function checkLblResearch(state){
+  if(state){  
+    $('#lblResearch').html('Your data["individual answers"?] are currently shared<strong> only with the WhereWeBreathe research team</strong>');
+  }
+  else{
+    $('#lblResearch').html('Your data["individual answers"?] <strong>will not</strong> be shared with the WhereWeBreathe research team');
+  } 
+}
+$(function(){
+  $.fn.bootstrapSwitch.defaults.onColor = 'success';
+  $.fn.bootstrapSwitch.defaults.offColor = 'danger';
+  $.fn.bootstrapSwitch.defaults.onText = 'Yes';
+  $.fn.bootstrapSwitch.defaults.offText = 'No';
+  $.fn.bootstrapSwitch.defaults.state = true;
+  $("[name='researchers'], [name='public']").bootstrapSwitch()
+  checkLblPub($("[name='public']").bootstrapSwitch('state'));
+  checkLblResearch($("[name='researchers']").bootstrapSwitch('state'));
+})
+
+$("[name='public']").on('switchChange.bootstrapSwitch', function(event, state) {
+  checkLblPub(state);
+});
+$("[name='researchers']").on('switchChange.bootstrapSwitch', function(event, state) {
+  checkLblResearch(state);
+});
+</script>

@@ -1,0 +1,6 @@
+<% layout('layout') -%>
+<% script -%>
+<% stylesheet -%>
+<h1>I am the <%=what%> template</h1>
+<% block('header', "<p>I'm in the header.</p>") -%>
+<% block('footer', "<p>I'm in the footer.</p>") -%>

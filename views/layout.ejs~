@@ -87,7 +87,7 @@
                           <li>
                             <a href="/privacy">Change privacy settings</a>
                           </li>
-                          <li>examples/theme/#
+                          <li>
                             <a href="/resetpass">Change password</a>
                           </li>
                           <li>
@@ -108,7 +108,7 @@
         </div><!--/.nav-collapse -->
       </div>
     </div>
-  <div class="container theme-showcase" role="main">
+  <div class="container theme-showcase col-lg-12" role="main">
     <div class="page-header">
     <%-blocks.header%>
       <h1 id="title"><%= title %></h1>

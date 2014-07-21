@@ -4,9 +4,6 @@ var Question = require('../models/question');
 var Answer = require('../models/answer');
 var authenticateUser = require('./authUser');
 
-
-
-
 exports.index = function(req, res){
   res.render('index', { title: 'Home', user : req.user});
 };
@@ -27,25 +24,33 @@ exports.questionnaire = function ( req, res ){
      qnum = parseInt(req.params.qnum);     
     }       
     Question.find({order: qnum}, function ( err, questions){
-      var question = questions[0];
-      console.log(question);
-      pageOptions = {
-        user : req.user,
-        title: 'Questionnaire',
-        question: question.question, 
-        label: question.label,
-        qType: question.qType,
-        qnum: question.order,
-        qid: question._id           
-      }
-      //append suggested answers if they exist (mongoose creates empty array it seems even if query returns nothing for answers key)
-      if (typeof question.answers !== 'undefined' && question.answers.length > 0){
-        pageOptions['answers']= question.answers; 
-      }
+    console.log(questions)
+      if (questions){
+        var question = questions[0];
+        console.log(question);
+        pageOptions = {
+          user : req.user,
+          title: 'Questionnaire',
+          question: question.question, 
+          label: question.label,
+          qType: question.qType,
+          qnum: question.order,
+          qid: question._id           
+        }
+        //append suggested answers if they exist (mongoose creates empty array it seems even if query returns nothing for answers key)
+        if (typeof question.answers !== 'undefined' && question.answers.length > 0){
+          pageOptions['answers']= question.answers; 
+        }
+        
+        res.render( 'questionnaire', pageOptions);
+      }//end if question
+      //if no question in DB
+      else{
+        res.render('login/message', { title: 'Oops!', user : req.user, message: {text:"It doesnt look like there is a question there yet", msgType: "alert-danger"} });
       
-      res.render( 'questionnaire', pageOptions);
-      });
-    });//end auth user
+      }
+    });
+  });//end auth user
 };
 //append answers into answers collection
 exports.answer = function ( req, res ){

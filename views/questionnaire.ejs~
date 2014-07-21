@@ -6,7 +6,7 @@
     <h3 class="panel-title"><%= question %></h3>
   </div>
   <div class="panel-body"> 
-    <form action="/answer" method="post" accept-charset="utf-8">
+    <form id="frmAns" accept-charset="utf-8">
       <div class="form-group">
         <%if (qType == "drop"){%>
         <select class="form-control" name="answer">
@@ -33,18 +33,19 @@
               <% } %>
             </label>
           <% } %>
-        <% } %>        
+        <% } %>      
         <input type="hidden" name="qid" value="<%= qid %>">
-        <input type="hidden" name="nextq" value="<%= qnum + 1%>">
+        <input type="hidden" name="nextq" value="<%= nextQ %>">
       </div>
       <div class="pull-right">
         <input  class="btn btn-primary" type="submit" value="Submit">
         <!--skip doesnt currently keep track of questions skipped-->
-        <input class="btn btn-default" type="button" value="Skip" onclick="window.location.href ='/questionnaire/<%= qnum + 1%>';"> 
+        <input class="btn btn-default" type="button" value="Skip" onclick="window.location.href ='/questionnaire/<%= nextQ%>';"> 
       </div>
     </form>
   </div>
 </div>
   <script>
-    console.log("<%= qid %>");
+    //console.log("<%= qid %>");
+    $('#frmAns').submit(function(event){
   </script>

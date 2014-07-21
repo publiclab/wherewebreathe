@@ -33,7 +33,7 @@ exports.questionnaire = function ( req, res ){
           question: question.question, 
           label: question.label,
           qType: question.qType,
-          qnum: question.order,
+          nextQ: question.order + 1,
           qid: question._id           
         }
         //append suggested answers if they exist (mongoose creates empty array it seems even if query returns nothing for answers key)

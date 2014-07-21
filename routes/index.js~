@@ -24,9 +24,15 @@ exports.questionnaire = function ( req, res ){
      qnum = parseInt(req.params.qnum);     
     }       
     Question.find({order: qnum}, function ( err, questions){
-    console.log(questions)
-      if (questions){
+      if (questions.length >0){
         var question = questions[0];
+        //if this question has a conditional question, set pages qnum(next question) variable
+        if(question.nextQ){
+         var nextQ = question.nextQ
+        }
+        else{
+          nextQ = question.order + 1 
+        }
         console.log(question);
         pageOptions = {
           user : req.user,
@@ -34,7 +40,7 @@ exports.questionnaire = function ( req, res ){
           question: question.question, 
           label: question.label,
           qType: question.qType,
-          qnum: question.order,
+          nextQ: nextQ,
           qid: question._id           
         }
         //append suggested answers if they exist (mongoose creates empty array it seems even if query returns nothing for answers key)

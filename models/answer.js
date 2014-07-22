@@ -5,15 +5,11 @@ var wwb = mongoose.createConnection('mongodb://localhost/wherewebreathe');
 
 var Schema = mongoose.Schema;
 
-var UserResponseSchema = new Schema({
-  uId: Number,
-  a: String
-});  
-
 var AnswerSchema = new Schema({
-  _id: Schema.Types.ObjectId,
-  graph_type: String,
-  userResponses: [UserResponseSchema]
+  qid: Schema.Types.ObjectId,
+  uid: Schema.Types.ObjectId,
+  d: Date,
+  a: String
   
 }); 
 

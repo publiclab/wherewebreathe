@@ -13,6 +13,7 @@ var User = new Schema({
     hash: String, 
     email: String,
     HID: String, 
+    firstLogin: Boolean,
     visInternet: Boolean,
     visResearch: Boolean,
     passReset: String

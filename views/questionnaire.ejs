@@ -26,10 +26,15 @@
         if (qType == "radio"){%>
           <% for(var i=0; i<answers.length; i++) {%>
             <label class="radio">
-              <input type="radio" name="answer" value="<%= answers[i].text %>">
+              <input type="radio" name="answer" value="<%= answers[i].text %>" 
+               <% if (answers[i].nextQ){ %>
+                data-nextq="<%= answers[i].nextQ %> "
+                <% }%>
+              >
               <%= answers[i].text %>
+              
               <%if(answers[i].text =="Other:"){%>
-                <input type="text" name="othAns">
+                <input type="text" name="othAns">   
               <% } %>
             </label>
           <% } %>
@@ -48,6 +53,25 @@
   <script>
     //console.log("<%= qid %>");
     $('#frmAns').submit(function(event){
-    alert("here")
+      //prevent actual submit, but HTML5 validation triggers
+      event.preventDefault();
+      //if the particular answer has a follow up question, set the follow up question as the next question
+      if($('input[name=answer]:checked').data("nextq")){
+        var nextQ = $('input[name=answer]:checked').data("nextq");      
+      }
+      //else get the questions defualt next question
+      else{
+        nextQ = <%= nextQ %>
+      }
+      $.post( '/answer',{qid: "<%= qid %>", nextq: nextQ, answer: $('input[name=answer]:checked').val()})
+          .fail(function(response) {
+          $( ".alert" ).remove();
+          var html = '<div class="alert alert-danger" role="alert">'+response.responseText+'</div>'
+          $( html ).insertAfter( ".page-header" );
+        })
+        .done(function(response) {
+          //redirect questionnaire page to load next question
+          window.location.replace("/questionnaire ")
+        });
     });
   </script>

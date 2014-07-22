@@ -4,8 +4,10 @@ var NewUser = require('../models/account').newuser;
 var nodemailer = require("nodemailer");
 var validate = require('./validate');
 var authenticateUser = require('./authUser');
+var Question = require('../models/question');
 
 function returnTo(res, req, message){
+  console.log(req.session);
   if (message){msg = message;}
   else if (req.session.msg){msg = req.session.msg}
   else{msg = null;}
@@ -141,7 +143,8 @@ exports.verify_get =  function(req, res) {
         hash: user.hash,
         email: user.email,
         HID: user.HID, 
-        firstLogin: true
+        firstLogin: true,
+        answered: []
       });
       verified.save(function(err) {
         if (err) {throw err}
@@ -172,7 +175,43 @@ exports.login_post = function(req, res) {
     }); //end user.findbyid...    
   }//end if user has privacy settings
   else{
-    returnTo(res, req);
+      /* this will create an array of all of the questions that a user hasnt answered to be stored in a session variable for directing the questionnaire*/
+    Question.find({}, 'order _id',
+    {
+      sort:{
+          order: 1 //Sort ascending
+      }
+    }, 
+    function(err, questions)
+    {
+      if (err) console.log(err);
+      //create an array of question ids
+      var unanswered = []
+      User.findOne(req.user._id, 'answered', function(err, answered){
+        if (err) console.log(err);
+        var answered = answered.answered; 
+        //loop through questions
+        for(var i in questions){
+          var append = true
+          //compare to already answered
+          var qid = questions[i]._id.toString();
+          for (var j = 0; j < answered.length; j++) {
+            //if question already answered, set append variable to false so that it doesnt get appended
+            if(qid == answered[j]){
+               append = false;
+            }//end if
+          }//end answered loop
+          if(append){
+            unanswered.push(questions[i]._id); 
+          } 
+        }
+        //console.log("unanswered questions: "+unanswered);
+        req.session.questions = ['1', '2', '3']
+        console.log("set: "+req.session.questions)
+        returnTo(res, req);
+      });
+    }
+    );
   }
 };
 exports.login_get = function(req, res) {
@@ -310,16 +349,7 @@ exports.resetpass_post =  function(req, res) {
     }//end else if
   }); //end find()
 }
-/**********************************************************************
-TEST - remove later
-***********************************************************************/
-exports.test =  function(req, res) {
-      console.log('there');
-      res.locals.myVar = 'fjdklfjsdkflsjfkdl';
-      res.render('test', { title: 'test', user : req.user, message: null });
-      //res.send("x")
-      console.log('here');
-};
+
 /****************************************************************
 PRIVACY
 *****************************************************************/
@@ -336,19 +366,20 @@ exports.privacy_get = function(req, res) {
   }
  var visInternet, visResearch
  //get user privacy setting from db if they exist
- User.findOne({_id: req.user._id}, function (err, user) {
+ User.findOne({_id: req.user._id}, function (err, result) {
   if (err){
     req.logout();
     return res.render('login/login', {title: "Login", user : req.user, message:  {text: "Something went wrong on our side of things. Please try logging in again to edit your privacy settings. (Error ID: 818)", msgType: "alert-success" }});
-  }  
-  }); //end find one 
-    res.render('login/privacy', { 
+  } //end if err
+  res.render('login/privacy', { 
             title: 'Privacy Settings', 
             user : req.user, 
             message: message, 
-            visInternet: visInternet,
-            visResearch: visResearch
-            });
+            visInternet: result.visInternet,
+            visResearch: result.visResearch
+            }); 
+  }); //end find one 
+    
   });//end auth user
 }
 

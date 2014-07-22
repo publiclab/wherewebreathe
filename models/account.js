@@ -16,7 +16,8 @@ var User = new Schema({
     firstLogin: Boolean,
     visInternet: Boolean,
     visResearch: Boolean,
-    passReset: String
+    passReset: String,
+    answered: Array
 });
 
 var NewUser = new Schema({

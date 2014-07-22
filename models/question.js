@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-mongoose.set('debug', true);
 //mongoose.set('debug', true);
 var wwb = mongoose.createConnection('mongodb://localhost/wherewebreathe');
 

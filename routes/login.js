@@ -162,21 +162,10 @@ exports.verify_get =  function(req, res) {
 LOGIN
 *************************************************************************/
 exports.login_post = function(req, res) {
-  //if user doesnt have privacy settings yet, redirect to privacy setting page, first save dafaults
-  if(req.user.firstLogin){
-
-    User.findByIdAndUpdate(req.user._id,{$unset: {firstLogin: 1 }, visInternet : false, visResearch : false}, function(error, results){
-      if(error){throw err}
-      else{ 
-      //console.log(results);
-        req.flash('info', ['It looks like this it the first time you have logged in. Please take a moment to review your privacy settings before continuing on to the rest of the site.', 'alert-warning'])
-        res.redirect('/privacy');
-      }
-    }); //end user.findbyid...    
-  }//end if user has privacy settings
-  else{
-      /* this will create an array of all of the questions that a user hasnt answered to be stored in a session variable for directing the questionnaire*/
-    Question.find({}, 'order _id',
+      /* this will create an array of all of the questions that a user hasnt answered to be stored in a session variable for directing the questionnaire 
+      It EXCLUDES questions with order values higher than 1000, which are reserved for conditional questions asked depending on responses to others
+      */
+    Question.find({order: {$lt: 1000}}, 'order _id',
     {
       sort:{
           order: 1 //Sort ascending
@@ -185,20 +174,25 @@ exports.login_post = function(req, res) {
     function(err, questions)
     {
       if (err) console.log(err);
+      //console.log("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{}}}}}}}}}}}}}}}}}}}}}}}}}} "+questions);
       //create an array of question ids
       var unanswered = []
       User.findOne(req.user._id, 'answered', function(err, answered){
         if (err) console.log(err);
         var answered = answered.answered; 
+        //console.log("questions++++++++++++++++++++++++++"+questions);
+        //console.log("andsered++++++++++++++++++++++++++"+answered);
         //loop through questions
         for(var i in questions){
           var append = true
           //compare to already answered
           var qid = questions[i]._id.toString();
+          //console.log(qid);
           for (var j = 0; j < answered.length; j++) {
             //if question already answered, set append variable to false so that it doesnt get appended
             if(qid == answered[j]){
                append = false;
+               //console.log("false");
             }//end if
           }//end answered loop
           if(append){
@@ -206,13 +200,30 @@ exports.login_post = function(req, res) {
           } 
         }
         //console.log("unanswered questions: "+unanswered);
-        req.session.questions = unanswered
-        console.log("set: "+req.session.questions)
-        returnTo(res, req);
+        req.session.unanswered = unanswered
+        //console.log ("unans+++++++++++++++++++++++++++"+unanswered);
+        //console.log("set: "+req.session.unanswered)
+        
+        //if user doesnt have privacy settings yet, redirect to privacy setting page, first save dafaults
+        if(req.user.firstLogin){
+        //console.log("first logion session test: "+req.session.unanswered)
+        User.findByIdAndUpdate(req.user._id,{$unset: {firstLogin: 1 }, visInternet : false, visResearch : false},   function(error, results){
+            if(error){throw err}
+            else{ 
+            //console.log(results);
+              req.flash('info', ['It looks like this it the first time you have logged in. Please take a moment to review your privacy settings before continuing on to the rest of the site.', 'alert-warning'])
+              res.redirect('/privacy');
+              }
+            }); //end user.findbyid...    
+          }//end if user has privacy settings
+          else{
+            //return to senter
+            returnTo(res, req);
+          }
       });
     }
     );
-  }
+
 };
 exports.login_get = function(req, res) {
   var message;
@@ -234,7 +245,7 @@ exports.forgotpass_get =  function(req, res) {
 }
 exports.forgotpass_post =  function(req, res) {
   var txtEmail = req.body.email.trim();
-  console.log(txtEmail);
+  //console.log(txtEmail);
   //validate email address
   //email
   var emailErr = validate.email(txtEmail);
@@ -287,7 +298,7 @@ exports.resetpass_get =  function(req, res) {
   if (req.params.token && req.params.id){
     //check that token is active and matched id
     User.findOne({passReset: req.params.token, _id: req.params.id}, function(err, results){
-    console.log(results)
+    //console.log(results)
       var message = null;
       if(!results){
         //if not token or token doesnt align with id
@@ -360,9 +371,7 @@ exports.privacy_get = function(req, res) {
   //for some reason, req.flash clears once accessed
   var temp = req.flash('info');
   if(temp.length > 0){
-    console.log(temp[0]);
     message =  {text: temp[0], msgType: temp[1]}
-    console.log(message);
   }
  var visInternet, visResearch
  //get user privacy setting from db if they exist
@@ -389,7 +398,6 @@ exports.privacy_post = function(req, res) {
         return res.send(400, "There was an error saving your privacy settings. Please try again.");
       }
       else{ 
-      //console.log(results);
         return res.send(200)
       }
   }); //end user.findbyid..

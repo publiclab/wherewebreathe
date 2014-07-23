@@ -79,7 +79,7 @@ app.get('/vinhud', routes.vinhud);
 //app.get('/questionnaire_cat', routes.questionnaire_cat);
 //app.get('/users', user.list);
 
-app.get('/test', login.test);
+app.get('/test', routes.test);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

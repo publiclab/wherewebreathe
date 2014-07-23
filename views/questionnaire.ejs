@@ -40,12 +40,11 @@
           <% } %>
         <% } %>      
         <input type="hidden" name="qid" value="<%= qid %>">
-        <input type="hidden" name="nextq" value="<%= nextQ %>">
       </div>
       <div class="pull-right">
         <input  class="btn btn-primary" type="submit" value="Submit">
         <!--skip doesnt currently keep track of questions skipped-->
-        <input class="btn btn-default" type="button" value="Skip" onclick="window.location.href ='/questionnaire/<%= nextQ%>';"> 
+        <input class="btn btn-default" type="button" value="Skip" onclick="window.location.href ='/questionnaire/<%= qid %>';"> 
       </div>
     </form>
   </div>
@@ -55,23 +54,45 @@
     $('#frmAns').submit(function(event){
       //prevent actual submit, but HTML5 validation triggers
       event.preventDefault();
-      //if the particular answer has a follow up question, set the follow up question as the next question
-      if($('input[name=answer]:checked').data("nextq")){
-        var nextQ = $('input[name=answer]:checked').data("nextq");      
+      var options = {qid: "<%= qid %>"};
+      //if the input is a radio, get val
+      var input = "<%=qType%>"
+      console.log(input);
+      if(input == "radio"){
+        var ans = $('input[name=answer]:checked').val();
+        if (ans == "Other:"){
+          ans = ans + $('input[name=othAns]').val()
+          console.log(ans)
+        }
+        options['answer'] = ans
       }
-      //else get the questions defualt next question
+      else if(input == "drop"){
+        options['answer'] = $("[name=answer] option:selected").text();
+      }
       else{
-        nextQ = <%= nextQ %>
+        options['answer'] = $('input[name=answer]').val()
       }
-      $.post( '/answer',{qid: "<%= qid %>", nextq: nextQ, answer: $('input[name=answer]:checked').val()})
+      //if the particular answer has a follow up question, send the nextq variable so that the server can redirect to it upon saving the answer
+      if($('input[name=answer]:checked').data("nextq")){
+        var nextQ = $('input[name=answer]:checked').data("nextq");  
+        options['nextq']= nextQ;     
+      }
+      console.log(options);
+      $.post( '/answer', options)
           .fail(function(response) {
           $( ".alert" ).remove();
           var html = '<div class="alert alert-danger" role="alert">'+response.responseText+'</div>'
           $( html ).insertAfter( ".page-header" );
         })
-        .done(function(response) {
-          //redirect questionnaire page to load next question
+        .done(function(response) {       
+          //if response isnt 'OK', it should contain a number for the next conditional question
+          if(response !== "OK"){
+            console.log(response)
+            window.location.replace("/questionnaire/0/"+response)
+          }
+          else{
           window.location.replace("/questionnaire ")
+          }
         });
     });
   </script>

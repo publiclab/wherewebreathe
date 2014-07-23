@@ -8,7 +8,6 @@ var Schema = mongoose.Schema;
 var AnswerSchema = new Schema({
   qid: Schema.Types.ObjectId,
   uid: Schema.Types.ObjectId,
-  d: Date,
   a: String
   
 }); 

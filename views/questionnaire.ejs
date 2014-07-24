@@ -9,7 +9,7 @@
     <form id="frmAns" accept-charset="utf-8">
       <div class="form-group">
         <%if (qType == "drop"){%>
-        <select class="form-control" name="answer">
+        <select required class="form-control" name="answer">
             <option value="" disabled selected>Select from the list</option>
             <% for(var i=0; i<answers.length; i++) {%>
             <option value="<%= answers[i].text %>"><%= answers[i].text %></option>

@@ -105,12 +105,15 @@ exports.answer = function ( req, res ){
     if (err) {
       return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 618)")     
     }
-    console.log("+++++==+++++++");
-    console.log(existingResults);
     if(existingResults.length > 0){
       return res.send(400, "Looks like you already answered that question.")
     }
-    //else user not already answered, continue on...
+    //check if answer isnt too short or too long, and doesnt have any crazy characters
+    // could read specific validation loged from questions table, but probably overkill
+    if(! /^[A-Za-z0-9_ .-:(),;?'\/]{1,50}$/.test(a)){ 
+      return res.send(400, "Your answer, '"+a+"', looks either too long or too short, or has characters that arent allowed.") 
+    } 
+    //no validation arrors, continue on...
     else{
      var ans = new Answer({
         qid: qid,

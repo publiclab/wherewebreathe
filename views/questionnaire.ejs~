@@ -10,6 +10,7 @@
       <div class="form-group">
         <%if (qType == "drop"){%>
         <select class="form-control" name="answer">
+            <option value="" disabled selected>Select from the list</option>
             <% for(var i=0; i<answers.length; i++) {%>
             <option value="<%= answers[i].text %>"><%= answers[i].text %></option>
             <% } %>
@@ -52,7 +53,7 @@
                 <% }%>
               >
               <%= answers[i].text %>
-              
+              </label>
               <%if(answers[i].text =="Other:"){%>
                 <input type="text" name="othAns"
                  <% if(validate){%>
@@ -66,7 +67,7 @@
                   <%}%>
                 >   
               <% } %>
-            </label>
+
           <% } %>
         <% } %>      
         <input type="hidden" name="qid" value="<%= qid %>">
@@ -84,8 +85,8 @@
     $(function(){
       $('input[type=radio]').change(function(){
         if ($('input[name=answer]:checked').val() == "Other:"){
-          $('input[name=othAns]').prop('required', true);
-          var ansText = $('input[name=othAns]').val().trim();
+          $('input[name=othAns]').prop('required', true).focus();
+
         }
         else{
         $('input[name=othAns]').prop('required', false);
@@ -100,13 +101,11 @@
       var input = "<%=qType%>"
       //get value from other: text box if other selected, make sure not blank
       if(input == "radio"){
-        var ans;
         var ansRadio = $('input[name=answer]:checked').val();
         if (ansRadio == "Other:"){
-          ans = ansRadio + $('input[name=othAns]').val().trim();;
-          console.log(ans);
+          ansRadio = ansRadio + $('input[name=othAns]').val().trim();;
         }
-        options['answer'] = ans
+        options['answer'] = ansRadio;
       }
       else if(input == "drop"){
         options['answer'] = $("[name=answer] option:selected").text();
@@ -120,7 +119,6 @@
         options['nextq']= nextQ;     
       }
       console.log(options);
-      /*
       $.post( '/answer', options)
           .fail(function(response) {
           $( ".alert" ).remove();
@@ -137,6 +135,5 @@
           window.location.replace("/questionnaire ")
           }
         });
-        */
     });
   </script>

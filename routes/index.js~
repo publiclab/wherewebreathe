@@ -79,7 +79,6 @@ exports.questionnaire = function ( req, res ){
         pageOptions['valMsg']= null;
       }
       //append input placeholder
-      console.log("+++++=="+question.placeholder);
       if (typeof question.placeholder !== 'undefined'){
           console.log("there"); 
           pageOptions['placeholder']= question.placeholder;         
@@ -98,31 +97,49 @@ exports.answer = function ( req, res ){
   if(!req.user){
     return res.send(400, "It looks like you have been logged out. please log in again to submit your answer")
   }
-  var ans = new Answer({
-    qid: req.body.qid,
-    uid: req.user._id, 
-    a: req.body.answer
-  });
-  ans.save( function(err, data){
+  var qid = req.body.qid;
+  var uid= req.user._id; 
+  var a = req.body.answer;
+  //check that there already isnt an answer for that question/user combo (redundant, but clean data is awesome!)
+  Answer.find({qid: qid, uid: uid}, function(err, existingResults){
     if (err) {
-      return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 617)")     
+      return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 618)")     
     }
-    //append qid to users array of answered questions
-    User.findByIdAndUpdate(req.user._id, {$push: {answered: req.body.qid}}, function (err, results) {
-      if (err) {
-        return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 618)")
-      }
-      //remove question from session array
-      removeFromUnansweredSession(req, req.body.qid, function(){
-      var msgResponse = "OK";
-      if (req.body.nextq){
-        msgResponse = req.body.nextq.toString();
-      }
-      res.send(200, msgResponse);
+    console.log("+++++==+++++++");
+    console.log(existingResults);
+    if(existingResults.length > 0){
+      return res.send(400, "Looks like you already answered that question.")
+    }
+    //else user not already answered, continue on...
+    else{
+     var ans = new Answer({
+        qid: qid,
+        uid: uid, 
+        a: a
       });
-    });//end findby...
+      ans.save( function(err, data){
+        if (err) {
+          return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 617)")     
+        }
+        //append qid to users array of answered questions
+        User.findByIdAndUpdate(req.user._id, {$push: {answered: req.body.qid}}, function (err, results) {
+          if (err) {
+            return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 618)")
+          }
+          /*//remove question from session array
+          removeFromUnansweredSession(req, req.body.qid, function(){
+          var msgResponse = "OK";
+          if (req.body.nextq){
+            msgResponse = req.body.nextq.toString();
+          }
+          res.send(200, msgResponse);
+          });*/
+        });//end findby...
 
-  });//end ans.save      
+      });//end ans.save       
+    }
+  });
+    
 }
 /**********************************************************************
 TEST - remove later

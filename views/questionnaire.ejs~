@@ -100,11 +100,13 @@
       var input = "<%=qType%>"
       //get value from other: text box if other selected, make sure not blank
       if(input == "radio"){
+        var ans;
         var ansRadio = $('input[name=answer]:checked').val();
         if (ansRadio == "Other:"){
-          ansRadio = ansRadio + $('input[name=othAns]').val().trim();;
+          ans = ansRadio + $('input[name=othAns]').val().trim();;
+          console.log(ans);
         }
-        options['answer'] = ansRadio;
+        options['answer'] = ans
       }
       else if(input == "drop"){
         options['answer'] = $("[name=answer] option:selected").text();

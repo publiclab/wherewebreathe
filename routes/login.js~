@@ -174,11 +174,14 @@ exports.login_post = function(req, res) {
     function(err, questions)
     {
       if (err) console.log(err);
+      //console.log("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{}}}}}}}}}}}}}}}}}}}}}}}}}} "+questions);
       //create an array of question ids
       var unanswered = []
       User.findOne(req.user._id, 'answered', function(err, answered){
         if (err) console.log(err);
         var answered = answered.answered; 
+        //console.log("questions++++++++++++++++++++++++++"+questions);
+        //console.log("andsered++++++++++++++++++++++++++"+answered);
         //loop through questions
         for(var i in questions){
           var append = true
@@ -196,7 +199,10 @@ exports.login_post = function(req, res) {
             unanswered.push(questions[i]._id); 
           } 
         }
+        //console.log("unanswered questions: "+unanswered);
         req.session.unanswered = unanswered
+        //console.log ("unans+++++++++++++++++++++++++++"+unanswered);
+        //console.log("set: "+req.session.unanswered)
         
         //if user doesnt have privacy settings yet, redirect to privacy setting page, first save dafaults
         if(req.user.firstLogin){

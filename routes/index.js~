@@ -79,7 +79,7 @@ exports.questionnaire = function ( req, res ){
         pageOptions['valMsg']= null;
       }
       //append input placeholder
-      console.log("+++++==+++++++"+question.placeholder);
+      console.log("+++++=="+question.placeholder);
       if (typeof question.placeholder !== 'undefined'){
           console.log("there"); 
           pageOptions['placeholder']= question.placeholder;         

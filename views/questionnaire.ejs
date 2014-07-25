@@ -1,15 +1,33 @@
 <% layout('layout') -%>
 <% script('/javascripts/flot/jquery.flot.min.js'), script('/javascripts/flot/jquery.flot.categories.min.js') -%>
 <% stylesheet -%>
+<%if (subheading == "symptoms"){%>
+<div class="panel panel-success">
+  <div class="panel-heading">
+    <h3 class="panel-title">Questions about your health symptoms</h3>
+  </div>
+<% } 
+
+else if (subheading == "housing-unit"){%>
+<div class="panel panel-info">
+  <div class="panel-heading">
+    <h3 class="panel-title">Questions about your housing-unit</h3>
+  </div>
+<% } 
+
+else{%>
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title"><%= question %></h3>
+    <h3 class="panel-title">(Unknown question category)</h3>
   </div>
+<% } %>
   <div class="panel-body"> 
-    <form action="/answer" method="post" accept-charset="utf-8">
+  <h3><%= question %></h3>
+    <form id="frmAns" accept-charset="utf-8">
       <div class="form-group">
         <%if (qType == "drop"){%>
-        <select class="form-control" name="answer">
+        <select required class="form-control" name="answer">
+            <option value="" disabled selected>Select from the list</option>
             <% for(var i=0; i<answers.length; i++) {%>
             <option value="<%= answers[i].text %>"><%= answers[i].text %></option>
             <% } %>
@@ -17,34 +35,121 @@
         <% } 
         if (qType == "text"){%>
           <label for="answer"><%= label %></label> 
-          <input class="form-control" type="text" name="answer">
+          <input class="form-control" type="text" name="answer" autofocus required
+            <% if(validate){%>
+            pattern="<%= validate %>"
+            <%}%>
+            <% if(valMsg){%>
+            title="<%= valMsg %>"
+            <%}%>
+            <% if(placeholder){%>
+            placeholder="<%= placeholder %>"
+            <%}%>          
+          >
         <% } 
         if (qType == "num"){%>
           <label for="answer"><%= label %></label> 
-          <input class="form-control" type="text" name="answer">
+          <input class="form-control" type="text" name="answer" required autofocus
+            <% if(validate){%>
+            pattern="<%= validate %>"
+            <%}%>
+            <% if(valMsg){%>
+            title="<%= valMsg %>"
+            <%}%>
+            <% if(placeholder){%>
+            placeholder="<%= placeholder %>"
+            <%}%>
+          >
         <% } 
         if (qType == "radio"){%>
           <% for(var i=0; i<answers.length; i++) {%>
             <label class="radio">
-              <input type="radio" name="answer" value="<%= answers[i].text %>">
+              <input type="radio" name="answer" required value="<%= answers[i].text %>" 
+               <% if (answers[i].nextQ){ %>
+                data-nextq="<%= answers[i].nextQ %> "
+                <% }%>
+              >
               <%= answers[i].text %>
+              </label>
               <%if(answers[i].text =="Other:"){%>
-                <input type="text" name="othAns">
+                <input type="text" name="othAns"
+                 <% if(validate){%>
+                  pattern="<%= validate %>"
+                  <%}%>
+                  <% if(valMsg){%>
+                  title="<%= valMsg %>"
+                  <%}%>
+                  <% if(placeholder){%>
+                  placeholder="<%= placeholder %>"
+                  <%}%>
+                >   
               <% } %>
-            </label>
+
           <% } %>
-        <% } %>        
+        <% } %>      
         <input type="hidden" name="qid" value="<%= qid %>">
-        <input type="hidden" name="nextq" value="<%= qnum + 1%>">
       </div>
       <div class="pull-right">
+        <input class="btn btn-default" type="button" value="Skip" onclick="window.location.href ='/questionnaire/<%= qid %>';"> 
         <input  class="btn btn-primary" type="submit" value="Submit">
-        <!--skip doesnt currently keep track of questions skipped-->
-        <input class="btn btn-default" type="button" value="Skip" onclick="window.location.href ='/questionnaire/<%= qnum + 1%>';"> 
       </div>
     </form>
   </div>
 </div>
   <script>
-    //console.log("<%= qid %>");
+  //make sure if other answer, text box for other answer not empty
+    $(function(){
+      $('input[type=radio]').change(function(){
+        if ($('input[name=answer]:checked').val() == "Other:"){
+          $('input[name=othAns]').prop('required', true).focus();
+
+        }
+        else{
+        $('input[name=othAns]').prop('required', false);
+        }
+      });
+    });
+    $('#frmAns').submit(function(event){
+      //prevent actual submit, but HTML5 validation triggers
+      event.preventDefault();
+      var options = {qid: "<%= qid %>"};
+      //if the input is a radio, get val
+      var input = "<%=qType%>"
+      //get value from other: text box if other selected, make sure not blank
+      if(input == "radio"){
+        var ansRadio = $('input[name=answer]:checked').val();
+        if (ansRadio == "Other:"){
+          ansRadio = ansRadio +" "+ $('input[name=othAns]').val().trim();;
+        }
+        options['answer'] = ansRadio;
+      }
+      else if(input == "drop"){
+        options['answer'] = $("[name=answer] option:selected").text();
+      }
+      else{
+        options['answer'] = $('input[name=answer]').val()
+      }
+      //if the particular answer has a follow up question, send the nextq variable so that the server can redirect to it upon saving the answer
+      if($('input[name=answer]:checked').data("nextq")){
+        var nextQ = $('input[name=answer]:checked').data("nextq");  
+        options['nextq']= nextQ;     
+      }
+      console.log(options);
+      $.post( '/answer', options)
+          .fail(function(response) {
+          $( ".alert" ).remove();
+          var html = '<div class="alert alert-danger" role="alert">'+response.responseText+'</div>'
+          $( html ).insertAfter( ".page-header" );
+        })
+        .done(function(response) {       
+          //if response isnt 'OK', it should contain a number for the next conditional question
+          if(response !== "OK"){
+            console.log(response)
+            window.location.replace("/questionnaire/0/"+response)
+          }
+          else{
+          window.location.replace("/questionnaire ")
+          }
+        });
+    });
   </script>

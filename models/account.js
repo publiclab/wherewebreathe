@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 //mongoose.set('debug', true);
-var userDB = mongoose.connect('mongodb://localhost/users');
+//var userDB = mongoose.connect('mongodb://localhost/users');
+var userDB = mongoose.connect('mongodb://localhost/wherewebreathe');
 
 var Schema = mongoose.Schema;
 var passportLocalMongoose = require('passport-local-mongoose');
@@ -16,7 +17,8 @@ var User = new Schema({
     firstLogin: Boolean,
     visInternet: Boolean,
     visResearch: Boolean,
-    passReset: String
+    passReset: String,
+    answered: Array
 });
 
 var NewUser = new Schema({

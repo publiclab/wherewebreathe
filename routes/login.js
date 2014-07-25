@@ -4,8 +4,10 @@ var NewUser = require('../models/account').newuser;
 var nodemailer = require("nodemailer");
 var validate = require('./validate');
 var authenticateUser = require('./authUser');
+var generateUnanswered = require('./generateUnanswered');
 
 function returnTo(res, req, message){
+  console.log(req.session);
   if (message){msg = message;}
   else if (req.session.msg){msg = req.session.msg}
   else{msg = null;}
@@ -117,7 +119,7 @@ exports.register_post = function(req, res) {
             };
             var mail = require("nodemailer").mail;
             mail(mailOptions);
-            res.render('login/message', { title: 'Almost done!', user : req.user, message: {text:"An email with an account verification link has been sent to you. Please follow the instructions in the email to complete your account registration", msgType: "alert-success"} });
+            res.render('message', { title: 'Almost done!', user : req.user, message: {text:"An email with an account verification link has been sent to you. Please follow the instructions in the email to complete your account registration", msgType: "alert-success"} });
           }//end else       
         });
       });//end rendomBytes  
@@ -141,7 +143,8 @@ exports.verify_get =  function(req, res) {
         hash: user.hash,
         email: user.email,
         HID: user.HID, 
-        firstLogin: true
+        firstLogin: true,
+        answered: []
       });
       verified.save(function(err) {
         if (err) {throw err}
@@ -151,7 +154,7 @@ exports.verify_get =  function(req, res) {
       });      
     }
     else{
-      res.render('login/message', { title: 'Oops!', user : req.user, message: {text:"That verification code has expired. If you registered more than a day ago, try registering again, and clicking the verify link that is emailed to you right away.", msgType: "alert-danger"} });
+      res.render('message', { title: 'Oops!', user : req.user, message: {text:"That verification code has expired. If you registered more than a day ago, try registering again, and clicking the verify link that is emailed to you right away.", msgType: "alert-danger"} });
     }
   });
 }
@@ -159,21 +162,24 @@ exports.verify_get =  function(req, res) {
 LOGIN
 *************************************************************************/
 exports.login_post = function(req, res) {
-  //if user doesnt have privacy settings yet, redirect to privacy setting page, first save dafaults
-  if(req.user.firstLogin){
-
-    User.findByIdAndUpdate(req.user._id,{$unset: {firstLogin: 1 }, visInternet : false, visResearch : false}, function(error, results){
-      if(error){throw err}
-      else{ 
-      //console.log(results);
-        req.flash('info', ['It looks like this it the first time you have logged in. Please take a moment to review your privacy settings before continuing on to the rest of the site.', 'alert-warning'])
-        res.redirect('/privacy');
-      }
-    }); //end user.findbyid...    
-  }//end if user has privacy settings
-  else{
-    returnTo(res, req);
-  }
+    generateUnanswered(req, function(){        
+      //if user doesnt have privacy settings yet, redirect to privacy setting page, first save dafaults
+      if(req.user.firstLogin){
+      //console.log("first logion session test: "+req.session.unanswered)
+      User.findByIdAndUpdate(req.user._id,{$unset: {firstLogin: 1 }, visInternet : false, visResearch : false},   function(error, results){
+          if(error){throw err}
+          else{ 
+          //console.log(results);
+            req.flash('info', ['It looks like this it the first time you have logged in. Please take a moment to review your privacy settings before continuing on to the rest of the site.', 'alert-warning'])
+            res.redirect('/privacy');
+            }
+          }); //end user.findbyid...    
+        }//end if user has privacy settings
+        else{
+          //return to senter
+          returnTo(res, req);
+        }      
+    });//end generateUnanswered funciton
 };
 exports.login_get = function(req, res) {
   var message;
@@ -195,7 +201,7 @@ exports.forgotpass_get =  function(req, res) {
 }
 exports.forgotpass_post =  function(req, res) {
   var txtEmail = req.body.email.trim();
-  console.log(txtEmail);
+  //console.log(txtEmail);
   //validate email address
   //email
   var emailErr = validate.email(txtEmail);
@@ -248,7 +254,7 @@ exports.resetpass_get =  function(req, res) {
   if (req.params.token && req.params.id){
     //check that token is active and matched id
     User.findOne({passReset: req.params.token, _id: req.params.id}, function(err, results){
-    console.log(results)
+    //console.log(results)
       var message = null;
       if(!results){
         //if not token or token doesnt align with id
@@ -310,16 +316,7 @@ exports.resetpass_post =  function(req, res) {
     }//end else if
   }); //end find()
 }
-/**********************************************************************
-TEST - remove later
-***********************************************************************/
-exports.test =  function(req, res) {
-      console.log('there');
-      res.locals.myVar = 'fjdklfjsdkflsjfkdl';
-      res.render('test', { title: 'test', user : req.user, message: null });
-      //res.send("x")
-      console.log('here');
-};
+
 /****************************************************************
 PRIVACY
 *****************************************************************/
@@ -330,9 +327,7 @@ exports.privacy_get = function(req, res) {
   //for some reason, req.flash clears once accessed
   var temp = req.flash('info');
   if(temp.length > 0){
-    console.log(temp[0]);
     message =  {text: temp[0], msgType: temp[1]}
-    console.log(message);
   }
  var visInternet, visResearch
  //get user privacy setting from db if they exist
@@ -359,7 +354,6 @@ exports.privacy_post = function(req, res) {
         return res.send(400, "There was an error saving your privacy settings. Please try again.");
       }
       else{ 
-      //console.log(results);
         return res.send(200)
       }
   }); //end user.findbyid..

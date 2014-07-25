@@ -1,4 +1,5 @@
 var Question = require('../models/question');
+var User = require('../models/account').user;
 module.exports = 
 function generateUnanswered(req, cb){
     /* this will create an array of all of the questions that a user hasnt answered to be stored in a session variable for directing the questionnaire 

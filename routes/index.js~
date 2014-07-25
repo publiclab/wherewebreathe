@@ -4,17 +4,18 @@ var Question = require('../models/question');
 var Answer = require('../models/answer');
 var authenticateUser = require('./authUser');
 var User = require('../models/account').user;
+var generateUnanswered = require('./generateUnanswered');
 
 function removeFromUnansweredSession(req, qid, cb){
-      var temp = req.session.unanswered;
-      index = temp.indexOf(qid);
-      temp.splice(index, 1)
-      req.session.unanswered = temp;
-      if(cb){
-        cb();
-      }
+  var temp = req.session.unanswered;
+  index = temp.indexOf(qid);
+  temp.splice(index, 1)
+  req.session.unanswered = temp;
+  req.session.skip = true;
+  if(cb){
+    cb();
+  }
 }
-
 exports.index = function(req, res){
   res.render('index', { title: 'Home', user : req.user});
 };
@@ -27,6 +28,11 @@ exports.knowledgebase = function(req, res){
 exports.vinhud = function(req, res){
   res.render('vinhud', { title: 'Am I looking for a VIN or a HUD number?', user : req.user});
 };
+exports.goBackSkipped = function(req, res){
+  generateUnanswered(req, function(){   
+    res.redirect('/questionnaire');
+  });//end gen unanswered
+};
 exports.questionnaire = function ( req, res ){
   authenticateUser(req, res, function(){  
     //deal with if there is get param for skipq or not
@@ -38,16 +44,18 @@ exports.questionnaire = function ( req, res ){
     if (req.params.nextq){
       query = {order: req.params.nextq};
     } 
-    //if user has answered all questions currently in DB
-    else if (req.session.unanswered <= 0){
-      return res.render('login/message', { title: 'Questionnaire complete!', user : req.user, message: {text:"You have answered all of our questions. If you have skipped any questions during this session of the survey, they will be asked to you the next time you login.", msgType: "alert-success"}});
+    //if user has answered but not skipped all questions in db
+    else if (req.session.unanswered.length <= 0 && !req.session.skip){
+      return res.render('message', { title: 'Questionnaire complete!', user : req.user, message: {text:"Thank you! You have answered all of the survey questions.", msgType: "alert-success"}});
     }
-    Question.find(query, function ( err, questions){
-      
- 
+    //if user has skipped some questions
+    else if(req.session.unanswered.length <= 0 && req.session.skip) {
+      return res.render('go-back-to-skipped', { title: 'Questionnaire complete!', user : req.user, message: {text:"there are skipped questions", msgType: "alert-warning"}});
+    }
+    Question.find(query, function ( err, questions){     
       //if question not found
       if (questions.length <= 0){
-        return res.render('login/message', { title: 'Oops!', user : req.user, message: {text:"It doesn't look like there is a question there yet", msgType: "alert-danger"} });
+        return res.render('message', { title: 'Oops!', user : req.user, message: {text:"It doesn't look like there is a question there yet", msgType: "alert-danger"} });
       }//end if question
       
       var question = questions[0];
@@ -148,8 +156,7 @@ exports.answer = function ( req, res ){
 TEST - remove later
 ***********************************************************************/
 exports.test =  function(req, res) {
-   var d = new Date();
-var y = d.getFullYear();
+   var y = new Date().getFullYear();
 console.log(y);
     res.locals.myVar = 'fjdklfjsdkflsjfkdl';
     res.render('test', { title: 'test', user : req.user, message: null });

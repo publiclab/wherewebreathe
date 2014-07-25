@@ -4,10 +4,7 @@ var NewUser = require('../models/account').newuser;
 var nodemailer = require("nodemailer");
 var validate = require('./validate');
 var authenticateUser = require('./authUser');
-var Question = require('../models/question');
 var generateUnanswered = require('./generateUnanswered');
-
-
 
 function returnTo(res, req, message){
   console.log(req.session);
@@ -122,7 +119,7 @@ exports.register_post = function(req, res) {
             };
             var mail = require("nodemailer").mail;
             mail(mailOptions);
-            res.render('login/message', { title: 'Almost done!', user : req.user, message: {text:"An email with an account verification link has been sent to you. Please follow the instructions in the email to complete your account registration", msgType: "alert-success"} });
+            res.render('message', { title: 'Almost done!', user : req.user, message: {text:"An email with an account verification link has been sent to you. Please follow the instructions in the email to complete your account registration", msgType: "alert-success"} });
           }//end else       
         });
       });//end rendomBytes  
@@ -157,7 +154,7 @@ exports.verify_get =  function(req, res) {
       });      
     }
     else{
-      res.render('login/message', { title: 'Oops!', user : req.user, message: {text:"That verification code has expired. If you registered more than a day ago, try registering again, and clicking the verify link that is emailed to you right away.", msgType: "alert-danger"} });
+      res.render('message', { title: 'Oops!', user : req.user, message: {text:"That verification code has expired. If you registered more than a day ago, try registering again, and clicking the verify link that is emailed to you right away.", msgType: "alert-danger"} });
     }
   });
 }

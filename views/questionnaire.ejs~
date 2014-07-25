@@ -74,7 +74,6 @@
       </div>
       <div class="pull-right">
         <input  class="btn btn-primary" type="submit" value="Submit">
-        <!--skip doesnt currently keep track of questions skipped-->
         <input class="btn btn-default" type="button" value="Skip" onclick="window.location.href ='/questionnaire/<%= qid %>';"> 
       </div>
     </form>

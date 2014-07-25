@@ -63,6 +63,7 @@ exports.questionnaire = function ( req, res ){
       pageOptions = {
         user : req.user,
         title: 'Questionnaire',
+        subheading: question.qSet,
         question: question.question, 
         label: question.label,
         qType: question.qType,

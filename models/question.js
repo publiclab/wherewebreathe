@@ -13,7 +13,8 @@ var QuestionSchema = new Schema({
   question: String, 
   validation: String,
   valMsg: String, 
-  placeholder: String
+  placeholder: String,
+  qSet: String
 });
 
 module.exports = wwb.model('Question', QuestionSchema);

@@ -34,14 +34,10 @@ exports.goBackSkipped = function(req, res){
 };
 exports.questionnaire = function ( req, res ){
   authenticateUser(req, res, function(){  
-    console.log("==================================================================");
-    console.log(req.session.unanswered.length);
-    console.log(req.session.skip);
     //deal with if there is get param for skipq or not
     if (req.params.skipq !== undefined && req.params.skipq !== "0"){
-      removeFromUnansweredSession(req, req.params.skipq);
-      console.log("WWWWTTTFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF?"+req.params.skipq); 
-      req.session.skip = true;// but conditional questions also trigger this, dealt with in next IF   
+      removeFromUnansweredSession(req, req.params.skipq); 
+      req.session.skip = true;   
     } 
     var query =  {_id: req.session.unanswered[0]};
     //if conditional question prompted by answer to another question
@@ -67,6 +63,7 @@ exports.questionnaire = function ( req, res ){
       pageOptions = {
         user : req.user,
         title: 'Questionnaire',
+        subheading: question.qType,
         question: question.question, 
         label: question.label,
         qType: question.qType,

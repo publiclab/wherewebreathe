@@ -110,7 +110,7 @@ exports.answer = function ( req, res ){
     }
     //check if answer isnt too short or too long, and doesnt have any crazy characters
     // could read specific validation loged from questions table, but probably overkill
-    if(! /^[A-Za-z0-9_ .-:(),;?']{1,50}$/.test(a)){ 
+    if(! /^[A-Za-z0-9_ .-:(),;?'\/]{1,50}$/.test(a)){ 
       return res.send(400, "Your answer, '"+a+"', looks either too long or too short, or has characters that arent allowed.") 
     } 
     //no validation arrors, continue on...
@@ -148,11 +148,9 @@ exports.answer = function ( req, res ){
 TEST - remove later
 ***********************************************************************/
 exports.test =  function(req, res) {
-   Answer.find({}, function(err, results){
-     for (i in results){
-     console.log(results[i]._id.getTimestamp());
-     }
-   });
+   var d = new Date();
+var y = d.getFullYear();
+console.log(y);
     res.locals.myVar = 'fjdklfjsdkflsjfkdl';
     res.render('test', { title: 'test', user : req.user, message: null });
     //res.send("x")

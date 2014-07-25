@@ -148,11 +148,8 @@ exports.answer = function ( req, res ){
 TEST - remove later
 ***********************************************************************/
 exports.test =  function(req, res) {
-   Answer.find({}, function(err, results){
-     for (i in results){
-     console.log(results[i]._id.getTimestamp());
-     }
-   });
+   var y = new Date().getFullYear();
+console.log(y);
     res.locals.myVar = 'fjdklfjsdkflsjfkdl';
     res.render('test', { title: 'test', user : req.user, message: null });
     //res.send("x")

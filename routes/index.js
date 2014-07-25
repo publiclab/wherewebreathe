@@ -11,7 +11,6 @@ function removeFromUnansweredSession(req, qid, cb){
   index = temp.indexOf(qid);
   temp.splice(index, 1)
   req.session.unanswered = temp;
-  req.session.skip = true;
   if(cb){
     cb();
   }
@@ -36,8 +35,9 @@ exports.goBackSkipped = function(req, res){
 exports.questionnaire = function ( req, res ){
   authenticateUser(req, res, function(){  
     //deal with if there is get param for skipq or not
-    if (req.params.skipq !== undefined && req.params.skipq !== 0){
-      removeFromUnansweredSession(req, req.params.skipq);    
+    if (req.params.skipq !== undefined && req.params.skipq !== "0"){
+      removeFromUnansweredSession(req, req.params.skipq); 
+      req.session.skip = true;   
     } 
     var query =  {_id: req.session.unanswered[0]};
     //if conditional question prompted by answer to another question

@@ -39,6 +39,9 @@ function generateUnanswered(req, cb){
               } 
             }
             req.session.unanswered = unanswered
+            //reinitiate skip value to be false
+            req.session.skip = false;
+            console.log("reinitiate skippppppppppppppppppppppppppppppppppppppppppppppppppp");
             cb();
           });
       }//end callback function for question find

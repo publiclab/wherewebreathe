@@ -11,7 +11,6 @@ function removeFromUnansweredSession(req, qid, cb){
   index = temp.indexOf(qid);
   temp.splice(index, 1)
   req.session.unanswered = temp;
-  req.session.skip = true;
   if(cb){
     cb();
   }
@@ -35,9 +34,14 @@ exports.goBackSkipped = function(req, res){
 };
 exports.questionnaire = function ( req, res ){
   authenticateUser(req, res, function(){  
+    console.log("==================================================================");
+    console.log(req.session.unanswered.length);
+    console.log(req.session.skip);
     //deal with if there is get param for skipq or not
-    if (req.params.skipq !== undefined && req.params.skipq !== 0){
-      removeFromUnansweredSession(req, req.params.skipq);    
+    if (req.params.skipq !== undefined && req.params.skipq !== "0"){
+      removeFromUnansweredSession(req, req.params.skipq);
+      console.log("WWWWTTTFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF?"+req.params.skipq); 
+      req.session.skip = true;// but conditional questions also trigger this, dealt with in next IF   
     } 
     var query =  {_id: req.session.unanswered[0]};
     //if conditional question prompted by answer to another question
@@ -50,7 +54,7 @@ exports.questionnaire = function ( req, res ){
     }
     //if user has skipped some questions
     else if(req.session.unanswered.length <= 0 && req.session.skip) {
-      return res.render('go-back-to-skipped', { title: 'Questionnaire complete!', user : req.user, message: {text:"there are skipped questions", msgType: "alert-warning"}});
+      return res.render('go-back-to-skipped', { title: 'Questionnaire complete!', user : req.user, message: {text:"You have reached the end of the survey, but you skipped some questions. You may go back and answer them if you would like.", msgType: "alert-warning"}});
     }
     Question.find(query, function ( err, questions){     
       //if question not found

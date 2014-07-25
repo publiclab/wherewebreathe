@@ -102,7 +102,7 @@
       if(input == "radio"){
         var ansRadio = $('input[name=answer]:checked').val();
         if (ansRadio == "Other:"){
-          ansRadio = ansRadio + $('input[name=othAns]').val().trim();;
+          ansRadio = ansRadio +" "+ $('input[name=othAns]').val().trim();;
         }
         options['answer'] = ansRadio;
       }

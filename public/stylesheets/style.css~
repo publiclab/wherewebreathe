@@ -2,13 +2,13 @@
     font-family: Junction;
     src: url(/fonts/junction/webfonts/junction-regular.woff);
 }
-#body{
+body{
   padding-bottom: 30px;
   padding-top: 70px;
   font-family: Junction,Helvetica Neue,Helvetica,Arial,sans-serif;
 }
-.container{
-  max-width: 700px;
+.alert, input{
+  font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
 }
 .navbar-btn{
   margin-left: 5px;

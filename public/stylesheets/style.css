@@ -2,10 +2,14 @@
     font-family: Junction;
     src: url(/fonts/junction/webfonts/junction-regular.woff);
 }
-#body{
+body{
   padding-bottom: 30px;
   padding-top: 70px;
   font-family: Junction,Helvetica Neue,Helvetica,Arial,sans-serif;
+}
+/*make form inputs and helper messages default to Helvetica et al.*/
+.alert, input{
+  font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
 }
 .navbar-btn{
   margin-left: 5px;

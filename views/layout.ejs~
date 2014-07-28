@@ -23,7 +23,7 @@
   </head>
   <body id="body">
     <!-- Fixed navbar -->
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -108,7 +108,7 @@
         </div><!--/.nav-collapse -->
       </div>
     </div>
-  <div class="container theme-showcase" role="main">
+  <div class="container theme-showcase" id="pageContent" role="main">
     <div class="page-header">
     <%-blocks.header%>
       <h1 id="title"><%= title %></h1>

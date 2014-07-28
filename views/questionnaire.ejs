@@ -1,6 +1,6 @@
 <% layout('layout') -%>
 <% script('/javascripts/flot/jquery.flot.min.js'), script('/javascripts/flot/jquery.flot.categories.min.js') -%>
-<% stylesheet -%>
+<% stylesheet('/stylesheets/questionnaire.css')%>
 <%if (subheading == "symptoms"){%>
 <div class="panel panel-success">
   <div class="panel-heading">
@@ -89,7 +89,7 @@ else{%>
         <% } %>      
         <input type="hidden" name="qid" value="<%= qid %>">
       </div>
-      <div class="pull-right">
+      <div class="pull-left">
         <input class="btn btn-default" type="button" value="Skip" onclick="window.location.href ='/questionnaire/<%= qid %>';"> 
         <input  class="btn btn-primary" type="submit" value="Submit">
       </div>

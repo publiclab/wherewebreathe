@@ -41,6 +41,40 @@ exports.goBackSkipped = function(req, res){
     res.redirect('/questionnaire');
   });//end gen unanswered
 };
+exports.narratives = function(req, res){
+  res.render('narratives', { title: 'Graphs and Narratives', user : req.user});
+};
+exports.narrativesData = function(req, res){
+  Question.findOne({order: 9}, function ( err, questions){
+    if (err){
+      return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 620)")
+    } //end if err 
+    console.log(questions)
+       
+    Answer.find({qid: questions._id}, function(err, results){
+    console.log("omg!")
+    console.log(results)
+    });
+    Answer.aggregate([
+      {$match: { qid: questions._id}},
+      { $group: {
+          _id: '$a', 
+          count: {$sum: 1}
+      }}
+    ], function(err, results){
+    console.log("here");
+    console.log(results);  
+    response = {
+      question: questions.question,
+      graphType: questions.graphType,
+      answers: results
+    }
+    
+    res.send (200, response)
+    });
+    
+  }); //end Question.find
+}
 exports.questionnaire = function ( req, res ){
   authenticateUser(req, res, function(){  
     //deal with if there is get param for skipq or not
@@ -121,7 +155,7 @@ exports.answer = function ( req, res ){
   //check that there already isnt an answer for that question/user combo (redundant, but clean data is awesome!)
   Answer.find({qid: qid, uid: uid}, function(err, existingResults){
     if (err) {
-      return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 618)")     
+      return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 619)")     
     }
     if(existingResults.length > 0){
       return res.send(400, "Looks like you already answered that question.")

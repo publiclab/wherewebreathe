@@ -70,6 +70,8 @@ app.get('/privacy', login.privacy_get);
 app.post('/privacy', login.privacy_post);
 
 app.get('/', routes.index);
+app.get('/narratives', routes.narratives);
+app.get('/narrativesData', routes.narrativesData);
 app.get('/questionnaire', routes.questionnaire);
 app.get('/questionnaire/:skipq', routes.questionnaire);
 app.get('/questionnaire/:skipq/:nextq', routes.questionnaire); 

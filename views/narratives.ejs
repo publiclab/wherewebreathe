@@ -1,0 +1,46 @@
+<% layout('/layout') -%>
+<% script('/javascripts/flot/jquery.flot.min.js'), script('/javascripts/flot/jquery.flot.categories.min.js') -%>
+<div class="panel panel-default">
+  <div class="panel-body">
+    Basic panel example
+    <div id="chart" style="width:600px;height:300px"></div>
+  </div>
+</div>
+<script>
+$(function($) {
+   //event.preventDefault();
+    $.get( '/narrativesData',{pass: 1, id: 1, token : 1})
+      .fail(function(response) {
+        $( ".alert" ).remove();
+        var html = '<div class="alert alert-danger" role="alert">'+response.responseText+'</div>'
+        $( html ).insertAfter( ".page-header" );
+      })
+      .done(function(response) {
+        console.log(response);
+        var chartData = [];
+        answers = response.answers;
+        for(i in answers){
+          console.log(answers[i])
+          chartData.push([answers[i]._id, answers[i].count]);
+          console.log(chartData);
+        }
+        $.plot("#chart", [ chartData ], {
+			series: {
+				bars: {
+					show: true,
+					barWidth: 0.6,
+					align: "center"
+				}
+			},
+			xaxis: {
+				mode: "categories",
+				tickLength: 0
+			},
+			yaxis: {
+			//a work-around for the fact that Flot doesnt have an option for axis label
+        tickFormatter: function(val, axis) { return val < axis.max ? val.toFixed(2) : axis.max+" kg";}
+      }
+		});
+      });
+});
+</script>

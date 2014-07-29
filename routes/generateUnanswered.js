@@ -36,12 +36,15 @@ function generateUnanswered(req, cb){
               }//end answered loop
               if(append){
                 unanswered.push(questions[i]._id); 
+                console.log("UNANSWERED==================");
+                console.log(questions[i].order);
               } 
             }
             req.session.unanswered = unanswered
             //reinitiate skip value to be false
             req.session.skip = false;
-            console.log("reinitiate skippppppppppppppppppppppppppppppppppppppppppppppppppp");
+
+            
             cb();
           });
       }//end callback function for question find

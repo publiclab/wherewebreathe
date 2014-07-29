@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-//mongoose.set('debug', true);
+mongoose.set('debug', false);
 var wwb = mongoose.createConnection('mongodb://localhost/wherewebreathe');
 
 var Schema = mongoose.Schema;

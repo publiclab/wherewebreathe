@@ -7,17 +7,17 @@ var authenticateUser = require('./authUser');
 var generateUnanswered = require('./generateUnanswered');
 
 function returnTo(res, req, message){
-  console.log(req.session);
+  //console.log(req.session);
   if (message){msg = message;}
   else if (req.session.msg){msg = req.session.msg}
   else{msg = null;}
   //if session variable has redirect info
   if(req.session.returnTo){
-    console.log(req.session.returnTo);
+    //console.log(req.session.returnTo);
     var msg;
     //have to use redirect instead of render to make sure page variables are sent (cent find a way to access them from req...)// wanted to be able to use message
     res.redirect(req.session.returnTo);
-    console.log(req.session.returnTo);
+    //console.log(req.session.returnTo);
     //clear redirect info
     delete req.session.returnTo
   }

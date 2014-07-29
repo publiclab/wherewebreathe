@@ -9,8 +9,17 @@ var generateUnanswered = require('./generateUnanswered');
 function removeFromUnansweredSession(req, qid, cb){
   var temp = req.session.unanswered;
   index = temp.indexOf(qid);
-  temp.splice(index, 1)
-  req.session.unanswered = temp;
+  console.log(index + "index")
+  console.log(qid + "    -->qid") 
+  //if qid found in unanswered, remove it
+  if (index !== -1){
+    temp.splice(index, 1)
+    req.session.unanswered = temp;
+    console.log("removefromunans = = = = = = = = = = = = = = = = = = = = = = = = = = = =")
+
+    
+  }
+  console.log(temp);
   if(cb){
     cb();
   }
@@ -89,13 +98,13 @@ exports.questionnaire = function ( req, res ){
       }
       //append input placeholder
       if (typeof question.placeholder !== 'undefined'){
-          console.log("there"); 
+          //console.log("there"); 
           pageOptions['placeholder']= question.placeholder;         
       }
       else{
         pageOptions['placeholder']= null;
       }      
-      console.log(pageOptions);
+      //console.log(pageOptions);
       res.render( 'questionnaire', pageOptions);
     });
   });//end auth user
@@ -143,7 +152,9 @@ exports.answer = function ( req, res ){
           var msgResponse = "OK";
           if (req.body.nextq){
             msgResponse = req.body.nextq.toString();
+            console.log("nextQ========================"+req.body.nextq);
           }
+          console.log("ANSWEEEEEEEEEEEEEEEEEEEEER");
           res.send(200, msgResponse);
           });
         });//end findby...

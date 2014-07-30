@@ -48,11 +48,11 @@ exports.narratives = function(req, res){
 };
 exports.narrativesData = function(req, res){
   authenticateUser(req, res, function(){ 
-  //keep track of which chart user is looking at to determin sequence
+  //keep track of which chart user is looking at to determine sequence
     if(!req.session.graphIndex){
       req.session.graphIndex = 0
     }
-    var questionsForShowing = [9, 1000, 1001]
+    var questionsForShowing = [6,7,9, 1000, 1001, 10, 1002, 1003, 11, 1004, 1005, 12, 1006, 1007, 13, 1008, 1009, 14, 1010, 1011, 15, 1012, 1013, 16, 1014, 1015, 17, 1016, 1017, 18, 1018, 1019, 19, 1020, 1021, 20, 1022, 1023, 21, 1024, 1025, 22, 1026, 1027, 23, 1028, 1029, 24, 1030, 1031, 25, 1038, 1039, 26, 1036, 1037, 27, 1034, 1035, 28, 29, 30]
     //if user clicks previous or next question (value will either be 1 or -1)
     if(req.body.progression){
       var newIndex = req.session.graphIndex + Number(req.body.progression);
@@ -68,7 +68,14 @@ exports.narrativesData = function(req, res){
         res.send(400, "Oops! Looks like that is the first question.");
       }
     }
-    console.log(questionsForShowing.length);
+    //control if next or previous question hrefs are shown
+    var next = true; 
+    var previous = true;
+    if(req.session.graphIndex == 0){
+    console.log("noPrev");
+    previous = false}
+    else if(req.session.graphIndex == (questionsForShowing.length -1)){console.log("noNext");next = false}
+    console.log(req.session.graphIndex +" : " + (questionsForShowing.length -1));
     console.log("INDEX==============" +req.session.graphIndex);
     qOrder = questionsForShowing[req.session.graphIndex];
     Question.findOne({order: qOrder}, function ( err, questions){
@@ -76,7 +83,9 @@ exports.narrativesData = function(req, res){
         return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 620)")
       } //end if err 
       //console.log(questions)
-         
+      if (!questions) {
+        return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 621)")
+      }  
       Answer.find({qid: questions._id}, function(err, results){
       //console.log("omg!")
       //console.log(results)
@@ -101,11 +110,19 @@ exports.narrativesData = function(req, res){
         }
       }
      //console.log("Aggregate results");
-     // console.log(results); 
+      console.log(results);
+      if(results.length<=0){
+        var answers = "no data"
+      }
+      else{
+        answers = results
+      }
       response = {
         question: questions.question,
         graphType: questions.graphType,
-        answers: results
+        answers: answers,
+        previous: previous,
+        next: next  
       }
       
       res.send (200, response)

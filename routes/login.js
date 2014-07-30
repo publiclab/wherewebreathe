@@ -176,7 +176,7 @@ exports.login_post = function(req, res) {
           }); //end user.findbyid...    
         }//end if user has privacy settings
         else{
-          //return to senter
+          //return to sender
           returnTo(res, req);
         }      
     });//end generateUnanswered funciton

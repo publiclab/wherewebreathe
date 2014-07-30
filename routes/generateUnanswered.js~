@@ -37,7 +37,7 @@ function generateUnanswered(req, cb){
               if(append){
                 unanswered.push(questions[i]._id); 
                 console.log("UNANSWERED==================");
-                console.log(questions[i]);
+                console.log(questions[i].order);
               } 
             }
             req.session.unanswered = unanswered

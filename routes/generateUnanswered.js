@@ -14,6 +14,7 @@ function generateUnanswered(req, cb){
       function(err, questions)
       {
         if (err) console.log(err);
+        console.log(questions);
         //create an array of unanswered question ids to be asked of user
         var unanswered = []
         User.findOne(req.user._id, 'answered', 

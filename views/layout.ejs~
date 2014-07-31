@@ -17,7 +17,7 @@
     <!-- styles -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="/stylesheets/style.css">
     <%-scripts%>
     <%-stylesheets%>
   </head>
@@ -38,9 +38,8 @@
           <ul class="nav navbar-nav">
             <li><a href="/questionnaire">Questionnaire</a></li>
             <li><a href="/about">About</a></li>
-            <li><a href="#">Privacy</a></li>
-            <li><a href="#">Blog</a></li>
-            <li><a href="/knowledge-base">Knowledge base</a></li> 
+            <li><a href="/knowledge-base">Knowledge base</a></li>
+            <li><a href="/narratives">Narratives</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right"> 
             <li class="dropdown">

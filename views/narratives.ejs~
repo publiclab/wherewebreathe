@@ -37,7 +37,7 @@ $.post( '/narrativesData', options)
 	      if(!response.previous){
 	        $('#previous').hide();
 	      }
-        if(response.answers == "no data"){$('#chart').html("<div id='noData' class='alert alert-default'>There are no answers for that question yet!</div>")}
+        if(response.answers == "no data"){$('#chart').html("<div id='noData' class='alert alert-warning'>There are no answers for that question yet!</div>")}
         else{
           $('#chart').empty();
           //console.log(response);

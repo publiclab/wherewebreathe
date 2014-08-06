@@ -107,31 +107,59 @@
         </div><!--/.nav-collapse -->
       </div>
     </div>
-  <div class="container theme-showcase" role="main">
-    <div class="page-header">
-    <%-blocks.header%>
-      <h1 id="title"><%= title %></h1>
+  <div class="content">
+    <div class="container theme-showcase" role="main">
+      <div class="page-header">
+      <%-blocks.header%>
+        <h1 id="title"><%= title %></h1>
+      </div>
+    <% if(message){ %>
+      <div class="alert <%= message.msgType %>" role="alert">
+        <%= message.text %>
+      </div>
+    <% } %>
+    <%-body -%>
+    </div><!-- end .container theme-showcase -->
+  </div><!-- end content -->
+  <div class="footer">
+    <div class="container">
+      <div class="col-md-6 col-xs-6 ">[what should we put here?]</div>
+      <div class="col-md-6 col-xs-6 ">
+      <a class="pull-right" id="download" href="#">Download Where We Breathe data</a>
+      </div>
     </div>
-  <% if(message){ %>
-    <div class="alert <%= message.msgType %>" role="alert">
-      <%= message.text %>
-    </div>
-  <% } %>
-  <%-body -%>
-  </div><!--/.container theme-showcase -->
+  </div>
   </body>
   <script>
-  $('#btnJoin').click(function() { window.location = '/register'; })
-  function logout(){
-    $.post('/logout', function(status){
-    if(status == "logged out"){
-      location.reload(true);
+      function logout(){
+      $.post('/logout', function(status){
+      console.log(status);
+      if(status == "logged out"){
+        window.location=window.location;// like location.reload, but without annoying "to display this page FF must send info that ....." message
+      }
+      else{
+      console.error("logout failed");
+      }
+      
+      });
     }
-    else{
-    console.error("logout failed");
-    }
-    
-    });
-  }
+  $(function(){
+    $('#btnJoin').click(function() { window.location = '/register'; })
+    $('#download').click(function(event){
+    //prevent actual submit, but HTML5 validation triggers
+    event.preventDefault();
+    $.get( '/test',{})
+      .fail(function(response) {
+        $( ".alert" ).remove();
+        var html = '<div class="alert alert-danger" role="alert">'+response.responseText+'</div>'
+        $( html ).insertAfter( ".page-header" );
+      })
+      .done(function(response) {
+        //redirect to login with message
+        console.log(response);
+        window.open('/test', '_self');
+      });
+  });
+  })//end on ready   
   </script>
 </html>

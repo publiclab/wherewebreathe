@@ -37,9 +37,9 @@
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li><a href="/questionnaire">Questionnaire</a></li>
-            <li><a href="/about">About</a></li>
-            <li><a href="/knowledge-base">Knowledge base</a></li>
             <li><a href="/narratives">Narratives</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/knowledge-base">Knowledge base</a></li>            
           </ul>
           <ul class="nav navbar-nav navbar-right"> 
             <li class="dropdown">
@@ -119,19 +119,45 @@
   <% } %>
   <%-body -%>
   </div><!--/.container theme-showcase -->
+  <div class="footer">
+    <div class="container">
+      <div class="col-md-6 col-xs-6 ">[what should we put here?]</div>
+      <div class="col-md-6 col-xs-6 ">
+      <a class="pull-right" id="download" href="#">Download Where We Breathe data</a>
+      </div>
+    </div>
+  </div>
   </body>
   <script>
-  $('#btnJoin').click(function() { window.location = '/register'; })
-  function logout(){
-    $.post('/logout', function(status){
-    if(status == "logged out"){
-      location.reload(true);
+      function logout(){
+      $.post('/logout', function(status){
+      console.log(status);
+      if(status == "logged out"){
+        window.location=window.location;// like location.reload, but without annoying "to display this page FF must send info that ....." message
+      }
+      else{
+      console.error("logout failed");
+      }
+      
+      });
     }
-    else{
-    console.error("logout failed");
-    }
-    
-    });
-  }
+  $(function(){
+    $('#btnJoin').click(function() { window.location = '/register'; })
+    $('#download').click(function(event){
+    //prevent actual submit, but HTML5 validation triggers
+    event.preventDefault();
+    $.get( '/test',{})
+      .fail(function(response) {
+        $( ".alert" ).remove();
+        var html = '<div class="alert alert-danger" role="alert">'+response.responseText+'</div>'
+        $( html ).insertAfter( ".page-header" );
+      })
+      .done(function(response) {
+        //redirect to login with message
+        console.log(response);
+        window.open('/test', '_self');
+      });
+  });
+  })//end on ready   
   </script>
 </html>

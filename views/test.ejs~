@@ -1,0 +1,27 @@
+<% layout('/layout') -%>
+test
+<script>
+
+$(function(){
+
+$('#frmPriv').submit(function(event){
+    //prevent actual submit, but HTML5 validation triggers
+    event.preventDefault();
+    $.post( '/privacy',{})
+      .fail(function(response) {
+        $( ".alert" ).remove();
+        console.log(response);
+        var html = '<div class="alert alert-danger" role="alert">'+response.responseText+'</div>'
+        $( html ).insertAfter( ".page-header" );
+      })
+      .done(function(response) {
+        //redirect to login with message
+        $( ".alert" ).remove();
+        var html = '<div class="alert alert-success" role="alert">Your privacy settings have been saved.</div>'
+        $( html ).insertAfter( "#alert" ).fadeOut( 5000);
+
+      });
+
+  });
+</script>
+

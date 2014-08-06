@@ -38,9 +38,30 @@ User.methods.resetPassword = function resetPassword(id, cb){
 };
 NewUser.plugin(passportLocalMongoose, {usernameField: "email"});
 
+var AnswerSchema = new Schema({
+  qid: Schema.Types.ObjectId,
+  uid: Schema.Types.ObjectId,
+  a: String
+  
+}); 
+var QuestionSchema = new Schema({
+  order: Number,
+  qType: String,
+  label: String,
+  answers: Array,
+  question: String, 
+  validation: String,
+  valMsg: String, 
+  placeholder: String,
+  qSet: String
+});
+
 //module.exports = userDB.model('Account', Account);
+
 module.exports = {
     user: userDB.model('user', User),
-    newuser: userDB.model('newuser', NewUser)
+    newuser: userDB.model('newuser', NewUser),
+    answer: userDB.model('answer', AnswerSchema),
+    question: userDB.model('question', QuestionSchema)
 };
 

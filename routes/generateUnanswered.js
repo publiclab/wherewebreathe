@@ -1,5 +1,5 @@
-var Question = require('../models/question');
-var User = require('../models/account').user;
+var Question = require('../models/db').question;
+var User = require('../models/db').user;
 module.exports = 
 function generateUnanswered(req, cb){
     /* this will create an array of all of the questions that a user hasnt answered to be stored in a session variable for directing the questionnaire 
@@ -36,9 +36,9 @@ function generateUnanswered(req, cb){
                 }//end if
               }//end answered loop
               if(append){
-                unanswered.push(questions[i]._id); 
+                unanswered.push(questions[i]._id.toString()); //.toString because mongoose model now uses references to help with join for bulk export, this means the questions[i]._id would return the id inside an array
                 console.log("UNANSWERED==================");
-                console.log(questions[i].order);
+                console.log(questions[i]._id.toString());
               } 
             }
             req.session.unanswered = unanswered

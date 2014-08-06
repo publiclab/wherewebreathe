@@ -71,7 +71,7 @@ app.post('/privacy', login.privacy_post);
 
 app.get('/', routes.index);
 app.get('/narratives', routes.narratives);
-app.get('/narrativesData', routes.narrativesData);
+app.post('/narrativesData', routes.narrativesData);
 app.get('/questionnaire', routes.questionnaire);
 app.get('/questionnaire/:skipq', routes.questionnaire);
 app.get('/questionnaire/:skipq/:nextq', routes.questionnaire); 

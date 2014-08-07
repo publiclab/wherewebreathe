@@ -29,8 +29,13 @@ function returnTo(res, req, message){
 REGISTRATION AND EMAIL VERIFICAITON
 *********************************************************************************************/
 exports.register_get = function(req, res) {
-      var pageOptions = { title: "Join Where We Breathe", user : req.user, regErr: []};
-      res.render('login/register', pageOptions);
+  var pageOptions = { title: "Join Where We Breathe", user : req.user, regErr: []};
+  var temp = req.flash('info');
+    if(temp.length > 0){
+      pageOptions['message'] =  {text: temp[0], msgType: temp[1]}
+    }  
+   
+  res.render('login/register', pageOptions);
 };
 //add new user to DB
 exports.register_post = function(req, res) {

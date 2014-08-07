@@ -82,6 +82,7 @@ app.post( '/answer', routes.answer );
 app.get('/about', routes.about);
 app.get('/knowledge-base', routes.knowledgebase);
 app.get('/vinhud', routes.vinhud);
+app.get('/download', routes.download);
 //app.get('/questionnaire_cat', routes.questionnaire_cat);
 //app.get('/users', user.list);
 

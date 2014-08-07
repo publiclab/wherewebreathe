@@ -264,6 +264,67 @@ exports.answer = function ( req, res ){
     
 }
 /**********************************************************************
+DATA DOWNLOAD
+***********************************************************************/   
+exports.download =  function(req, res) {
+req.session.returnTo = req.path;
+//this is where it really seems like we should have used a RDBMS... Mongo doesnt *really* join data well, and also js being async doesnt make this app-side join/conversion straightforward. Its probably unlikely that our server will get overloaded with data download requests, so I apologize for the convoluted next bit of code (this is better than starting from scratch with a RDBMS!).
+  Question.find({},'question order',{sort:{_id: 1}}, function(err, questions){
+    if (err) {return res.send(400, "Something went wrong on our side of things. Please try that again, or contact us to let us know. (Error ID: 622)")}
+
+    var csv = [];
+    var titles = [];
+    
+    //create title row for csv
+    for(j in questions){
+      titles.push(questions[j].question)          
+    }//end for loop
+    csv.push(titles)
+
+    //get unique users who have answered questions (each user will have a csv row)
+    Answer.distinct('uid', function(err, usersAnswered){
+      //create function to iterate through each userid to create row/array for csv, but waiting for mongo query to return and the  processing of the results before continuing onto the next iteration (for loops create a mess here)     
+      var recursiveLoop = function(i){
+        //for each user create a row of answers 
+        if(i< usersAnswered.length){
+          //find all of the answers form this user
+          Answer.find({uid: usersAnswered[i]},'',{sort:{ qid: 1}}, function(err, answers){
+            if (err) {return res.send(400, "Something went wrong on our side of things. Please that try again, or contact us to let us know. (Error ID: 623)")}
+            //temp array to hold array/row of user's answers in order       
+            var userCsvRow = [];
+            //for each question, loop through and fill in the userCsvRow array with the answer in the index location that matches the questions index in the title row (j) 
+            for(j in questions){
+              //default value null
+              userCsvRow[j] = '<null>'
+              //console.log(questions[j].question);
+              for (k in answers){
+                if (answers[k].qid.equals(questions[j]._id)){
+                  //if the answer's qid matched the question's id, then overwrite the null value at the same index location as the title row for the particular question
+                  userCsvRow[j] = answers[k].a
+                  //console.log(userCsvRow[j])
+                }
+                
+              }//end for k in answers
+            }//end for j in questions
+            csv.push(userCsvRow);
+            //continue to next user
+            i++;
+            recursiveLoop(i);
+          });//end ans.find        
+        }
+        else {
+          console.log(csv);
+          res.csv(csv)
+          return console.log('end'); // exit condition
+        }
+      }//end recursiveLoop
+      
+      //start iteration through users to create their answer rows
+      recursiveLoop(0);
+    });
+  });//end Q.find
+}
+/**********************************************************************
 TEST - remove later
 ***********************************************************************/   
 exports.test =  function(req, res) {

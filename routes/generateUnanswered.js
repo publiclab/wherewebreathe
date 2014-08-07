@@ -14,7 +14,7 @@ function generateUnanswered(req, cb){
       function(err, questions)
       {
         if (err) console.log(err);
-        console.log(questions);
+        //console.log(questions);
         //create an array of unanswered question ids to be asked of user
         var unanswered = []
         User.findOne(req.user._id, 'answered', 
@@ -37,8 +37,8 @@ function generateUnanswered(req, cb){
               }//end answered loop
               if(append){
                 unanswered.push(questions[i]._id.toString()); //.toString because mongoose model now uses references to help with join for bulk export, this means the questions[i]._id would return the id inside an array
-                console.log("UNANSWERED==================");
-                console.log(questions[i]._id.toString());
+               // console.log("UNANSWERED==================");
+               // console.log(questions[i]._id.toString());
               } 
             }
             req.session.unanswered = unanswered

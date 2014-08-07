@@ -26,7 +26,7 @@ if( '<%= tour %>' == 'yes'){
   tour.addStep({
    element: "#f",
    title: "Welcome to Where We Breathe",
-   content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vitae nisl diam. Morbi elementum tempor mi, eu faucibus eros feugiat eget. Duis tempus felis a dui iaculis, sit amet ullamcorper. <br><br> This tour will guide you through some of WWB's site features",
+   content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vitae nisl diam. Morbi elementum tempor mi, eu faucibus eros feugiat eget. Duis tempus felis a dui iaculis, sit amet ullamcorper. <br><br> This tour will guide you through some of WWB's site features <br><br> <a  href='/questionnaire'><button class='btn btn-primary center-block'>No thanks, take me to the questionnaire</button>",
    backdrop: true
   });
 
@@ -47,7 +47,7 @@ if( '<%= tour %>' == 'yes'){
   tour.addStep({
    element: "#nav-q",
    title: "Questionnaire ",
-   content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam lobortis, diam ac mattis dictum, purus nibh auctor sem, ut auctor. ", 
+   content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam lobortis, diam ac mattis dictum, purus nibh auctor sem, ut auctor. </a>", 
    placement: 'bottom'
   });
   tour.addStep({
@@ -60,12 +60,6 @@ if( '<%= tour %>' == 'yes'){
    element: "#nav-kb",
    title: "Knowledge Base",
    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam lobortis, diam ac mattis dictum, purus nibh auctor sem, ut auctor.", 
-   placement: 'bottom'
-  });
-  tour.addStep({
-   element: "#nav-tour",
-   title: "Tour",
-   content: "Click 'Tour' to take this tour again", 
    placement: 'bottom'
   });
   tour.addStep({

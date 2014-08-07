@@ -162,6 +162,7 @@ exports.verify_get =  function(req, res) {
 LOGIN
 *************************************************************************/
 exports.login_post = function(req, res) {
+    console.log(res);
     generateUnanswered(req, function(){        
       //if user doesnt have privacy settings yet, redirect to privacy setting page, first save dafaults
       if(req.user.firstLogin){
@@ -171,7 +172,7 @@ exports.login_post = function(req, res) {
           else{ 
           //console.log(results);
             //req.flash('info', ['It looks like this it the first time you have logged in. Please take a moment to review your privacy settings before continuing on to the rest of the site.', 'alert-warning'])
-            res.redirect('/');
+            res.redirect('/welcome');
             
             }
           }); //end user.findbyid...    

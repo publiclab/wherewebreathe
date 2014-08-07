@@ -44,6 +44,7 @@ if ('development' == app.get('env')) {
 app.locals.message = null;
 //because user signup is integrated into index page (maybe change in later phase to use connect-flash?)
 app.locals.regErr = [];
+app.locals.tour = null
 
 // passport config
 var User = require('./models/db').user;

@@ -26,23 +26,11 @@ function removeFromUnansweredSession(req, qid, cb){
   }
 }
 exports.index = function(req, res){
-  res.render('index', { title: 'Home', user : req.user, tour: null});
+  res.render('index', { title: 'Home', user : req.user});
 };
 exports.welcome = function(req, res){
-  tour = {
-  steps: [
-  {
-    element: "#my-element",
-    title: "Title of my step",
-    content: "Content of my step"
-  },
-  {
-    element: "#my-other-element",
-    title: "Title of my step",
-    content: "Content of my step"
-  }
-]}
-  res.render('index', { title: 'Home', user : req.user, tour: tour});
+
+  res.render('index', { title: 'Home', user : req.user, tour: 'yes'});
 };
 exports.about = function(req, res){
   res.render('about', { title: 'About Where We Breathe', user : req.user});

@@ -26,7 +26,23 @@ function removeFromUnansweredSession(req, qid, cb){
   }
 }
 exports.index = function(req, res){
-  res.render('index', { title: 'Home', user : req.user});
+  res.render('index', { title: 'Home', user : req.user, tour: null});
+};
+exports.welcome = function(req, res){
+  tour = {
+  steps: [
+  {
+    element: "#my-element",
+    title: "Title of my step",
+    content: "Content of my step"
+  },
+  {
+    element: "#my-other-element",
+    title: "Title of my step",
+    content: "Content of my step"
+  }
+]}
+  res.render('index', { title: 'Home', user : req.user, tour: tour});
 };
 exports.about = function(req, res){
   res.render('about', { title: 'About Where We Breathe', user : req.user});
@@ -260,7 +276,7 @@ TEST - remove later
 ***********************************************************************/   
 exports.test =  function(req, res) {
 //this is where it really seems like we should have used a RDBMS... Mongo doesnt *really* join data well, and also js being async doesnt make this app-side join/conversion straightforward. Its probably unlikely that our server will get overloaded with data download requests, so I apologize for the convoluted next bit of code (this is better than starting from scratch with a RDBMS!).
-  Question.find({_id: 1},'question order',{sort:{_id: 1}}, function(err, questions){
+  Question.find({},'question order',{sort:{_id: 1}}, function(err, questions){
     if (err) {return res.send(400, "Something went wrong on our side of things. Please try that again, or contact us to let us know. (Error ID: 622)")}
 
     var csv = [];

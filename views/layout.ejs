@@ -14,16 +14,18 @@
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="/bootstrap-tour-0.9.3/build/js/bootstrap-tour.min.js"></script>
     <!-- styles -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="/bootstrap-tour-0.9.3/build/css/bootstrap-tour.min.css">
     <%-scripts%>
     <%-stylesheets%>
   </head>
   <body id="body">
     <!-- Fixed navbar -->
-    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div id="menu" class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -36,10 +38,10 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li><a href="/questionnaire">Questionnaire</a></li>
-            <li><a href="/narratives">Narratives</a></li>
-            <li><a href="/about">About</a></li>
-            <li><a href="/knowledge-base">Knowledge base</a></li>            
+            <li id='nav-q'><a href="/questionnaire">Questionnaire</a></li>
+            <li id='nav-graphs'><a href="/narratives">Narratives</a></li>
+            <li id='nav-kb'><a href="/knowledge-base">Knowledge base</a></li> 
+            <li id='nav-about'><a href="/about">About</a></li>                       
           </ul>
           <ul class="nav navbar-nav navbar-right"> 
             <li class="dropdown">
@@ -54,7 +56,7 @@
                 </form>-->
                 <!--Default buttons with dropdown menu-->
                 <div class="btn-group">
-                    <button data-toggle="dropdown" class="btn btn-default dropdown-toggle navbar-btn">
+                    <button id="login" data-toggle="dropdown" class="btn btn-default dropdown-toggle navbar-btn">
                       <!--set login/user button accordingly-->
                 <% if(!user){ %>
                       Login 
@@ -81,7 +83,7 @@
                       <%= user.username %>
                       <span class="caret"></span>
                     </button>
-                    <div class="dropdown-menu">
+                    <div class="dropdown-menu userMenu">
                         <ul class="nav">
                           <li>
                             <a href="/privacy">Change privacy settings</a>

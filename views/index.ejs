@@ -18,3 +18,58 @@
 </div>
 <hr>
 <% include login/register-template %>
+<script>
+$(function(){
+if( '<%= tour %>' == 'yes'){
+  var tour = new Tour({orphan: true});
+
+  tour.addStep({
+   element: "#f",
+   title: "Welcome to Where We Breathe",
+   content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vitae nisl diam. Morbi elementum tempor mi, eu faucibus eros feugiat eget. Duis tempus felis a dui iaculis, sit amet ullamcorper. <br><br> This tour will guide you through some of WWB's site features",
+   backdrop: true
+  });
+
+  tour.addStep({
+   element: "#login",
+   title: "User Menu",
+   content: "Click the user menu to manage your account", 
+   placement: "left"
+  });
+  tour.addStep({
+   element: ".userMenu",
+   title: "User Menu",
+   content: "Inside the user menu, you can change your password, privacy settings, and logout",
+   onShow: function (tour) {$('.userMenu').show();},
+   onHidden: function (tour) {$('.userMenu').hide();},
+   placement: "left"
+  });
+  tour.addStep({
+   element: "#nav-q",
+   title: "Questionnaire ",
+   content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam lobortis, diam ac mattis dictum, purus nibh auctor sem, ut auctor. ", 
+   placement: 'bottom'
+  });
+  tour.addStep({
+   element: "#nav-graphs",
+   title: "Forum",
+   content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam lobortis, diam ac mattis dictum, purus nibh auctor sem, ut auctor. ", 
+   placement: 'bottom'
+  });
+  tour.addStep({
+   element: "#nav-kb",
+   title: "Knowledge Base",
+   content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam lobortis, diam ac mattis dictum, purus nibh auctor sem, ut auctor.", 
+   placement: 'bottom'
+  });
+  tour.addStep({
+   element: "#f",
+   title: "Lorem Ipsum",
+   content: "<p class='justify'>[some text about how important the survey responses will be as a call to continue on to the survey]</p> <br><br> <a  href='/questionnaire'><button class='btn btn-primary center-block'>Start the questionnaire</button></a>", 
+   placement: 'bottom'
+  });
+  tour.restart();
+  console.log("here");
+}
+})//end on ready
+</script>

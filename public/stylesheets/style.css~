@@ -10,6 +10,7 @@ body{
 }
 .content{
   margin-top: -20px;/*override navbar margin*/
+  padding-top: 20px;/*override navbar margin*/
   background-color: #fff;
   padding-bottom: 20px;
 }
@@ -36,4 +37,8 @@ body{
 
 figcaption{
   font-style:italic
+}
+.popover-content{
+  text-align:justify;
+  text-justify:inter-word;
 }

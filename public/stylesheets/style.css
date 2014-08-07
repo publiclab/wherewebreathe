@@ -38,3 +38,7 @@ body{
 figcaption{
   font-style:italic
 }
+.justify{
+  text-align:justify;
+  text-justify:inter-word;
+}

@@ -46,7 +46,7 @@ app.locals.message = null;
 app.locals.regErr = [];
 
 // passport config
-var User = require('./models/account').user;
+var User = require('./models/db').user;
 //use next line instead of 'passport.use(new LocalStrategy(Account.authenticate()));' in conjuction with usernameField option (in account.js) to use email input from frontend to use email instead of username. 
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());

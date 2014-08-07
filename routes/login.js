@@ -170,8 +170,9 @@ exports.login_post = function(req, res) {
           if(error){throw err}
           else{ 
           //console.log(results);
-            req.flash('info', ['It looks like this it the first time you have logged in. Please take a moment to review your privacy settings before continuing on to the rest of the site.', 'alert-warning'])
-            res.redirect('/privacy');
+            //req.flash('info', ['It looks like this it the first time you have logged in. Please take a moment to review your privacy settings before continuing on to the rest of the site.', 'alert-warning'])
+            res.redirect('/welcome');
+            
             }
           }); //end user.findbyid...    
         }//end if user has privacy settings

@@ -92,7 +92,7 @@
                             <a href="/resetpass">Change password</a>
                           </li>
                           <li>
-                            <a href="#" onclick="logout()">logout</a>
+                            <a id='logout' href="#" onclick="log_out()">logout</a>
                           </li>
                         </ul>
                     </div>                           
@@ -133,11 +133,12 @@
   </div>
   </body>
   <script>
-      function logout(){
+      function log_out(){
       $.post('/logout', function(status){
       console.log(status);
       if(status == "logged out"){
-        window.location=window.location;// like location.reload, but without annoying "to display this page FF must send info that ....." message
+        //window.location=window.location;// like location.reload, but without annoying "to display this page FF must send info that ....." message
+        window.location.reload()
       }
       else{
       console.error("logout failed");
@@ -146,6 +147,7 @@
       });
     }
   $(function(){
+    //$('#logout').click(function(){logout();})
     $('#btnJoin').click(function() { window.location = '/register'; })
     $('#download').click(function(event){
     //prevent actual submit, but HTML5 validation triggers
@@ -166,15 +168,14 @@
           var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based         
           var dd  = this.getDate().toString();             
                               
-          return yyyy + '-' + (mm[1]?mm:"0"+mm[0]) + '-' + (dd[1]?dd:"0"+dd[0]);
+          return yyyy + (mm[1]?mm:"0"+mm[0]) + (dd[1]?dd:"0"+dd[0]);
         }; 
         var date = new Date().yyyymmdd()
-        console.log(date);
         var encodedUri = encodeURI(response);
         var link = document.createElement("a");
         document.body.appendChild(link);
         link.setAttribute("href", 'data:text/csv;charset=utf-8,' +encodedUri);
-        link.setAttribute("download", "WhereWeBreathe "+date+".csv");
+        link.setAttribute("download", "WhereWeBreatheData"+date+".csv");
 
         link.click();
       });

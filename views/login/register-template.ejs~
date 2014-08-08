@@ -43,7 +43,7 @@ There were the following errors:
   <a href="/">
   <button type="button" class="btn btn-primary">Cancel</button></a>
 </form>
-<div id='bugs'>Having trouble with the registration form? Conntact us at <a href="mailto:support@wherewebreathe.org?Subject=Registration bugs" target="_top">
+<div id='bugs'>Having trouble with the registration form? Contact us at <a href="mailto:support@wherewebreathe.org?Subject=Registration bugs" target="_top">
 support@wherewebreathe.org</a></div>
 
   <!--<label for="username">Are you human? (sorry: spam filtering!)</label>

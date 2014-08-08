@@ -175,7 +175,8 @@ exports.questionnaire = function ( req, res ){
         question: question.question, 
         label: question.label,
         qType: question.qType,
-        qid: question._id        
+        qid: question._id,
+        noUnans: req.session.unanswered.length        
       }
       //append suggested answers if they exist (mongoose creates empty array it seems even if query returns nothing for answers key)
       if (typeof question.answers !== 'undefined' && question.answers.length > 0){
@@ -266,7 +267,7 @@ exports.answer = function ( req, res ){
 /**********************************************************************
 DATA DOWNLOAD
 ***********************************************************************/   
-exports.test =  function(req, res) {
+exports.download =  function(req, res) {
 req.session.returnTo = req.path;
 //this is where it really seems like we should have used a RDBMS... Mongo doesnt *really* join data well, and also js being async doesnt make this app-side join/conversion straightforward. Its probably unlikely that our server will get overloaded with data download requests, so I apologize for the convoluted next bit of code (this is better than starting from scratch with a RDBMS!).
   Question.find({},'question order',{sort:{_id: 1}}, function(err, questions){

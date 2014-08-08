@@ -96,6 +96,7 @@ else{%>
     </form>
   </div>
 </div>
+<div class='text-center center-block'>Approximately <span class='text-success'><%= numUnans %></span> questions left.</div>
   <script>
   //make sure if other answer, text box for other answer not empty
     $(function(){

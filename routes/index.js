@@ -175,7 +175,8 @@ exports.questionnaire = function ( req, res ){
         question: question.question, 
         label: question.label,
         qType: question.qType,
-        qid: question._id        
+        qid: question._id,
+        numUnans: req.session.unanswered.length        
       }
       //append suggested answers if they exist (mongoose creates empty array it seems even if query returns nothing for answers key)
       if (typeof question.answers !== 'undefined' && question.answers.length > 0){

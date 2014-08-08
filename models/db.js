@@ -25,7 +25,8 @@ var NewUser = new Schema({
     password: String, 
     email: String,
     HID: String, 
-    token: String
+    token: String,
+    createdAt: { type: Date, default : Date.now, expires: '24h' }//expire after 15 seconds 
 });
 User.plugin(passportLocalMongoose, {usernameField: "email"});
 

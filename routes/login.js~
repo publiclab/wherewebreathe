@@ -358,6 +358,7 @@ exports.privacy_post = function(req, res) {
       if(error){
         return res.send(400, "There was an error saving your privacy settings. Please try again. (Error ID: 819)");
       }
+      console.log(results)
       if(results.length<=0){
         return res.send(400, "There was an error saving your privacy settings. Please try again. (Error ID: 820)");
       }      

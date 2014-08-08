@@ -15,8 +15,7 @@ var User = new Schema({
     email: String,
     HID: String, 
     firstLogin: Boolean,
-    visInternet: Boolean,
-    visResearch: Boolean,
+    visPublic: Boolean,
     passReset: String,
     answered: Array
 });

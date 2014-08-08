@@ -34,7 +34,7 @@ exports.register_get = function(req, res) {
     if(temp.length > 0){
       pageOptions['message'] =  {text: temp[0], msgType: temp[1]}
     }  
-  console.log(pageOptions); 
+   
   res.render('login/register', pageOptions);
 };
 //add new user to DB
@@ -171,7 +171,7 @@ exports.login_post = function(req, res) {
       //if user doesnt have privacy settings yet, redirect to privacy setting page, first save dafaults
       if(req.user.firstLogin){
       //console.log("first logion session test: "+req.session.unanswered)
-      User.findByIdAndUpdate(req.user._id,{$unset: {firstLogin: 1 }, visInternet : false, visResearch : false},   function(error, results){
+      User.findByIdAndUpdate(req.user._id,{$unset: {firstLogin: 1 }, visPublic : false},   function(error, results){
           if(error){throw err}
           else{ 
           //console.log(results);
@@ -335,7 +335,7 @@ exports.privacy_get = function(req, res) {
   if(temp.length > 0){
     message =  {text: temp[0], msgType: temp[1]}
   }
- var visInternet, visResearch
+ var visPublic
  //get user privacy setting from db if they exist
  User.findOne({_id: req.user._id}, function (err, result) {
   if (err){
@@ -346,8 +346,7 @@ exports.privacy_get = function(req, res) {
             title: 'Privacy Settings', 
             user : req.user, 
             message: message, 
-            visInternet: result.visInternet,
-            visResearch: result.visResearch
+            visPublic: result.visPublic
             }); 
   }); //end find one 
     
@@ -355,10 +354,13 @@ exports.privacy_get = function(req, res) {
 }
 
 exports.privacy_post = function(req, res) {
- User.findByIdAndUpdate(req.user._id, {visInternet : req.body.visInternet, visResearch : req.body.visResearch}, function(error, results){
+ User.findByIdAndUpdate(req.user._id, {visPublic : req.body.visPublic}, function(error, results){
       if(error){
-        return res.send(400, "There was an error saving your privacy settings. Please try again.");
+        return res.send(400, "There was an error saving your privacy settings. Please try again. (Error ID: 819)");
       }
+      if(results.length<=0){
+        return res.send(400, "There was an error saving your privacy settings. Please try again. (Error ID: 820)");
+      }      
       else{ 
         return res.send(200)
       }

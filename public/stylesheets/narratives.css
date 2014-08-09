@@ -1,0 +1,32 @@
+#chart{
+  max-width:500px;
+  height:250px;
+  text-align: center;
+  margin: 0 auto;
+  position: relative; 
+  
+  
+}
+#noData{
+ 
+  
+}
+#question{
+  text-align: center;
+}
+.yaxisLabel {
+    left: 2px;
+    top: 50%;
+    transform: rotate(-90deg);
+    transform-origin: 30px 20px 0;
+}
+.axisLabel {
+    font-size: 11px;
+    position: absolute;
+    text-align: center;
+    z-index: 1000;
+}
+#chartParent{
+  padding: 5px;
+  position: relative;
+}

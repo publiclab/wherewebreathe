@@ -44,9 +44,10 @@ if ('development' == app.get('env')) {
 app.locals.message = null;
 //because user signup is integrated into index page (maybe change in later phase to use connect-flash?)
 app.locals.regErr = [];
+app.locals.tour = null
 
 // passport config
-var User = require('./models/account').user;
+var User = require('./models/db').user;
 //use next line instead of 'passport.use(new LocalStrategy(Account.authenticate()));' in conjuction with usernameField option (in account.js) to use email input from frontend to use email instead of username. 
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
@@ -70,6 +71,9 @@ app.get('/privacy', login.privacy_get);
 app.post('/privacy', login.privacy_post);
 
 app.get('/', routes.index);
+app.get('/welcome', routes.welcome);
+app.get('/narratives', routes.narratives);
+app.post('/narrativesData', routes.narrativesData);
 app.get('/questionnaire', routes.questionnaire);
 app.get('/questionnaire/:skipq', routes.questionnaire);
 app.get('/questionnaire/:skipq/:nextq', routes.questionnaire); 
@@ -78,6 +82,7 @@ app.post( '/answer', routes.answer );
 app.get('/about', routes.about);
 app.get('/knowledge-base', routes.knowledgebase);
 app.get('/vinhud', routes.vinhud);
+app.get('/download', routes.download);
 //app.get('/questionnaire_cat', routes.questionnaire_cat);
 //app.get('/users', user.list);
 

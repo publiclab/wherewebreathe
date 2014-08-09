@@ -3,10 +3,24 @@
     src: url(/fonts/junction/webfonts/junction-regular.woff);
 }
 body{
-  padding-bottom: 30px;
   padding-top: 70px;
   font-family: Junction,Helvetica Neue,Helvetica,Arial,sans-serif;
+  height: 100%;
+  background-color: #f8f8f8;
 }
+.content{
+  margin-top: -20px;/*override navbar margin*/
+  padding-top: 20px;/*override navbar margin*/
+  background-color: #fff;
+  padding-bottom: 20px;
+}
+.footer{
+  border-top: 1px solid #e7e7e7;
+  clear: both;
+  margin: 0;
+  padding: 20px;
+}
+/*make form inputs and helper messages default to Helvetica et al.*/
 .alert, input{
   font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
 }
@@ -23,4 +37,8 @@ body{
 
 figcaption{
   font-style:italic
+}
+.popover-content{
+  text-align:justify;
+  text-justify:inter-word;
 }

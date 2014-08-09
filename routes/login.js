@@ -1,6 +1,7 @@
 var passport = require('passport');
 var User = require('../models/db').user;
 var NewUser = require('../models/db').newuser;
+var PassReset = require('../models/db').passReset;
 var nodemailer = require("nodemailer");
 var validate = require('./validate');
 var authenticateUser = require('./authUser');
@@ -133,7 +134,7 @@ exports.register_post = function(req, res) {
       });//end newusers find username
     });//end email User.find()
   });//end username User.find()
-};//end exports.register_post
+};//end exports.register_postUser
 
 //verify new users' emails
 exports.verify_get =  function(req, res) {
@@ -183,7 +184,7 @@ exports.login_post = function(req, res) {
         }//end if user has privacy settings
         else{
           //return to sender
-          returnTo(res, req);
+          returnTo(res, req);User
         }      
     });//end generateUnanswered funciton
 };
@@ -212,61 +213,69 @@ exports.forgotpass_post =  function(req, res) {
   //email
   var emailErr = validate.email(txtEmail);
   if(emailErr){
-    return res.send(400, emailErr);
+    return res.send(400, emailErr);User
   }   
   //check if user with email address exists
   User.findOne({email: txtEmail}, function ( error, user){
     if(error){throw error}
-    if (!user){
-      return res.send(400, "An account with the email, '"+txtEmail+"' isnt currently registered with Where We Breathe.");
-    }
-    //there is a user but it already has a token set for passReset
-    else if(user.passReset){
-      return res.send(400, "An email with a password reset link has already been sent to that account.");
-    }
-    //there is a user with no existing reset token
-    else{
-     
-      require('crypto').randomBytes(48, function(ex, buf) {
-        var token = buf.toString('hex');    
-        User.findByIdAndUpdate(user._id, {passReset : token}, function(error, results){
-          if(error){throw error}
-          else{ 
-            var mailText = "You have requested to reset your password with Where We Breathe because you have forgotten your password. If you did not request this, please ignore it. It will expire and become useless in 24 hours time.  \r\n";
-            mailText += "Please click the link below to finish your registration. \r\n\r\n";
-            //req.headers.host includes the port#, req.host will be sans port#
-            mailText += "http://"+req.headers.host+"/resetpass/"+user._id+"/"+token;
-            var transport = nodemailer.createTransport("direct", {debug: true});
-            var   mailOptions = {
-              from: "noreply@wherewebreathe.org",
-              to: txtEmail,
-              subject: "[TESTING] password reset email",
-              text: mailText
-            };
-            var mail = require("nodemailer").mail;
-            mail(mailOptions);               
-          //success
-            return res.send(200); 
-          }
+    PassReset.findOne({uid: user._id}, function ( error2, passResetResults){
+      if(error2){throw error}
+      if (!user){
+        return res.send(400, "An account with the email, '"+txtEmail+"' isnt currently registered with Where We Breathe.");
+      }
+      //there is a user but it already has a token set for passReset
+      else if(passResetResults){
+        return res.send(400, "An email with a password reset link has already been sent to that account.");
+      }
+      
+      //there is a user with no existing reset token
+      else{
+       
+        require('crypto').randomBytes(48, function(ex, buf) {
+          var token = buf.toString('hex'); 
+          var reset = new PassReset({
+            uid: user._id,
+            passReset : token
+          })   
+          reset.save( function(error, results, noAffected){
+            if(error){throw error}
+            else{ 
+              var mailText = "You have requested to reset your password with Where We Breathe because you have forgotten your password. If you did not request this, please ignore it. It will expire and become useless in 24 hours time.  \r\n";
+              mailText += "Please click the link below to finish your registration. \r\n\r\n";
+              //req.headers.host includes the port#, req.host will be sans port#
+              mailText += "http://"+req.headers.host+"/resetpass/"+user._id+"/"+token;
+              var transport = nodemailer.createTransport("direct", {debug: true});
+              var   mailOptions = {
+                from: "noreply@wherewebreathe.org",
+                to: txtEmail,
+                subject: "[TESTING] password reset email",
+                text: mailText
+              };
+              var mail = require("nodemailer").mail;
+              mail(mailOptions);               
+            //successUser
+              return res.send(200); 
+            }
+          });
         });
-      });
-      //message check your email for a link to reset your password. 
-      //res.render('login/message', { title: 'Please check your email', user : req.user, message: {text:"An email with a link to reset your password has been sent to your email address", msgType: "alert-success"} });
-    }
+        //message check your email for a link to reset your password. 
+        //res.render('login/message', { title: 'Please check your email', user : req.user, message: {text:"An email with a link to reset your password has been sent to your email address", msgType: "alert-success"} });
+      }
+    });//end passREsetFind
   });
 }
 exports.resetpass_get =  function(req, res) {
   //either the user has to have a link with :id and :token params, or they need to be logged in
   if (req.params.token && req.params.id){
     //check that token is active and matched id
-    User.findOne({passReset: req.params.token, _id: req.params.id}, function(err, results){
+    PassReset.findOne({passReset: req.params.token, uid: req.params.id}, function(err, results){
     //console.log(results)
       var message = null;
       if(!results){
         //if not token or token doesnt align with id
         message = { text: 'That link has expired or is invalid.', msgType: "alert-danger"}
       }
-      res.render('login/resetpass', { title: 'Reset Password', user : req.user, id: req.params.id, token:         req.params.token, message: message } );//end res.render  
+      res.render('login/resetpass', { title: 'Reset Password', user : req.user, id: req.params.id, token: req.params.token, message: message } );//end res.render  
     });//end user.find()///    
   }//end if params...
   else if(req.user){
@@ -280,7 +289,6 @@ exports.resetpass_get =  function(req, res) {
 }
 exports.resetpass_post =  function(req, res) {
   var txtPass = req.body.pass;
-  
   //check password
   var passErr = validate.password(txtPass);
   if(passErr){
@@ -293,15 +301,16 @@ exports.resetpass_post =  function(req, res) {
   //if not logged in, require token, if logged in use id from user to search for a user
   var query;
   if (!req.user){
-   if (!txtId || ! txtToken){return res.send(400, "If you arent logged in to your account, you cannot change your password without a valid password reset link (which you can obtain by clicking on the 'forgotten password' link on the login screen.")};
-   query = {_id: txtId, passReset: txtToken};
+    if (!txtId || ! txtToken){return res.send(400, "If you arent logged in to your account, you cannot change your password without a valid password reset link (which you can obtain by clicking on the 'forgotten password' link on the login screen.")};
+   query = {uid: txtId, passReset: txtToken};
   }
   else{
-    query = {_id: req.user.id}
+    query = {uid: req.user.id}
     //console.log("id" + req.user.id);
   }
   //console.log(query);
-  User.findOne(query, function(error, user){
+  PassReset.findOneAndRemove(query, function(error, user){
+    console.log(user)
     if(error){
       return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 816)");
     }
@@ -310,10 +319,11 @@ exports.resetpass_post =  function(req, res) {
       var tempUser = new User();
       tempUser.setPassword(txtPass, function(err, stuff){
         //remove passReset field, update salt and hash fields from tempUser
-        User.findByIdAndUpdate(user.id, {$unset: {passReset: 1 },hash: tempUser.hash, salt: tempUser.salt}, function(err, results){
+        User.findByIdAndUpdate(user.uid, {hash: tempUser.hash, salt: tempUser.salt}, function(err, results){
           if (err) {
             return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 817)");
           }
+          console.log(results)
           //no err, so logout and give ok status to ajax
           req.logout();          
           res.send(200);

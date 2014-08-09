@@ -20,6 +20,11 @@ var User = new Schema({
     answered: Array
 });
 
+var PassReset = new Schema({ 
+    passReset: String,
+    uid: Schema.Types.ObjectId
+});
+
 var NewUser = new Schema({
     username: String,
     password: String, 
@@ -62,6 +67,7 @@ module.exports = {
     user: userDB.model('user', User),
     newuser: userDB.model('newuser', NewUser),
     answer: userDB.model('answer', AnswerSchema),
-    question: userDB.model('question', QuestionSchema)
+    question: userDB.model('question', QuestionSchema),
+    passReset: userDB.model('passReset', PassReset),
 };
 

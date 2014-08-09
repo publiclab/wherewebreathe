@@ -20,13 +20,19 @@ var User = new Schema({
     answered: Array
 });
 
+var PassReset = new Schema({ 
+    passReset: String,
+    uid: Schema.Types.ObjectId,
+    createdAt: { type: Date, default : Date.now, expires: '24h' }//expire after 24h seconds 
+});
+
 var NewUser = new Schema({
     username: String,
     password: String, 
     email: String,
     HID: String, 
     token: String,
-    createdAt: { type: Date, default : Date.now, expires: '24h' }//expire after 15 seconds 
+    createdAt: { type: Date, default : Date.now, expires: '24h' }//expire after 24h seconds 
 });
 User.plugin(passportLocalMongoose, {usernameField: "email"});
 
@@ -62,6 +68,7 @@ module.exports = {
     user: userDB.model('user', User),
     newuser: userDB.model('newuser', NewUser),
     answer: userDB.model('answer', AnswerSchema),
-    question: userDB.model('question', QuestionSchema)
+    question: userDB.model('question', QuestionSchema),
+    passReset: userDB.model('passReset', PassReset),
 };
 

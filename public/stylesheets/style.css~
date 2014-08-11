@@ -24,8 +24,11 @@ body{
 .alert, input{
   font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
 }
-.navbar-btn{
+#login, #btnJoin{
   margin-left: 5px;
+}
+#login{
+  margin-right: 20px;
 }
 #divLogin{
   padding:7px;
@@ -38,7 +41,7 @@ body{
 figcaption{
   font-style:italic
 }
-.popover-content{
+.justify{
   text-align:justify;
   text-justify:inter-word;
 }

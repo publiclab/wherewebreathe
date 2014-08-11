@@ -152,7 +152,7 @@
     $('#download').click(function(event){
     //prevent actual submit, but HTML5 validation triggers
     event.preventDefault();
-    $.get( '/test',{})
+    $.get( '/download',{})
       .fail(function(response) {
         $( ".alert" ).remove();
         var html = '<div class="alert alert-danger" role="alert">'+response.responseText+'</div>'

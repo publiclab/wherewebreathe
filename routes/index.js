@@ -270,7 +270,7 @@ DATA DOWNLOAD
 exports.download =  function(req, res) {
 req.session.returnTo = req.path;
 //this is where it really seems like we should have used a RDBMS... Mongo doesnt *really* join data well, and also js being async doesnt make this app-side join/conversion straightforward. Its probably unlikely that our server will get overloaded with data download requests, so I apologize for the convoluted next bit of code (this is better than starting from scratch with a RDBMS!).
-  Question.find({},'question order',{sort:{_id: 1}}, function(err, questions){
+  Question.find({},'question order',{sort:{order: 1}}, function(err, questions){
     if (err) {return res.send(400, "Something went wrong on our side of things. Please try that again, or contact us to let us know. (Error ID: 622)")}
 
     var csv = [];

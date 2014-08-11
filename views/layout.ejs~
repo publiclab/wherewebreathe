@@ -137,7 +137,7 @@
       $.post('/logout', function(status){
       console.log(status);
       if(status == "logged out"){
-        //window.location=window.location;// like location.reload, but without annoying "to display this page FF must send info that ....." message
+        //window.location=window.location;// like location.reload, but without annoying "to display this page FF must send info that ....." message ... doesnt work in chrome. reload message no longer a prob...
         window.location.reload()
       }
       else{

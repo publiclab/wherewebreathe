@@ -327,12 +327,8 @@ req.session.returnTo = req.path;
 }
 /**********************************************************************
 TEST - remove later
-***********************************************************************/ 
-var PassReset = require('../models/db').passreset;  
+***********************************************************************/   
 exports.test =  function(req, res) {
-PassReset.findOne({}, function ( error2, passResetResults){
-      console.log("++++++++++++++++++++++++++++++++++++++++++")
-      console.log(passResetResults)
-      if(error2){throw error}});
+
 }
 

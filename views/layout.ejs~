@@ -26,6 +26,7 @@
   <body id="body">
     <!-- Fixed navbar -->
     <div id="menu" class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="sr-only">Toggle navigation</span>
@@ -42,61 +43,63 @@
             <li id='nav-kb'><a href="/knowledge-base">Knowledge base</a></li> 
             <li id='nav-about'><a href="/about">About</a></li>                       
           </ul>
-          <ul class="nav navbar-nav navbar-right">                           
-              <% if(!user){ %> 
-              <li>
-                <button class="btn btn-primary navbar-btn" id="btnJoin">Join</button>
-              </li> 
-              <% } %>  
-              <!--Default buttons with dropdown menu-->
-              <li >
-                  <button id="login" data-toggle="dropdown" class="btn btn-default dropdown-toggle navbar-btn">
-                    <!--set login/user button accordingly-->
-                    
-              <% if(!user){ %>
-                    Login 
-                    <span class="caret"></span>
-                  </button>
-                  <div class="dropdown-menu" id="divLogin">
-                    <form role="form" action="/login" method="post" >
-                      <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="email" name="email" placeholder="you@email.com" class="form-control">
-                      </div>
-                      <div class="form-group">
-                        <label for="password">Password:</label>
-                        <input type="password" name="password" placeholder="Password" class="form-control">
-                      </div>
-                      <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-                    <br/>
-                    <a href="/forgotpass">forgotten password</a>
-                  </div>                          
-              <% } %>
-              
-              <% if(user){ %>                         
-                    <i class="fa fa-user"></i>
-                    <%= user.username %>
-                    <span class="caret"></span>
-                  </button>
-                  <div class="dropdown-menu userMenu">
-                      <ul class="nav">
-                        <li>
-                          <a href="/privacy">Change privacy settings</a>
-                        </li>
-                        <li>
-                          <a href="/resetpass">Change password</a>
-                        </li>
-                        <li>
-                          <a id='logout' href="#" onclick="log_out()">logout</a>
-                        </li>
-                      </ul>
-                  </div>                           
-              <% } %>
+          <ul class="nav navbar-nav navbar-right"> 
+                      <% if(!user){ %> 
+            <li>
+              <button class="btn btn-primary navbar-btn" id="btnJoin">Join</button>
+            </li> 
+            <% } %> 
+            <li class="dropdown">
+                <!--Default buttons with dropdown menu-->
+                <div>
+                    <button id="login" data-toggle="dropdown" class="btn btn-default dropdown-toggle navbar-btn">
+                      <!--set login/user button accordingly-->
+                <% if(!user){ %>
+                      Login 
+                      <span class="caret"></span>
+                    </button>
+                    <div class="dropdown-menu" id="divLogin">
+                      <form role="form" action="/login" method="post" >
+                        <div class="form-group">
+                          <label for="email">Email:</label>
+                          <input type="email" name="email" placeholder="you@email.com" class="form-control">
+                        </div>
+                        <div class="form-group">
+                          <label for="password">Password:</label>
+                          <input type="password" name="password" placeholder="Password" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                      </form>
+                      <br/>
+                      <a href="/forgotpass">forgotten password</a>
+                    </div>                          
+                <% } %>
+                <% if(user){ %>                         
+                      <i class="fa fa-user"></i>
+                      <%= user.username %>
+                      <span class="caret"></span>
+                    </button>
+                    <div class="dropdown-menu userMenu">
+                        <ul class="nav">
+                          <li>
+                            <a href="/privacy">Change privacy settings</a>
+                          </li>
+                          <li>
+                            <a href="/resetpass">Change password</a>
+                          </li>
+                          <li>
+                            <a id='logout' href="#" onclick="log_out()">logout</a>
+                          </li>
+                        </ul>
+                    </div>                           
+                <% } %>
+                     
+                </div>                
+            </li> 
                    
-              </li>                                 
           </ul>
         </div><!--/.nav-collapse -->
+      </div>
     </div>
   <div class="content">
     <div class="container theme-showcase" role="main">

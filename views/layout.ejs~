@@ -14,16 +14,18 @@
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="/bootstrap-tour-0.9.3/build/js/bootstrap-tour.min.js"></script>
     <!-- styles -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="/bootstrap-tour-0.9.3/build/css/bootstrap-tour.min.css">
     <%-scripts%>
     <%-stylesheets%>
   </head>
   <body id="body">
     <!-- Fixed navbar -->
-    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div id="menu" class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -36,11 +38,10 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li><a href="/questionnaire">Questionnaire</a></li>
-            <li><a href="/about">About</a></li>
-            <li><a href="#">Privacy</a></li>
-            <li><a href="#">Blog</a></li>
-            <li><a href="/knowledge-base">Knowledge base</a></li> 
+            <li id='nav-q'><a href="/questionnaire">Questionnaire</a></li>
+            <li id='nav-graphs'><a href="/narratives">Narratives</a></li>
+            <li id='nav-kb'><a href="/knowledge-base">Knowledge base</a></li> 
+            <li id='nav-about'><a href="/about">About</a></li>                       
           </ul>
           <ul class="nav navbar-nav navbar-right"> 
             <li class="dropdown">
@@ -55,7 +56,7 @@
                 </form>-->
                 <!--Default buttons with dropdown menu-->
                 <div class="btn-group">
-                    <button data-toggle="dropdown" class="btn btn-default dropdown-toggle navbar-btn">
+                    <button id="login" data-toggle="dropdown" class="btn btn-default dropdown-toggle navbar-btn">
                       <!--set login/user button accordingly-->
                 <% if(!user){ %>
                       Login 
@@ -82,7 +83,7 @@
                       <%= user.username %>
                       <span class="caret"></span>
                     </button>
-                    <div class="dropdown-menu">
+                    <div class="dropdown-menu userMenu">
                         <ul class="nav">
                           <li>
                             <a href="/privacy">Change privacy settings</a>
@@ -91,7 +92,7 @@
                             <a href="/resetpass">Change password</a>
                           </li>
                           <li>
-                            <a href="#" onclick="logout()">logout</a>
+                            <a id='logout' href="#" onclick="log_out()">logout</a>
                           </li>
                         </ul>
                     </div>                           
@@ -108,31 +109,77 @@
         </div><!--/.nav-collapse -->
       </div>
     </div>
-  <div class="container theme-showcase" role="main">
-    <div class="page-header">
-    <%-blocks.header%>
-      <h1 id="title"><%= title %></h1>
+  <div class="content">
+    <div class="container theme-showcase" role="main">
+      <div class="page-header">
+      <%-blocks.header%>
+        <h1 id="title"><%= title %></h1>
+      </div>
+    <% if(message){ %>
+      <div class="alert <%= message.msgType %>" role="alert">
+        <%= message.text %>
+      </div>
+    <% } %>
+    <%-body -%>
+    </div><!-- end .container theme-showcase -->
+  </div><!-- end content -->
+  <div class="footer">
+    <div class="container">
+      <div class="col-md-6 col-xs-6 ">[what should we put here?]</div>
+      <div class="col-md-6 col-xs-6 ">
+      <a class="pull-right" id="download" href="#">Download Where We Breathe data</a>
+      </div>
     </div>
-  <% if(message){ %>
-    <div class="alert <%= message.msgType %>" role="alert">
-      <%= message.text %>
-    </div>
-  <% } %>
-  <%-body -%>
-  </div><!--/.container theme-showcase -->
+  </div>
   </body>
   <script>
-  $('#btnJoin').click(function() { window.location = '/register'; })
-  function logout(){
-    $.post('/logout', function(status){
-    if(status == "logged out"){
-      location.reload(true);
+      function log_out(){
+      $.post('/logout', function(status){
+      console.log(status);
+      if(status == "logged out"){
+        //window.location=window.location;// like location.reload, but without annoying "to display this page FF must send info that ....." message ... doesnt work in chrome. reload message no longer a prob...
+        window.location.reload()
+      }
+      else{
+      console.error("logout failed");
+      }
+      
+      });
     }
-    else{
-    console.error("logout failed");
-    }
-    
-    });
-  }
+  $(function(){
+    //$('#logout').click(function(){logout();})
+    $('#btnJoin').click(function() { window.location = '/register'; })
+    $('#download').click(function(event){
+    //prevent actual submit, but HTML5 validation triggers
+    event.preventDefault();
+    $.get( '/test',{})
+      .fail(function(response) {
+        $( ".alert" ).remove();
+        var html = '<div class="alert alert-danger" role="alert">'+response.responseText+'</div>'
+        $( html ).insertAfter( ".page-header" );
+      })
+      .done(function(response) {
+        //redirect to login with message
+        console.log(response);
+        //window.open('/test', '_self');
+        Date.prototype.yyyymmdd = function() {         
+                                
+          var yyyy = this.getFullYear().toString();                                    
+          var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based         
+          var dd  = this.getDate().toString();             
+                              
+          return yyyy + (mm[1]?mm:"0"+mm[0]) + (dd[1]?dd:"0"+dd[0]);
+        }; 
+        var date = new Date().yyyymmdd()
+        var encodedUri = encodeURI(response);
+        var link = document.createElement("a");
+        document.body.appendChild(link);
+        link.setAttribute("href", 'data:text/csv;charset=utf-8,' +encodedUri);
+        link.setAttribute("download", "WhereWeBreatheData"+date+".csv");
+
+        link.click();
+      });
+  });
+  })//end on ready   
   </script>
 </html>

@@ -1,0 +1,75 @@
+<% layout('layout') -%>
+<% stylesheet('/stylesheets/home.css') -%>
+<% block('header', 'Sharing your story towards a better public understanding of indoor air quality health issues | <a href="#">Learn More</a>') -%>
+<div id="topFront" class="well">
+  <p>Public Lab and X are asking:</p>
+  <h1>Does formaldehyde exposure affect residents of manufactured homes?</h1>
+  <a class="btn btn-primary" href="/register/">Join Where We Breathe</a> and become part of the conversation.
+  <p>Do you live in a mobile home? Use this site to share information about indoor air quality health issues and read others' stories.</p>
+</div>
+<div class="well container-fluid">
+  <p>Where We Breathe is a place to share stories and data about your health if you live in a manufactured home.</p>
+  <div class="col-xs-6">
+  You'll be able to share your story privately with the <a href="/about/#team">WhereWeBreathe research team</a> or publicly with the rest of the world.
+  </div>
+  <div class="col-xs-6">
+  Publish your information for anyone to learn more about indoor air quality issues.
+  </div>
+</div>
+<hr>
+<% include login/register-template %>
+<script>
+$(function(){
+if( '<%= tour %>' == 'yes'){
+  var tour = new Tour({orphan: true});
+
+  tour.addStep({
+   element: "#f",
+   title: "Welcome to Where We Breathe",
+   content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vitae nisl diam. Morbi elementum tempor mi, eu faucibus eros feugiat eget. Duis tempus felis a dui iaculis, sit amet ullamcorper. <br><br> This tour will guide you through some of WWB's site features <br><br> <a  href='/questionnaire'><button class='btn btn-primary center-block'>No thanks, take me to the questionnaire</button>",
+   backdrop: true
+  });
+
+  tour.addStep({
+   element: "#login",
+   title: "User Menu",
+   content: "Click the user menu to manage your account", 
+   placement: "left"
+  });
+  tour.addStep({
+   element: ".userMenu",
+   title: "User Menu",
+   content: "Inside the user menu, you can change your password, privacy settings, and logout",
+   onShow: function (tour) {$('.userMenu').show();},
+   onHidden: function (tour) {$('.userMenu').hide();},
+   placement: "left"
+  });
+  tour.addStep({
+   element: "#nav-q",
+   title: "Questionnaire ",
+   content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam lobortis, diam ac mattis dictum, purus nibh auctor sem, ut auctor. </a>", 
+   placement: 'bottom'
+  });
+  tour.addStep({
+   element: "#nav-graphs",
+   title: "Forum",
+   content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam lobortis, diam ac mattis dictum, purus nibh auctor sem, ut auctor. ", 
+   placement: 'bottom'
+  });
+  tour.addStep({
+   element: "#nav-kb",
+   title: "Knowledge Base",
+   content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam lobortis, diam ac mattis dictum, purus nibh auctor sem, ut auctor.", 
+   placement: 'bottom'
+  });
+  tour.addStep({
+   element: "#f",
+   title: "Lorem Ipsum",
+   content: "<p class='justify'>[some text about how important the survey responses will be as a call to continue on to the survey]</p> <br><br> <a  href='/questionnaire'><button class='btn btn-primary center-block'>Start the questionnaire</button></a>", 
+   placement: 'bottom'
+  });
+  tour.restart();
+  console.log("here");
+}
+})//end on ready
+</script>

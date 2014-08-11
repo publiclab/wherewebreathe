@@ -1,0 +1,105 @@
+<% layout('/layout') -%>
+<% script('/javascripts/flot/jquery.flot.min.js'), script('/javascripts/flot/jquery.flot.categories.min.js') -%>
+<% stylesheet('/stylesheets/narratives.css')%>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <h2 id="question"></h2>
+    <div id="chartParent">
+      <div id="chart">
+      </div>    
+    </div>
+    
+    <a href="#" id="previous" class="pull-left"><i class="fa fa-angle-left"></i> previous question</a>
+    <a href="#" id="next" class="pull-right">next question <i class="fa fa-angle-right"></i></a>
+  </div>
+</div>
+<script>
+function getChart(progression){
+$( ".alert" ).fadeOut();
+$('#previous').show();
+$('#next').show();
+var options = {pass: 1, id: 1, token : 1}
+if (progression){
+  options['progression'] = progression;
+}
+console.log(options)
+$.post( '/narrativesData', options)
+      .fail(function(response) {
+        var html = '<div class="alert alert-danger" role="alert">'+response.responseText+'</div>'
+        $( html ).insertAfter( ".page-header" );
+      })
+      .done(function(response) {
+    		$('#question').html(response.question);
+	      console.log(response.next);
+	      if(!response.next){
+	        $('#next').hide();
+	      }
+	      if(!response.previous){
+	        $('#previous').hide();
+	      }
+        if(response.answers == "no data"){$('#chart').html("<div id='noData' class='alert alert-warning'>There are no answers for that question yet!</div>")}
+        else{
+          $('#chart').empty();
+          //console.log(response);
+          var chartData = [];
+          answers = response.answers;
+          for(i in answers){
+            console.log(answers[i])
+            var obj = {
+            data: [[answers[i]._id, answers[i].count]], 
+            color: answers[i].color
+            }
+            //console.log(answers[i].color)
+            //chartData.push([answers[i]._id, answers[i].count]);
+            chartData.push(obj);
+            //console.log(chartData);
+            
+          }
+          var data = [{data: [[0,1]], color: "red"},
+              {data: [[1,2]], color: "yellow"},
+              {data: [[2,3]], color: "green"}];
+          $.plot($("#chart"), chartData, {
+			      series: {
+				      bars: {
+					      show: true,
+					      barWidth: 0.5,
+					      align: "center"
+				      }
+			      },
+			      xaxis: {
+				      mode: "categories",
+				      tickLength: 0,
+				      autoscaleMargin: 0.1
+			      },
+			      yaxis: {
+			      //a work-around for the fact that Flot doesnt have an option for axis label
+              //tickFormatter: function(val, axis) { return val > axis.min ? val.toFixed(0) : axis.min+"  respondents";},
+             autoscaleMargin: 1,
+             tickDecimals: 0,
+        
+            }, 
+            grid:{
+              borderWidth: 0, 
+              borderColor: "lightgrey",
+              margin: {
+                left: 40
+              }
+            }
+		      });
+		      //append y axis label
+		      var yaxisLabel = $("<div class='axisLabel yaxisLabel'></div>")
+		        .text("Count of Responses")
+		        .appendTo($("#chart"));
+		    }//end else (not no data)
+      });//end done?
+}//end function getChart()
+$(function($) {
+  //check #chartParent width and set chart width based on it. 
+  $('#chart').innerWidth($('#chartParent').innerWidth())
+  
+   //event.preventDefault();
+    getChart()
+    $('#previous').click(function(){getChart(-1)});
+    $('#next').click(function(){getChart(1)});
+});
+</script>

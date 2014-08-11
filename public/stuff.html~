@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<head>
+ <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="/bootstrap-tour-0.9.3/build/js/bootstrap-tour-standalone.min.js"></script>
+    <!-- styles -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="/bootstrap-tour-0.9.3/build/css/bootstrap-tour-standalone.min.css">
+    <style>
+      body {
+        padding: 20px;
+      }
+      .case {
+        padding: 10px;
+      }
+      .popover {
+        display: block;
+        position: relative;
+      }
+    </style>
+</head>
+<html>
+<body>
+
+<h1 id="x">My First Heading</h1>
+
+<p>My first paragraph.</p>
+<input id="one" value="one"/><br/>
+<input id="two" value="two"/><br/>
+<input id="three" value="three"/><br/>
+
+</body>
+</html>
+<script>
+$(function(){
+ var tour = new Tour();
+
+tour.addStep({
+ element: "#one",
+ title: "Step 1",
+ content: "Content for step 1"
+});
+
+tour.addStep({
+ element: "#one",
+ title: "Step 2",
+  content: "Content for step 2"
+});
+
+tour.addStep({
+  element: "#three",
+  title: "Step 3",
+ content: "Content for step 3"
+});
+
+tour.restart();
+  console.log("here");
+})//end on ready
+</script>

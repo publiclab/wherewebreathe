@@ -2,21 +2,21 @@
 <% script('/javascripts/flot/jquery.flot.min.js'), script('/javascripts/flot/jquery.flot.categories.min.js') -%>
 <% stylesheet('/stylesheets/questionnaire.css')%>
 <%if (subheading == "symptoms"){%>
-<div class="panel panel-success">
+<div id="divQ" class="panel panel-success">
   <div class="panel-heading">
     <h3 class="panel-title">Questions about your health symptoms</h3>
   </div>
 <% } 
 
 else if (subheading == "housing-unit"){%>
-<div class="panel panel-info">
+<div id="divQ" class="panel panel-info">
   <div class="panel-heading">
     <h3 class="panel-title">Questions about your housing-unit</h3>
   </div>
 <% } 
 
 else{%>
-<div class="panel panel-default">
+<div id="divQ" class="panel panel-default">
   <div class="panel-heading">
     <h3 class="panel-title">(Unknown question category)</h3>
   </div>
@@ -98,8 +98,8 @@ else{%>
 </div>
 <div class='text-center center-block'>Approximately <strong><span class='text-success'><%= numUnans %></span></strong> questions left.</div>
   <script>
-  //make sure if other answer, text box for other answer not empty
     $(function(){
+    //make sure if other answer, text box for other answer not empty
       $('input[type=radio]').change(function(){
         if ($('input[name=answer]:checked').val() == "Other:"){
           $('input[name=othAns]').prop('required', true).focus();
@@ -109,6 +109,12 @@ else{%>
         $('input[name=othAns]').prop('required', false);
         }
       });
+      //if small screen, focus window on Question
+      if($(window).height() <= 400){
+        console.log($("#divQ").offset().top - $('#menu').outerHeight())
+        $('html, body').animate({
+          scrollTop: $("#divQ").offset().top - $('#menu').outerHeight()}, 1000);
+      }
     });
     $('#frmAns').submit(function(event){
       //prevent actual submit, but HTML5 validation triggers

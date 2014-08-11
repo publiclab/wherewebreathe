@@ -44,18 +44,14 @@
             <li id='nav-about'><a href="/about">About</a></li>                       
           </ul>
           <ul class="nav navbar-nav navbar-right"> 
+            <% if(!user){ %> 
+            <li>
+              <button class="btn btn-primary navbar-btn" id="btnJoin">Join</button>
+            </li> 
+            <% } %> 
             <li class="dropdown">
-              <!--<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                <i class="fa fa-user fa-fw"></i>
-                Log in
-                <b class="caret"></b>
-                </a>-->
-                <!--<form action="#">
-                    <button class="btn btn-default navbar-btn">Login</button>
-                    
-                </form>-->
                 <!--Default buttons with dropdown menu-->
-                <div class="btn-group">
+                <div>
                     <button id="login" data-toggle="dropdown" class="btn btn-default dropdown-toggle navbar-btn">
                       <!--set login/user button accordingly-->
                 <% if(!user){ %>
@@ -100,11 +96,7 @@
                      
                 </div>                
             </li> 
-            <% if(!user){ %> 
-            <li>
-              <button class="btn btn-primary navbar-btn pull-right" id="btnJoin">Join</button>
-            </li> 
-            <% } %>                    
+                   
           </ul>
         </div><!--/.nav-collapse -->
       </div>

@@ -15,12 +15,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script src="/bootstrap-tour-0.9.3/build/js/bootstrap-tour.min.js"></script>
+    <%-scripts%>
     <!-- styles -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/stylesheets/style.css">
     <link rel="stylesheet" href="/bootstrap-tour-0.9.3/build/css/bootstrap-tour.min.css">
-    <%-scripts%>
+    <link rel="stylesheet" href="/stylesheets/style.css">
     <%-stylesheets%>
   </head>
   <body id="body">
@@ -44,18 +44,14 @@
             <li id='nav-about'><a href="/about">About</a></li>                       
           </ul>
           <ul class="nav navbar-nav navbar-right"> 
+                      <% if(!user){ %> 
+            <li>
+              <button class="btn btn-primary navbar-btn" id="btnJoin">Join</button>
+            </li> 
+            <% } %> 
             <li class="dropdown">
-              <!--<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                <i class="fa fa-user fa-fw"></i>
-                Log in
-                <b class="caret"></b>
-                </a>-->
-                <!--<form action="#">
-                    <button class="btn btn-default navbar-btn">Login</button>
-                    
-                </form>-->
                 <!--Default buttons with dropdown menu-->
-                <div class="btn-group">
+                <div>
                     <button id="login" data-toggle="dropdown" class="btn btn-default dropdown-toggle navbar-btn">
                       <!--set login/user button accordingly-->
                 <% if(!user){ %>
@@ -100,11 +96,7 @@
                      
                 </div>                
             </li> 
-            <% if(!user){ %> 
-            <li>
-              <button class="btn btn-primary navbar-btn pull-right" id="btnJoin">Join</button>
-            </li> 
-            <% } %>                    
+                   
           </ul>
         </div><!--/.nav-collapse -->
       </div>

@@ -120,7 +120,7 @@ exports.narrativesData = function(req, res){
          console.log(otherCount);
          
         }
-        //if not 'other:...' add to results
+        //if not 'other:...' add to results 
         else{
           object._id = results[i]._id;
           object.count = results[i].count;

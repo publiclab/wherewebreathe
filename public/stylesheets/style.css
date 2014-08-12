@@ -48,3 +48,8 @@ figcaption{
   text-align:justify;
   text-justify:inter-word;
 }
+/*squish nav items a bit to avoid login buttons wrapping before trips mobile mode*/
+.navbar-default .navbar-nav > li > .aNav{
+  padding-left: 7px;
+  padding-right: 10px;
+}

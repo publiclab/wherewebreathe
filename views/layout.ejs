@@ -22,6 +22,9 @@
     <link rel="stylesheet" href="/bootstrap-tour-0.9.3/build/css/bootstrap-tour.min.css">
     <link rel="stylesheet" href="/stylesheets/style.css">
     <%-stylesheets%>
+    <style>
+      <%-blocks.style%>
+    </style>
   </head>
   <body id="body">
     <!-- Fixed navbar -->
@@ -38,11 +41,11 @@
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
           <!--these 'nav-' ids are likely legacy, not sure yet, so havent deleted them...-->
-            <li id='nav-q'><a href="/questionnaire">Questionnaire</a></li>
-            <li id='nav-graphs'><a href="/narratives">Forums</a></li>
-            <li id='nav-kb'><a href="/knowledge-base">Knowledge base</a></li> 
-            <li id='nav-about'><a href="/about">About</a></li>   
-            <li id='nav-download'><a href="/download">Download</a></li>                     
+            <li id='nav-q'><a class='aNav' href="/questionnaire">Questionnaire</a></li>
+            <li id='nav-graphs'><a class='aNav' href="/narratives">Forums</a></li>
+            <li id='nav-kb'><a class='aNav' href="/knowledge-base">Knowledge base</a></li> 
+            <li id='nav-about'><a class='aNav' href="/about">About</a></li>   
+            <li id='nav-download'><a class='aNav' href="/download">Download</a></li>                     
           </ul>
           <ul class="nav navbar-nav navbar-right"> 
             <% if(!user){ %> 

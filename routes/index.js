@@ -112,6 +112,7 @@ exports.narrativesData = function(req, res){
       console.log(results);
       var otherCount = 0
       var modifiedResults = []
+      //var palette = ['#F2D43F', '#492D61']
       for (i in results){
         //if other: make count
         var object = {}
@@ -134,12 +135,17 @@ exports.narrativesData = function(req, res){
           else if (results[i]._id == "Yes, sometimes"){
             object.color = "#048091";        
           }
+          //use colors in palette (rest will be randomly assigned)
+          //else if(palette.length >0){
+          //  object.color = palette[0];
+          //  palette.splice(0, 1)
+          //}
           modifiedResults.push(object);
         }
       }
               //push other on to modifiedResults if exists
         if (otherCount > 0){
-          modifiedResults.push({_id: "Other", color: "red", count: otherCount})
+          modifiedResults.push({_id: "Other", color: "#C0C0C0", count: otherCount})
         }
      console.log("modified results");
       console.log(modifiedResults);
@@ -289,8 +295,12 @@ exports.answer = function ( req, res ){
 }
 /**********************************************************************
 DATA DOWNLOAD
-***********************************************************************/   
+***********************************************************************/ 
 exports.download =  function(req, res) {
+  req.session.returnTo = req.path;
+  res.render('download', { title: 'Export Where We Breathe Data', user : req.user});
+}  
+exports.exportData =  function(req, res) {
 req.session.returnTo = req.path;
 //this is where it really seems like we should have used a RDBMS... Mongo doesnt *really* join data well, and also js being async doesnt make this app-side join/conversion straightforward. Its probably unlikely that our server will get overloaded with data download requests, so I apologize for the convoluted next bit of code (this is better than starting from scratch with a RDBMS!).
   Question.find({},'question order',{sort:{order: 1}}, function(err, questions){

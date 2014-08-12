@@ -58,7 +58,9 @@ $.post( '/narrativesData', options)
           var data = [{data: [[0,1]], color: "red"},
               {data: [[1,2]], color: "yellow"},
               {data: [[2,3]], color: "green"}];
+          
           $.plot($("#chart"), chartData, {
+          colors: ['red','orange','green','blue','purple'],
 			      series: {
 				      bars: {
 					      show: true,
@@ -70,8 +72,7 @@ $.post( '/narrativesData', options)
 			      xaxis: {
 				      mode: "categories",
 				      tickLength: 0,
-				      autoscaleMargin: 0.1,
-				      white-space: nowrap;
+				      autoscaleMargin: 0.1
 			      },
 			      yaxis: {
 			      //a work-around for the fact that Flot doesnt have an option for axis label

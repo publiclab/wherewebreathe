@@ -1,6 +1,0 @@
-<% layout('../layout') -%>
-<% if(message){ %>
-  <div class="alert alert-danger" role="alert">
-    <%= message %>
-  </div>
-<% } %>

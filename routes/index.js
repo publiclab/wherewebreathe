@@ -52,7 +52,7 @@ exports.goBackSkipped = function(req, res){
 };
 exports.narratives = function(req, res){
   authenticateUser(req, res, function(){ 
-    res.render('narratives', { title: 'Graphs and Narratives', user : req.user});
+    res.render('narratives', { title: 'Forums', user : req.user});
   });
 };
 exports.narrativesData = function(req, res){
@@ -61,7 +61,7 @@ exports.narrativesData = function(req, res){
     if(!req.session.graphIndex){
       req.session.graphIndex = 0
     }
-    var questionsForShowing = [6,7,9, 1000, 1001, 10, 1002, 1003, 11, 1004, 1005, 12, 1006, 1007, 13, 1008, 1009, 14, 1010, 1011, 15, 1012, 1013, 16, 1014, 1015, 17, 1016, 1017, 18, 1018, 1019, 19, 1020, 1021, 20, 1022, 1023, 21, 1024, 1025, 22, 1026, 1027, 23, 1028, 1029, 24, 1030, 1031, 25, 1038, 1039, 26, 1036, 1037, 27, 1034, 1035, 28, 29, 30]
+    var questionsForShowing = [1,2.1,3,4,5,6,7,9, 1000, 1001, 10, 1002, 1003, 11, 1004, 1005, 12, 1006, 1007, 13, 1008, 1009, 14, 1010, 1011, 15, 1012, 1013, 16, 1014, 1015, 17, 1016, 1017, 18, 1018, 1019, 19, 1020, 1021, 20, 1022, 1023, 21, 1024, 1025, 22, 1026, 1027, 23, 1028, 1029, 24, 1030, 1031, 25, 1038, 1039, 26, 1036, 1037, 27, 1034, 1035, 28, 29, 30]
     //if user clicks previous or next question (value will either be 1 or -1)
     if(req.body.progression){
       var newIndex = req.session.graphIndex + Number(req.body.progression);
@@ -107,24 +107,53 @@ exports.narrativesData = function(req, res){
         }}
       ], function(err, results){ 
       //loop through results and append colour
+      //palett inspired by http://www.colourlovers.com/palette/1663477/A_Thousand_Rainbows
+      console.log("orig results")
+      console.log(results);
+      var otherCount = 0
+      var modifiedResults = []
+      //var palette = ['#F2D43F', '#492D61']
       for (i in results){
-        if (results[i]._id == "No, never" || results[i]._id == "No"){
-          results[i].color = "red";        
+        //if other: make count
+        var object = {}
+        if(new RegExp("Other:").test(results[i]._id)){
+         otherCount += 1;
+         console.log(otherCount);
+         
         }
-        else if (results[i]._id == "Yes, often (every week)" || results[i]._id == "Yes"){
-          results[i].color = "green";        
-        }
-        else if (results[i]._id == "Yes, sometimes"){
-          results[i].color = "blue";        
+        //if not 'other:...' add to results 
+        else{
+          object._id = results[i]._id;
+          object.count = results[i].count;
+          
+          if (results[i]._id == "No, never" || results[i]._id == "No"){
+            object.color = "#D1026C";        
+          }
+          else if (results[i]._id == "Yes, often (every week)" || results[i]._id == "Yes"){
+            object.color = "#61C155";        
+          }
+          else if (results[i]._id == "Yes, sometimes"){
+            object.color = "#048091";        
+          }
+          //use colors in palette (rest will be randomly assigned)
+          //else if(palette.length >0){
+          //  object.color = palette[0];
+          //  palette.splice(0, 1)
+          //}
+          modifiedResults.push(object);
         }
       }
-     //console.log("Aggregate results");
-      console.log(results);
+              //push other on to modifiedResults if exists
+        if (otherCount > 0){
+          modifiedResults.push({_id: "Other", color: "#C0C0C0", count: otherCount})
+        }
+     console.log("modified results");
+      console.log(modifiedResults);
       if(results.length<=0){
         var answers = "no data"
       }
       else{
-        answers = results
+        answers = modifiedResults
       }
       response = {
         question: questions.question,
@@ -266,8 +295,12 @@ exports.answer = function ( req, res ){
 }
 /**********************************************************************
 DATA DOWNLOAD
-***********************************************************************/   
+***********************************************************************/ 
 exports.download =  function(req, res) {
+  req.session.returnTo = req.path;
+  res.render('download', { title: 'Export Where We Breathe Data', user : req.user});
+}  
+exports.exportData =  function(req, res) {
 req.session.returnTo = req.path;
 //this is where it really seems like we should have used a RDBMS... Mongo doesnt *really* join data well, and also js being async doesnt make this app-side join/conversion straightforward. Its probably unlikely that our server will get overloaded with data download requests, so I apologize for the convoluted next bit of code (this is better than starting from scratch with a RDBMS!).
   Question.find({},'question order',{sort:{order: 1}}, function(err, questions){

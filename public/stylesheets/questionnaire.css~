@@ -1,8 +1,0 @@
-.theme-showcase{
-  max-width: 700px;
-}
-.radio, .checkbox {
-    margin-bottom: 13px;
-    margin-top: 13px !important;
-    min-height: 23px;
-}

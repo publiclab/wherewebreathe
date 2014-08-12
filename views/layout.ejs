@@ -22,11 +22,13 @@
     <link rel="stylesheet" href="/bootstrap-tour-0.9.3/build/css/bootstrap-tour.min.css">
     <link rel="stylesheet" href="/stylesheets/style.css">
     <%-stylesheets%>
+    <style>
+      <%-blocks.style%>
+    </style>
   </head>
   <body id="body">
     <!-- Fixed navbar -->
     <div id="menu" class="navbar navbar-default navbar-fixed-top" role="navigation">
-      <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="sr-only">Toggle navigation</span>
@@ -38,10 +40,12 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li id='nav-q'><a href="/questionnaire">Questionnaire</a></li>
-            <li id='nav-graphs'><a href="/narratives">Narratives</a></li>
-            <li id='nav-kb'><a href="/knowledge-base">Knowledge base</a></li> 
-            <li id='nav-about'><a href="/about">About</a></li>                       
+          <!--these 'nav-' ids are likely legacy, not sure yet, so havent deleted them...-->
+            <li id='nav-q'><a class='aNav' href="/questionnaire">Questionnaire</a></li>
+            <li id='nav-graphs'><a class='aNav' href="/narratives">Forums</a></li>
+            <li id='nav-kb'><a class='aNav' href="/knowledge-base">Knowledge base</a></li> 
+            <li id='nav-about'><a class='aNav' href="/about">About</a></li>   
+            <li id='nav-download'><a class='aNav' href="/download">Download</a></li>                     
           </ul>
           <ul class="nav navbar-nav navbar-right"> 
             <% if(!user){ %> 
@@ -99,7 +103,6 @@
                    
           </ul>
         </div><!--/.nav-collapse -->
-      </div>
     </div>
   <div class="content">
     <div class="container theme-showcase" role="main">
@@ -117,10 +120,9 @@
   </div><!-- end content -->
   <div class="footer">
     <div class="container">
-      <div class="col-md-6 col-xs-6 ">[what should we put here?]</div>
-      <div class="col-md-6 col-xs-6 ">
-      <a class="pull-right" id="download" href="#">Download Where We Breathe data</a>
-      </div>
+      <!--<div class="col-md-6 col-xs-6 "></div>
+      <div class="col-md-6 col-xs-6 "></div>-->
+      This is a project by Public Lab and X; this website is <a href='https://github.com/publiclab/wherewebreathe'>open source</a> software.
     </div>
   </div>
   </body>
@@ -141,37 +143,16 @@
   $(function(){
     //$('#logout').click(function(){logout();})
     $('#btnJoin').click(function() { window.location = '/register'; })
-    $('#download').click(function(event){
-    //prevent actual submit, but HTML5 validation triggers
-    event.preventDefault();
-    $.get( '/download',{})
-      .fail(function(response) {
-        $( ".alert" ).remove();
-        var html = '<div class="alert alert-danger" role="alert">'+response.responseText+'</div>'
-        $( html ).insertAfter( ".page-header" );
-      })
-      .done(function(response) {
-        //redirect to login with message
-        console.log(response);
-        //window.open('/test', '_self');
-        Date.prototype.yyyymmdd = function() {         
-                                
-          var yyyy = this.getFullYear().toString();                                    
-          var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based         
-          var dd  = this.getDate().toString();             
-                              
-          return yyyy + (mm[1]?mm:"0"+mm[0]) + (dd[1]?dd:"0"+dd[0]);
-        }; 
-        var date = new Date().yyyymmdd()
-        var encodedUri = encodeURI(response);
-        var link = document.createElement("a");
-        document.body.appendChild(link);
-        link.setAttribute("href", 'data:text/csv;charset=utf-8,' +encodedUri);
-        link.setAttribute("download", "WhereWeBreatheData"+date+".csv");
+    
+    //highlight in menu which page active page
+    var url = window.location;
+    // Will only work if string in href matches with location
+    $('ul.nav a[href="'+ url +'"]').parent().addClass('active');
 
-        link.click();
-      });
-  });
+    // Will also work for relative and absolute hrefs
+    $('ul.nav a').filter(function() {
+        return this.href == url;
+    }).parent().addClass('active');
   })//end on ready   
   </script>
 </html>

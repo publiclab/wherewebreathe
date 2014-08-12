@@ -1,7 +1,6 @@
 <% layout('/layout') -%>
 <% script('/javascripts/flot/jquery.flot.min.js'), script('/javascripts/flot/jquery.flot.categories.min.js') -%>
 <% stylesheet('/stylesheets/narratives.css')%>
-<h3>(Stand-alone narratives page example)</h3>
 <div class="panel panel-default">
   <div class="panel-body">
     <h2 id="question"></h2>
@@ -10,8 +9,8 @@
       </div>    
     </div>
     
-    <a href="#" id="previous" class="pull-left"><i class="fa fa-angle-left"></i> previous question</a>
-    <a href="#" id="next" class="pull-right">next question <i class="fa fa-angle-right"></i></a>
+    <a href="#" id="previous" class="pull-left"><i class="fa fa-angle-left"></i> previous</a>
+    <a href="#" id="next" class="pull-right">next <i class="fa fa-angle-right"></i></a>
   </div>
 </div>
 <script>
@@ -64,7 +63,8 @@ $.post( '/narrativesData', options)
 				      bars: {
 					      show: true,
 					      barWidth: 0.5,
-					      align: "center"
+					      align: "center",
+					      fill: .85
 				      }
 			      },
 			      xaxis: {
@@ -95,6 +95,11 @@ $.post( '/narrativesData', options)
       });//end done?
 }//end function getChart()
 $(function($) {
+//if not small screensize, make next and previous labels more descriptive
+  if($(window).innerWidth()>400){
+    $('#next').html('next question <i class="fa fa-angle-right"></i>');
+    $('#previous').html('<i class="fa fa-angle-left"></i> previous question');
+  }
   //check #chartParent width and set chart width based on it. 
   $('#chart').innerWidth($('#chartParent').innerWidth())
   

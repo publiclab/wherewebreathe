@@ -3,13 +3,9 @@
   height:250px;
   text-align: center;
   margin: 0 auto;
-  position: relative; 
-  background-color: red;
-  
+  position: relative;   
 }
 #noData{
-  margin: 100px auto;
-  position: relative;
 }
 #question{
   text-align: center;
@@ -27,6 +23,21 @@
     z-index: 1000;
 }
 #chartParent{
-  padding: 5px;
+  padding: 30px 5px;
   position: relative;
+}
+#previous, #next{
+  font-size: 17px;
+  padding-top: 15px;
+  
+}
+#chart div.xAxis div.tickLabel 
+{    
+    transform: rotate(45deg);
+    -ms-transform:rotate(45deg); /* IE 9 */
+    -moz-transform:rotate(45deg); /* Firefox */
+    -webkit-transform:rotate(45deg); /* Safari and Chrome */
+    -o-transform:rotate(-45deg); /* Opera */
+    rotation-point:0 0; /* CSS3 */
+    rotation:270deg; /* CSS3 */
 }

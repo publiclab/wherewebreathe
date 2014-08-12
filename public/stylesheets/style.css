@@ -8,6 +8,9 @@ body{
   height: 100%;
   background-color: #f8f8f8;
 }
+#title{
+  font-size: 38px;
+}
 .content{
   margin-top: -20px;/*override navbar margin*/
   padding-top: 20px;/*override navbar margin*/
@@ -21,7 +24,7 @@ body{
   padding: 20px;
 }
 /*make form inputs and helper messages default to Helvetica et al.*/
-.alert, input{
+.alert, input, #login, #btnJoin, .register{
   font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
 }
 #login, #btnJoin{

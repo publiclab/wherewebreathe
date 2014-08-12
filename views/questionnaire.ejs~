@@ -4,7 +4,7 @@
 <%if (subheading == "symptoms"){%>
 <div id="divQ" class="panel panel-success">
   <div class="panel-heading">
-    <h3 class="panel-title">Questions about your health symptoms</h3>
+    <h3 id='h3Question' class="panel-title">Questions about your health symptoms</h3>
   </div>
 <% } 
 

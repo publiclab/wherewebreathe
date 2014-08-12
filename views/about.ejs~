@@ -19,19 +19,27 @@ In the future we hope to establish a lending library of formaldehyde sensors tha
 </p>
 
 <h2>Team</h2>
-<p>
-<strong>Jeffrey Warren</strong> leads the development of the WWB webtool. Warren is the creator of <a target='_blank' href="http://grassrootsmapping.org/">GrassrootsMapping.org</a> and co-founder and Research Director for the Public Laboratory for Open Technology and Science, Warren designs mapping and civic science tools and professionally flies balloons and kites. Notable software he has created include the vector-mapping framework Cartagen and orthorectification tool MapKnitter. He is a fellow at MIT's Center for Civic Media and an advocate of open source software, hardware, and data. He co-founded Vestal Design, a graphic/interaction design firm in 2004, and directed the Cut&Paste Labs project, a year-long series of workshops on opensource tools and web design in 2006-7 with Lima designer Diego Rotalde. Jeff holds an MS from MIT and a BA in Architecture from Yale University, and spent much of that time working with artist/technologist Natalie Jeremijenko, building robotic dogs for public science investigations.
-</p>
-<p>
-<strong>Nicole Novak</strong> is our lead epidemiologist. Novak designed the research protocol and analyzes the quantitative data in addition to facilitating outreach to the Hispanic migrant labor communities in the midwest with whom she works. Novak, a doctoral candidate in Epidemiologic Science at the University of Michigan-Ann Arbor, holds a masters in public health science from the University of Oxford. She is the 2013-2014 recipient of the Angus Campbell Fellowship for Survey Research (Institute for Social Research-University of Michigan).
-</p>
-<p>
+<div class="row">
+  <p class='col-md-6'>
+  <strong>Jeffrey Warren</strong> leads the development of the WWB webtool. Warren is the creator of <a target='_blank' href="http://grassrootsmapping.org/">GrassrootsMapping.org</a> and co-founder and Research Director for the Public Laboratory for Open Technology and Science, Warren designs mapping and civic science tools and professionally flies balloons and kites. Notable software he has created include the vector-mapping framework Cartagen and orthorectification tool MapKnitter. He is a fellow at MIT's Center for Civic Media and an advocate of open source software, hardware, and data. He co-founded Vestal Design, a graphic/interaction design firm in 2004, and directed the Cut&Paste Labs project, a year-long series of workshops on opensource tools and web design in 2006-7 with Lima designer Diego Rotalde. Jeff holds an MS from MIT and a BA in Architecture from Yale University, and spent much of that time working with artist/technologist Natalie Jeremijenko, building robotic dogs for public science investigations.
+  </p>
+  <p class='col-md-6'>
+  <strong>Nicole Novak</strong> is our lead epidemiologist. Novak designed the research protocol and analyzes the quantitative data in addition to facilitating outreach to the Hispanic migrant labor communities in the midwest with whom she works. Novak, a doctoral candidate in Epidemiologic Science at the University of Michigan-Ann Arbor, holds a masters in public health science from the University of Oxford. She is the 2013-2014 recipient of the Angus Campbell Fellowship for Survey Research (Institute for Social Research-University of Michigan).
+  </p>
+</div>
+<div class="row">
+
+</div>
+<div class="row">
+
+</div>
+<p class='col-md-6'>
 <strong>Dr. Nick Shapiro</strong> is our lead researcher of WWB. Shapiro holds a doctorate in anthropology and a masters in medical anthropology from the University of Oxford. In his doctoral work Shapiro tracked the resale of 150,000 FEMA trailers across the US using ethnographic, GIS and citizen science techniques. Shapiro began to develop the concept of this project during an NEH fellowship at University of Southern California’s Institute of Multimedia Literacy in 2011. He is currently a post-doctoral researcher in Goldsmiths’ Department of Sociology where he studies environmental monitoring practices and devices as a part of the European Research Council funded Citizen Sense project.
 </p>
-<p>
-<strong>Melissa Nunes</strong> is our site programmer. Nunes freelances as a Web Developer and GIS Analyst and is the founder of <a href='http://kidfriendlyplaces.org' target="_blank">Kid-Friendly Places</a>, and a co-founder of Vancouver's <a target="_blank" href='http://streetsforeveryone.org'>Streets For Everyone</a>. Her interests include open data, crowdsourcing, GIS, urbanism, and DIY, some of which she occasionally <a target="_blank" href='http://topophilo.com'>blogs</a> about. 
+<p class='col-md-6'>
+<strong>Melissa Nunes</strong> is our site programmer. Nunes freelances as a Web Developer and GIS Analyst. She founded <a href='http://kidfriendlyplaces.org' target="_blank">Kid-Friendly Places</a>, and is a co-founder of Vancouver's <a target="_blank" href='http://streetsforeveryone.org'>Streets For Everyone</a>. Her interests include open data, crowdsourcing, GIS, urbanism, and DIY, some of which she occasionally <a target="_blank" href='http://topophilo.com'>blogs</a> about. 
 </p>
-<p>
+<p class='col-md-6'>
 <strong>Ellen (Stevie) Lewis</strong> is our the Outreach manager at Public Lab and leads WWB's community outreach. Lewis comes to Public Lab with a background in environmental studies and community development. She has held positions as Volunteer Coordinator for the Grand Bay National Estuarine Research Reserve in Mississippi, Resource Advisor for the National Park Service in response to the Deepwater Horizon Oil Spill, and as Watershed Coordinator for the Alliance for Aquatic Resource Monitoring, a non-profit focused on promoting citizen science in aquatics. Stevie’s interest in building community resilience through environmental initiatives includes community and environmental work in far reaching corners of Kenya, Thailand, Botswana and Scotland. Stevie holds a BA in Environmental Studies from Dickinson College. As a 2012 Rotary Ambassadorial Scholar, Stevie completed a MSc in Environment and Development from the University of Edinburgh. Her academic work and dissertation earned distinction through the university and she completed her studies first in class.
 </p>
 <h2>Advisors:</h2>

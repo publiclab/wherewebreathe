@@ -4,7 +4,7 @@
 </div>
 <form class='register' role="form" action="/register" method="post">
 <% if(regErr.length > 0){ %>
-<div class="alert alert-danger" role="alert">
+<div id='regMsg' class="alert alert-danger" role="alert">
 There were the following errors:
   <ul>
     <% regErr.forEach( function( message ){ %>
@@ -49,7 +49,16 @@ There were the following errors:
 </form>
 <div id='bugs'>Having trouble with the registration form? Contact us at <a href="mailto:support@wherewebreathe.org?Subject=Registration bugs" target="_top">
 support@wherewebreathe.org</a></div>
-
+<script>
+  $(function(){
+  //if there is an error message scroll to it.
+  <% if(regErr.length > 0){ %>
+  console.log("scroll")
+    $('html, body').animate({
+      scrollTop: $("#regMsg").offset().top - $('#menu').outerHeight()}, 600);
+    });
+  <%} %>
+</script>
   <!--<label for="username">Are you human? (sorry: spam filtering!)</label>
   <fieldset>
     <div class="radio">

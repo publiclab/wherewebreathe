@@ -1,5 +1,5 @@
 <% layout('layout') -%>
-<% script('/javascripts/flot/jquery.flot.min.js'), script('/javascripts/flot/jquery.flot.categories.min.js'), script('/h5Validate-master/jquery.h5validate.min.js') -%>
+<% script('/javascripts/flot/jquery.flot.min.js'), script('/javascripts/flot/jquery.flot.categories.min.js') -%>
 <% stylesheet('/stylesheets/questionnaire.css')%>
 <%if (subheading == "symptoms"){%>
 <div id="divQ" class="panel panel-success">
@@ -99,7 +99,6 @@ else{%>
 <div class='text-center center-block'>Approximately <strong><span class='text-success'><%= numUnans %></span></strong> questions left.</div>
   <script>
     $(function(){
-    //make sure html5 validation happens on all browsers
     //make sure if other answer, text box for other answer not empty
       $('input[type=radio]').change(function(){
         if ($('input[name=answer]:checked').val() == "Other:"){
@@ -169,3 +168,4 @@ else{%>
         }
     }
   </script>
+

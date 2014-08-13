@@ -97,7 +97,7 @@ else{%>
   </div>
 </div>
 <div class='text-center center-block'>Approximately <strong><span class='text-success'><%= numUnans %></span></strong> questions left.</div>
-  <script>
+    <script>
     $(function(){
     //make sure if other answer, text box for other answer not empty
       $('input[type=radio]').change(function(){
@@ -111,9 +111,14 @@ else{%>
       });
       //if small screen, focus window on Question
       if($(window).height() <= 400){
-        console.log($("#divQ").offset().top - $('#menu').outerHeight())
+        //console.log($("#divQ").offset().top - $('#menu').outerHeight())
+        <% if(message){ %>       
+        $('html, body').animate({
+          scrollTop: $("#msg").offset().top - $('#menu').outerHeight()}, 600);
+        <%}else{%>
         $('html, body').animate({
           scrollTop: $("#divQ").offset().top - $('#menu').outerHeight()}, 600);
+        <%}%>
       }
     });
     $('#frmAns').submit(function(event){

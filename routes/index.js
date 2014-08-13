@@ -247,6 +247,8 @@ exports.answer = function ( req, res ){
   var qid = req.body.qid;
   var uid= req.user._id; 
   var a = req.body.answer;
+  console.log("answerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+  console.log(a)
   //check that there already isnt an answer for that question/user combo (redundant, but clean data is awesome!)
   Answer.find({qid: qid, uid: uid}, function(err, existingResults){
     if (err) {

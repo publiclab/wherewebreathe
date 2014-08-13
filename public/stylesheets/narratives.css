@@ -15,6 +15,12 @@
     top: 50%;
     transform: rotate(-90deg);
     transform-origin: 30px 20px 0;
+    -ms-transform:rotate(-90deg); /* IE 9 */
+    -moz-transform:rotate(-90deg); /* Firefox */
+    -webkit-transform:rotate(-90deg); /* Safari and Chrome */
+    -o-transform:rotate(-90deg); /* Opera */
+    rotation-point:30px 20px 0;; /* CSS3 */
+    rotation:-90deg; /* CSS3 */
 }
 .axisLabel {
     font-size: 11px;

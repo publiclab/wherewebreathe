@@ -141,7 +141,6 @@ else{%>
         options['nextq']= nextQ;     
       }
       console.log(options);
-      options['answer'] = "&&^*^%*"
       $.post( '/answer', options)
           .fail(function(response) {
           console.log("fail")

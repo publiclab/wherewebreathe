@@ -110,11 +110,6 @@
       <%-blocks.header%>
         <h1 id="title"><%= title %></h1>
       </div>
-    <% if(message){ %>
-      <div class="alert <%= message.msgType %>" role="alert">
-        <%= message.text %>
-      </div>
-    <% } %>
     <%-body -%>
     </div><!-- end .container theme-showcase -->
   </div><!-- end content -->
@@ -141,6 +136,11 @@
       });
     }
   $(function(){
+    <% if(message){ %>
+      //if errmessage, show message
+      handleMsg('<%=message.text%>', '<%= message.msgType %>')
+      console.log('<%=message.text%>')
+    <% } %>
     //$('#logout').click(function(){logout();})
     $('#btnJoin').click(function() { window.location = '/register'; })
     
@@ -153,6 +153,19 @@
     $('ul.nav a').filter(function() {
         return this.href == url;
     }).parent().addClass('active');
-  })//end on ready   
+  })//end on ready 
+  
+  function handleMsg(message, type, pos){
+    var alertType = type || "alert-danger";
+    //a css selector of the element the alert will be positioned after
+    var alertPos = pos || ".page-header" 
+    $( ".alert" ).remove();
+    var html = '<div id="layoutMsg" class="alert '+alertType+'" role="alert">'+message+'</div>'
+    $( html ).insertAfter( alertPos );
+    if($(window).height() <= 400){
+      $('html, body').animate({
+      scrollTop: $("#layoutMsg").offset().top - $('#menu').outerHeight()}, 600);
+    }
+  }  
   </script>
 </html>

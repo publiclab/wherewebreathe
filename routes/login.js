@@ -74,7 +74,10 @@ exports.register_post = function(req, res) {
           }
       
       //check form input again serve-side
-      console.log(errorMsgs);
+      //console.log(errorMsgs);
+       //over 18
+       console.log("Eighteen: "+req.body.eighteen)
+    if(req.body.eighteen != "18"){ errorMsgs.push("You must be over 18 to register")}; 
       //username
     if(! /^[A-Za-z0-9_.-@]{3,30}$/.test(txtUsername)){ errorMsgs.push("Your username must be 3 to 30 characters in length and may contain letters, numbers, or . - @ _ characters.")}; 
     //email

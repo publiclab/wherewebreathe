@@ -1,9 +1,13 @@
 #chart{
-  max-width:500px;
+  max-width:1500px;
+  min-width: 500px;
   height:250px;
   text-align: center;
   margin: 0 auto;
   position: relative;   
+}
+.content{
+  min-width: 600px;
 }
 #noData{
 }
@@ -15,6 +19,12 @@
     top: 50%;
     transform: rotate(-90deg);
     transform-origin: 30px 20px 0;
+    -ms-transform:rotate(-90deg); /* IE 9 */
+    -moz-transform:rotate(-90deg); /* Firefox */
+    -webkit-transform:rotate(-90deg); /* Safari and Chrome */
+    -o-transform:rotate(-90deg); /* Opera */
+    rotation-point:30px 20px 0;; /* CSS3 */
+    rotation:-90deg; /* CSS3 */
 }
 .axisLabel {
     font-size: 11px;
@@ -31,13 +41,9 @@
   padding-top: 15px;
   
 }
-/*#chart div.xAxis div.tickLabel 
+#chart div.xAxis div.tickLabel 
 {    
-    transform: rotate(45deg);
-    -ms-transform:rotate(45deg); /* IE 9 */
-    -moz-transform:rotate(45deg); /* Firefox */
-    -webkit-transform:rotate(45deg); /* Safari and Chrome */
-    -o-transform:rotate(-45deg); /* Opera */
-    rotation-point:0 0; /* CSS3 */
-    rotation:270deg; /* CSS3 */
-}*/
+   
+    width: 50px;
+    
+}

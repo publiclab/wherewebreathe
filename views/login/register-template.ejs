@@ -2,9 +2,20 @@
 <div id='lnkLogin'>
  If you already have an account, you can <strong><a href="/login">login here</a></strong>.
 </div>
+<div class="panel panel-info">
+  <div class="panel-heading">
+    <h3 class="panel-title">Stay Anonymous</h3>
+  </div>
+  <div class="panel-body">
+    <p>There's no reason to share your real name, address, or contact information. Share your data under a false name and be careful of the potentially identifying information you decide to share.</p>
+    <p>We work hard to keep your data secure, and don't need to know who you are.</p>
+    <p>You can decide to share privately with our team of epidemiologists and social scientists, and the information you supply will only be used for scholarly purposes and in a non-identifying manner.</p>
+    <p>If you choose to make your data public, anyone will be able to read your story to learn about indoor air contamination in mobile homes.</p>
+  </div>
+</div>
 <form class='register' role="form" action="/register" method="post">
 <% if(regErr.length > 0){ %>
-<div class="alert alert-danger" role="alert">
+<div id='regMsg' class="alert alert-danger" role="alert">
 There were the following errors:
   <ul>
     <% regErr.forEach( function( message ){ %>
@@ -41,7 +52,7 @@ There were the following errors:
   </div>
   <div class="form-group">
     <label for="password2">I am at least 18 years old:</label>
-    <input type="checkbox" name="18" value="18" required>
+    <input type="checkbox" name="eighteen" value="18" required>
   </div>
   <button type="submit" class="btn btn-default">Submit</button>&nbsp;
   <a href="/">
@@ -49,7 +60,17 @@ There were the following errors:
 </form>
 <div id='bugs'>Having trouble with the registration form? Contact us at <a href="mailto:support@wherewebreathe.org?Subject=Registration bugs" target="_top">
 support@wherewebreathe.org</a></div>
-
+<script>
+  $(function(){
+  //if there is an error message scroll to it.
+  <% if(regErr.length > 0){ %>
+  console.log("scroll")
+    $('html, body').animate({
+      scrollTop: $("#regMsg").offset().top - $('#menu').outerHeight()}, 600);
+    });
+  <%} %>
+  });
+</script>
   <!--<label for="username">Are you human? (sorry: spam filtering!)</label>
   <fieldset>
     <div class="radio">

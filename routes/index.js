@@ -246,10 +246,10 @@ exports.answer = function ( req, res ){
   }
   var qid = req.body.qid;
   var uid= req.user._id; 
-  var a = req.body.answer;
+  var a = req.body.answer.trim();
   console.log("answerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
   console.log(a)
-      if (!a) {
+      if (!a || a == "") {
       return res.send(400, "Your answer shouldnt be blank")     
     }
   //check that there already isnt an answer for that question/user combo (redundant, but clean data is awesome!)

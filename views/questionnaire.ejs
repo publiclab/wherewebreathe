@@ -150,8 +150,7 @@ else{%>
           //if response isnt 'OK', it should contain a number for the next conditional question
           if(response !== "OK"){
             console.log("response not 'ok'")
-            //window.location.replace("/questionnaire/0/"+response)
-            handleMsg(response);           
+            window.location.replace("/questionnaire/0/"+response)           
           }
           else{
           window.location.replace("/questionnaire ")

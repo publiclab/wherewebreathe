@@ -141,6 +141,7 @@ else{%>
         options['nextq']= nextQ;     
       }
       console.log(options);
+      options['answer'] = "&^$%%&^%*^%*%";
       $.post( '/answer', options)
           .fail(function(response) {
           $( ".alert" ).remove();
@@ -153,10 +154,13 @@ else{%>
             //console.log(response)
             //window.location.replace("/questionnaire/0/"+response)
             $( ".alert" ).remove();
-            var html = '<div class="alert alert-danger" role="alert">'+response'</div>'
+            var html = '<div class="alert alert-danger" role="alert">'+response+'</div>'
             $( html ).insertAfter( ".page-header" );
-            $('html, body').animate({
+            if($(window).height() <= 400){
+              $('html, body').animate({
               scrollTop: $("#msg").offset().top - $('#menu').outerHeight()}, 600);
+              }
+            
             
           }
           else{

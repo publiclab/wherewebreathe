@@ -10,17 +10,17 @@ var csv = require('express-csv')
 function removeFromUnansweredSession(req, qid, cb){
   var temp = req.session.unanswered;
   index = temp.indexOf(qid);
-  console.log(index + "index")
-  console.log(qid + "    -->qid") 
+  //console.log(index + "index")
+  //console.log(qid + "    -->qid") 
   //if qid found in unanswered, remove it
   if (index !== -1){
     temp.splice(index, 1)
     req.session.unanswered = temp;
-    console.log("removefromunans = = = = = = = = = = = = = = = = = = = = = = = = = = = =")
+    //console.log("removefromunans = = = = = = = = = = = = = = = = = = = = = = = = = = = =")
 
     
   }
-  console.log(temp);
+  //console.log(temp);
   if(cb){
     cb();
   }
@@ -249,6 +249,9 @@ exports.answer = function ( req, res ){
   var a = req.body.answer;
   console.log("answerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
   console.log(a)
+      if (!a) {
+      return res.send(400, "Your answer shouldnt be blank")     
+    }
   //check that there already isnt an answer for that question/user combo (redundant, but clean data is awesome!)
   Answer.find({qid: qid, uid: uid}, function(err, existingResults){
     if (err) {
@@ -283,9 +286,9 @@ exports.answer = function ( req, res ){
           var msgResponse = "OK";
           if (req.body.nextq){
             msgResponse = req.body.nextq.toString();
-            console.log("nextQ========================"+req.body.nextq);
+            //console.log("nextQ========================"+req.body.nextq);
           }
-          console.log("ANSWEEEEEEEEEEEEEEEEEEEEER");
+          //console.log("ANSWEEEEEEEEEEEEEEEEEEEEER");
           res.send(200, msgResponse);
           });
         });//end findby...
@@ -349,7 +352,7 @@ req.session.returnTo = req.path;
           });//end ans.find        
         }
         else {
-          console.log(csv);
+          //console.log(csv);
           res.csv(csv)
           return console.log('end'); // exit condition
         }

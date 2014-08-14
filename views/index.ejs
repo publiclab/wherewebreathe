@@ -19,48 +19,93 @@
 <hr>
 <% include login/register-template %>
 <script>
+function border(selector) {
+  $(selector).css( "border", "solid white 3px" );
+}
+function noborder(selector) {
+  $(selector).css( "border", "none" );
+}
 $(function(){
 if( '<%= tour %>' == 'yes'){
   var tour = new Tour({orphan: true});
+//if window less than 768x (bootstrap nav bar break point) set up tour one way, else set up the other way
+//show border function
 
-  tour.addStep({
+
+tour.addStep({
    element: "#f",
    title: "Welcome to Where We Breathe",
    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vitae nisl diam. Morbi elementum tempor mi, eu faucibus eros feugiat eget. Duis tempus felis a dui iaculis, sit amet ullamcorper. <br><br> This tour will guide you through some of WWB's site features",
    backdrop: true
+});
+//explain collapsing menu if small screen
+if($(window).width() < 768){
+tour.addStep({
+   element: ".navbar-toggle",
+   title: "Menu",
+   content: "On small screnes, the menu opens when you click this button", 
+   onShow: function (tour) {$('.navbar-collapse').collapse('show');},//mobile
+   placement: "bottom"//mobile
   });
+ }
+ 
+if($(window).height() < 768){
+  console.log($(window).height())
+}
+else{
+  console.log("there")
+}
 
-  tour.addStep({
-   element: "#login",
-   title: "User Menu",
-   content: "Click the user menu to manage your account", 
-   placement: "left"
-  });
-  tour.addStep({
-   element: ".userMenu",
-   title: "User Menu",
-   content: "Inside the user menu, you can change your password, privacy settings, and logout",
-   onShow: function (tour) {$('.userMenu').show();},
-   onHidden: function (tour) {$('.userMenu').hide();},
-   placement: "left"
-  });
+
+  
   tour.addStep({
    element: "#nav-q",
    title: "Questionnaire ",
    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam lobortis, diam ac mattis dictum, purus nibh auctor sem, ut auctor. </a>", 
+   onShow: function (tour) {border('#nav-q')},
+   onHidden: function (tour) {noborder('#nav-q')},
    placement: 'bottom'
   });
   tour.addStep({
    element: "#nav-graphs",
-   title: "Forum",
+   title: "Forums",
    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam lobortis, diam ac mattis dictum, purus nibh auctor sem, ut auctor. ", 
+   onShow: function (tour) {border("#nav-graphs")},
+   onHidden: function (tour) {noborder("#nav-graphs")},
    placement: 'bottom'
   });
+  if($(window).width() < 768){
+    var tourLoginPlacement = "right";
+  }
+  else{
+    tourLoginPlacement = 'left';
+    
+  }
   tour.addStep({
-   element: "#nav-kb",
-   title: "Knowledge Base",
-   content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam lobortis, diam ac mattis dictum, purus nibh auctor sem, ut auctor.", 
-   placement: 'bottom'
+   element: "#login",
+   title: "User Menu",
+   content: "Click the user menu to manage your account", 
+   placement: tourLoginPlacement
+  });
+  
+  if($(window).width() < 768){
+    var tourUserMenuPlacement = "top";
+  }
+  else{
+    tourUserMenuPlacement = "left";
+  }  
+  tour.addStep({
+   element: ".userMenu",
+   title: "User Menu",
+   content: "Inside the user menu, you can change your password, privacy settings, and logout",
+   onShow: function (tour) {
+     $('.userMenu').show(); 
+     //$('.navbar-collapse').scrolltop($('.userMenu').scrollTop());
+     $('.navbar-collapse').animate({
+        scrollTop: $('.userMenu').offset().top}, 0);
+   },
+   onHidden: function (tour) {$('.userMenu').hide();},
+   placement: tourUserMenuPlacement
   });
   tour.addStep({
    element: "#f",
@@ -69,7 +114,6 @@ if( '<%= tour %>' == 'yes'){
    placement: 'bottom'
   });
   tour.restart();
-  console.log("here");
 }
 })//end on ready
 </script>

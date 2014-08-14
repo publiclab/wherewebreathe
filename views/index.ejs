@@ -104,14 +104,19 @@ else{
      $('.navbar-collapse').animate({
         scrollTop: $('.userMenu').offset().top}, 0);
    },
-   onHidden: function (tour) {$('.userMenu').hide();},
+   onHidden: function (tour) {
+    $('.userMenu').hide();
+    if($(window).width() < 768){ 
+      $('.navbar-collapse').collapse('hide');//mobile
+    }
+   },
    placement: tourUserMenuPlacement
   });
   tour.addStep({
    element: "#f",
    title: "Lorem Ipsum",
    content: "<p class='justify'>[some text about how important the survey responses will be as a call to continue on to the survey]</p> <br><br> <a  href='/questionnaire'><button class='btn btn-primary center-block'>Start the questionnaire</button></a>", 
-   placement: 'bottom'
+   placement: 'bottom',
   });
   tour.restart();
 }

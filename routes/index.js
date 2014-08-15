@@ -30,8 +30,9 @@ exports.index = function(req, res){
   res.render('index', { title: 'Home', user : req.user});
 };
 exports.welcome = function(req, res){
-  req.session.returnTo = req.path;
+  authenticateUser(req, res, function(){ 
   res.render('index', { title: 'Home', user : req.user, tour: 'yes'});
+  });
 };
 exports.about = function(req, res){
   req.session.returnTo = req.path;

@@ -1,6 +1,6 @@
 <% layout('layout') -%>
-<% script('/javascripts/flot/jquery.flot.min.js'), script('/javascripts/flot/jquery.flot.categories.min.js') -%>
-<% stylesheet('/stylesheets/questionnaire.css')%>
+<% script('/javascripts/flot/jquery.flot.min.js'), script('/javascripts/flot/jquery.flot.categories.min.js'), script('//code.jquery.com/ui/1.11.1/jquery-ui.js') -%>
+<% stylesheet('/stylesheets/questionnaire.css'), stylesheet('//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css')%>
 <%if (subheading == "symptoms"){%>
 <div id="divQ" class="panel panel-success">
   <div class="panel-heading">
@@ -114,7 +114,23 @@ else{%>
         $('html, body').animate({
           scrollTop: $("#divQ").offset().top - $('#menu').outerHeight()}, 600);
       }
-    });
+      
+      //if text input, checck if possible answers and set up autocomplete
+      console.log("<%= answers[0] %>")
+      if ($('input[name=answer]').attr("type") == 'text'){
+        <%if (answers.length >0){%>
+        var availableTags = [];
+          //for some reason the answers array doesnt come through as an array of strings, so force it?
+          <% for(var i=0; i<answers.length; i++) {%>
+            availableTags.push('<%= answers[i] %>')
+          <% }%>          
+          console.log(availableTags)
+          $('input[name=answer]').autocomplete({
+            source: availableTags
+          });
+        <%}%>
+      }
+    });//end on ready
     $('#frmAns').submit(function(event){
       //prevent actual submit, but HTML5 validation triggers
       event.preventDefault();

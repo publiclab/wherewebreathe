@@ -209,8 +209,15 @@ exports.questionnaire = function ( req, res ){
         numUnans: req.session.unanswered.length        
       }
       //append suggested answers if they exist (mongoose creates empty array it seems even if query returns nothing for answers key)
-      if (typeof question.answers !== 'undefined' && question.answers.length > 0){
-        pageOptions['answers']= question.answers; 
+      //if (typeof question.answers !== 'undefined' && question.answers.length > 0){
+        pageOptions['answers']= question.answers;
+         
+      //}
+      //if autocomplete info exists, overwrite answers to that
+      console.log(question.answers)
+      if(typeof question.autocomplete !== 'undefined' && question.autocomplete.length > 0){
+      console.log("autocomplete")
+        pageOptions['answers']= question.autocomplete;
       }
       //append validation logic if present
       if (typeof question.validation !== 'undefined'){

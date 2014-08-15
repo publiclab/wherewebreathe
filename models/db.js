@@ -59,7 +59,8 @@ var QuestionSchema = new Schema({
   validation: String,
   valMsg: String, 
   placeholder: String,
-  qSet: String
+  qSet: String,
+  autocomplete: Array
 });
 
 //module.exports = userDB.model('Account', Account);

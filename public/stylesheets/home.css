@@ -19,3 +19,7 @@ h1#title{
 .page-header{
   margin: 0;
 }
+.tour-steps{
+  margin-bottom: -10px;
+  margin-top: 6px;
+}

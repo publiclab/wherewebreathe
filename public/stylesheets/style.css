@@ -49,7 +49,43 @@ figcaption{
   text-justify:inter-word;
 }
 /*squish nav items a bit to avoid login buttons wrapping before trips mobile mode*/
-.navbar-default .navbar-nav > li > .aNav{
-  padding-left: 7px;
-  padding-right: 10px;
+@media (min-width: 790px) and (max-width: 880px) { 
+  .navbar-default .navbar-nav > li > .aNav{
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+}
+/*override the bootstrap cuttoff point for the nav collapse*/
+@media (max-width: 800px) {
+    .navbar-header {
+        float: none;
+    }
+    .navbar-toggle {
+        display: block;
+    }
+    .navbar-collapse {
+        border-top: 1px solid transparent;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .navbar-collapse.collapse {
+        display: none!important;
+    }
+    .navbar-nav {
+        float: none!important;
+        margin: 7.5px -15px;
+    }
+    .navbar-nav>li {
+        float: none;
+    }
+    .navbar-nav>li>a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    /* since 3.1.0 */
+    .navbar-collapse.collapse.in { 
+        display: block!important;
+    }
+    .collapsing {
+        overflow: hidden!important;
+    }
 }

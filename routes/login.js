@@ -197,6 +197,16 @@ exports.login_get = function(req, res) {
   if (req.params.msg){
     message = { text: req.params.msg, msgType: req.params.msgType};
   }
+  //flash message, keeping req.params bit for now because it holds validation message
+  //for some reason, req.flash clears once accessed
+  var temp = req.flash('info');
+  if(temp.length > 0){
+    message =  {text: temp[0], msgType: temp[1]}
+  }
+  var temp = req.flash('info');
+    if(temp.length > 0){
+      pageOptions['message'] =  {text: temp[0], msgType: temp[1]}
+    } 
   res.render('login/login', { title: 'Login', user : req.user, message: message });
 }; 
 exports.logout =  function(req, res) {

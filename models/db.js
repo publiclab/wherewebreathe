@@ -51,15 +51,16 @@ var AnswerSchema = new Schema({
   
 }); 
 var QuestionSchema = new Schema({
-  order: Number,
-  qType: String,
-  label: String,
-  answers: Array,
-  question: String, 
-  validation: String,
-  valMsg: String, 
-  placeholder: String,
-  qSet: String
+  order: Number,//the order questions are asked in (conditional questions dont get ordered and start at 100x)
+  qType: String,//dropdown, radio, text
+  label: String,//question helper label, not totally necessary?
+  answers: Array,// can be dropdown answers
+  question: String, //questioon text
+  validation: String,//validation pattern
+  valMsg: String, //validation warning text
+  placeholder: String,//placeholder for text input
+  qSet: String,//question set
+  autocomplete: Array// array of suggested answers
 });
 
 //module.exports = userDB.model('Account', Account);

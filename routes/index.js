@@ -10,17 +10,11 @@ var csv = require('express-csv')
 function removeFromUnansweredSession(req, qid, cb){
   var temp = req.session.unanswered;
   index = temp.indexOf(qid);
-  //console.log(index + "index")
-  //console.log(qid + "    -->qid") 
   //if qid found in unanswered, remove it
   if (index !== -1){
     temp.splice(index, 1)
-    req.session.unanswered = temp;
-    //console.log("removefromunans = = = = = = = = = = = = = = = = = = = = = = = = = = = =")
-
-    
+    req.session.unanswered = temp;   
   }
-  //console.log(temp);
   if(cb){
     cb();
   }
@@ -31,7 +25,7 @@ exports.index = function(req, res){
 };
 exports.welcome = function(req, res){
   authenticateUser(req, res, function(){ 
-  res.render('index', { title: 'Home', user : req.user, tour: 'yes'});
+  res.render('welcome', { title: 'Home', user : req.user, tour: 'yes'});
   });
 };
 exports.about = function(req, res){
@@ -62,7 +56,7 @@ exports.narrativesData = function(req, res){
     if(!req.session.graphIndex){
       req.session.graphIndex = 0
     }
-    var questionsForShowing = [1,2.1,3,4,5,6,7,9, 1000, 1001, 10, 1002, 1003, 11, 1004, 1005, 12, 1006, 1007, 13, 1008, 1009, 14, 1010, 1011, 15, 1012, 1013, 16, 1014, 1015, 17, 1016, 1017, 18, 1018, 1019, 19, 1020, 1021, 20, 1022, 1023, 21, 1024, 1025, 22, 1026, 1027, 23, 1028, 1029, 24, 1030, 1031, 25, 1038, 1039, 26, 1036, 1037, 27, 1034, 1035, 28, 29, 30]
+    var questionsForShowing = [1,2,3,4,5,6,7,9, 1000, 1001, 10, 1002, 1003, 11, 1004, 1005, 12, 1006, 1007, 13, 1008, 1009, 14, 1010, 1011, 15, 1012, 1013, 16, 1014, 1015, 17, 1016, 1017, 18, 1018, 1019, 19, 1020, 1021, 20, 1022, 1023, 21, 1024, 1025, 22, 1026, 1027, 23, 1028, 1029, 24, 1030, 1031, 25, 1038, 1039, 26, 1036, 1037, 27, 1034, 1035, 28, 29, 30]
     //if user clicks previous or next question (value will either be 1 or -1)
     if(req.body.progression){
       var newIndex = req.session.graphIndex + Number(req.body.progression);
@@ -82,23 +76,17 @@ exports.narrativesData = function(req, res){
     var next = true; 
     var previous = true;
     if(req.session.graphIndex == 0){
-    console.log("noPrev");
     previous = false}
-    else if(req.session.graphIndex == (questionsForShowing.length -1)){console.log("noNext");next = false}
-    console.log(req.session.graphIndex +" : " + (questionsForShowing.length -1));
-    console.log("INDEX==============" +req.session.graphIndex);
+    else if(req.session.graphIndex == (questionsForShowing.length -1)){next = false}
     qOrder = questionsForShowing[req.session.graphIndex];
     Question.findOne({order: qOrder}, function ( err, questions){
       if (err){
         return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 620)")
-      } //end if err 
-      //console.log(questions)
+      } //end if err
       if (!questions) {
         return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 621)")
       }  
       Answer.find({qid: questions._id}, function(err, results){
-      //console.log("omg!")
-      //console.log(results)
       });
       Answer.aggregate([
         {$match: { qid: questions._id}},
@@ -109,8 +97,6 @@ exports.narrativesData = function(req, res){
       ], function(err, results){ 
       //loop through results and append colour
       //palett inspired by http://www.colourlovers.com/palette/1663477/A_Thousand_Rainbows
-      console.log("orig results")
-      console.log(results);
       var otherCount = 0
       var modifiedResults = []
       //var palette = ['#F2D43F', '#492D61']
@@ -118,9 +104,7 @@ exports.narrativesData = function(req, res){
         //if other: make count
         var object = {}
         if(new RegExp("Other:").test(results[i]._id)){
-         otherCount += 1;
-         console.log(otherCount);
-         
+         otherCount += 1;         
         }
         //if not 'other:...' add to results 
         else{
@@ -148,8 +132,6 @@ exports.narrativesData = function(req, res){
         if (otherCount > 0){
           modifiedResults.push({_id: "Other", color: "#C0C0C0", count: otherCount})
         }
-     console.log("modified results");
-      console.log(modifiedResults);
       if(results.length<=0){
         var answers = "no data"
       }
@@ -209,8 +191,15 @@ exports.questionnaire = function ( req, res ){
         numUnans: req.session.unanswered.length        
       }
       //append suggested answers if they exist (mongoose creates empty array it seems even if query returns nothing for answers key)
-      if (typeof question.answers !== 'undefined' && question.answers.length > 0){
-        pageOptions['answers']= question.answers; 
+      //if (typeof question.answers !== 'undefined' && question.answers.length > 0){
+        pageOptions['answers']= question.answers;
+         
+      //}
+      //if autocomplete info exists, overwrite answers to that
+      console.log(encodeURIComponent(question.autocomplete))
+      if(typeof question.autocomplete !== 'undefined' && question.autocomplete.length > 0){
+      console.log("autocomplete")
+        pageOptions['answers']= encodeURIComponent(question.autocomplete);
       }
       //append validation logic if present
       if (typeof question.validation !== 'undefined'){
@@ -248,6 +237,7 @@ exports.answer = function ( req, res ){
   var qid = req.body.qid;
   var uid= req.user._id; 
   var a = req.body.answer;
+  console.log(a);
     if (!a) {
       return res.send(400, "Your answer shouldnt be blank")     
     }
@@ -268,7 +258,7 @@ exports.answer = function ( req, res ){
     }
     //check if answer isnt too short or too long, and doesnt have any crazy characters
     // could read specific validation loged from questions table, but probably overkill
-    if(! /^[A-Za-z0-9_ .-:(),;?'\/]{1,50}$/.test(a)){ 
+    if(! /^[A-Za-z0-9_ .-:(),;?&'\/]{1,50}$/.test(a)){ 
       return res.send(400, "Your answer, '"+a+"', looks either too long or too short, or has characters that arent allowed.") 
     } 
     //no validation arrors, continue on...

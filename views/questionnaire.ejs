@@ -1,6 +1,6 @@
 <% layout('layout') -%>
-<% script('/javascripts/flot/jquery.flot.min.js'), script('/javascripts/flot/jquery.flot.categories.min.js') -%>
-<% stylesheet('/stylesheets/questionnaire.css')%>
+<% script('/javascripts/flot/jquery.flot.min.js'), script('/javascripts/flot/jquery.flot.categories.min.js'), script('//code.jquery.com/ui/1.11.1/jquery-ui.js') -%>
+<% stylesheet('/stylesheets/questionnaire.css'), stylesheet('//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css')%>
 <%if (subheading == "symptoms"){%>
 <div id="divQ" class="panel panel-success">
   <div class="panel-heading">
@@ -114,7 +114,17 @@ else{%>
         $('html, body').animate({
           scrollTop: $("#divQ").offset().top - $('#menu').outerHeight()}, 600);
       }
-    });
+      
+      //if text input, checck if possible answers and set up autocomplete
+      console.log(decodeURIComponent("<%= answers %>"))
+      if ($('input[name=answer]').attr("type") == 'text'){
+        <%if (answers.length >0){%>
+          $('input[name=answer]').autocomplete({
+            source: decodeURIComponent("<%= answers %>").split(",")
+          });
+        <%}%>
+      }
+    });//end on ready
     $('#frmAns').submit(function(event){
       //prevent actual submit, but HTML5 validation triggers
       event.preventDefault();

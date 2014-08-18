@@ -31,7 +31,7 @@ exports.index = function(req, res){
 };
 exports.welcome = function(req, res){
   authenticateUser(req, res, function(){ 
-  res.render('index', { title: 'Home', user : req.user, tour: 'yes'});
+  res.render('welcome', { title: 'Home', user : req.user, tour: 'yes'});
   });
 };
 exports.about = function(req, res){

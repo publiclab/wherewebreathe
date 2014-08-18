@@ -13,3 +13,15 @@ fieldset {
 #bugs{
 margin-top: 8px;
 }
+#title, .page-header{
+  display: none;
+}
+.container, .container-fluid{
+  padding:0 3px;
+}
+@media (min-width: 768px) { 
+  .col-md-8{
+    border-left: whitesmoke thin solid;
+  }
+
+}

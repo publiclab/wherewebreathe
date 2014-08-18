@@ -116,17 +116,11 @@ else{%>
       }
       
       //if text input, checck if possible answers and set up autocomplete
-      console.log("<%= answers[0] %>")
+      console.log(decodeURIComponent("<%= answers %>"))
       if ($('input[name=answer]').attr("type") == 'text'){
         <%if (answers.length >0){%>
-        var availableTags = [];
-          //for some reason the answers array doesnt come through as an array of strings, so force it?
-          <% for(var i=0; i<answers.length; i++) {%>
-            availableTags.push('<%= answers[i] %>')
-          <% }%>          
-          console.log(availableTags)
           $('input[name=answer]').autocomplete({
-            source: availableTags
+            source: decodeURIComponent("<%= answers %>").split(",")
           });
         <%}%>
       }

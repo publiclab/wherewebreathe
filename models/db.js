@@ -60,7 +60,8 @@ var QuestionSchema = new Schema({
   valMsg: String, //validation warning text
   placeholder: String,//placeholder for text input
   qSet: String,//question set
-  autocomplete: Array// array of suggested answers
+  autocomplete: Array,// array of suggested answers,
+  storiesPrompt: Boolean//if true prompts user to tell story upon skip or answer
 });
 
 //module.exports = userDB.model('Account', Account);

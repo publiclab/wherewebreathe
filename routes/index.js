@@ -19,6 +19,21 @@ function removeFromUnansweredSession(req, qid, cb){
     cb();
   }
 }
+exports.skipQ = function(req, res){
+console.log("skip")
+  authenticateUser(req, res, function(){ 
+    if (req.params.skipq !== undefined && req.params.skipq !== "0"){
+      removeFromUnansweredSession(req, req.params.skipq,
+        function(){
+          //flag that a question has been skipped
+          req.session.skip = true;  
+          res.send(200);
+        }
+      ); 
+       
+    } 
+  });
+};
 exports.index = function(req, res){
   req.session.returnTo = req.path;
   res.render('index', { title: 'Home', user : req.user});
@@ -152,6 +167,11 @@ exports.narrativesData = function(req, res){
     }); //end Question.find
   });//end auth user
 }
+exports.storiesPrompt = function(req, res){
+  authenticateUser(req, res, function(){ 
+    res.render('stories-prompt', { title: 'Tell your story', user : req.user, qSet: req.params.qSet});
+  });
+};
 exports.questionnaire = function ( req, res ){
   authenticateUser(req, res, function(){  
     //deal with if there is get param for skipq or not
@@ -164,7 +184,7 @@ exports.questionnaire = function ( req, res ){
     if (req.params.nextq){
       query = {order: req.params.nextq};
     } 
-    //if user has answered but not skipped all questions in db
+    //if user has answered and not skipped all questions in db
     else if (req.session.unanswered.length <= 0 && !req.session.skip){
       return res.render('message', { title: 'Questionnaire complete!', user : req.user, message: {text:"Thank you! You have answered all of the survey questions.", msgType: "alert-success"}});
     }
@@ -177,18 +197,19 @@ exports.questionnaire = function ( req, res ){
       if (questions.length <= 0){
         return res.render('message', { title: 'Oops!', user : req.user, message: {text:"It doesn't look like there is a question there yet", msgType: "alert-danger"} });
       }//end if question
-      
+
       var question = questions[0];
-      //console.log(question);
+      console.log(question.storiesPrompt );
       pageOptions = {
         user : req.user,
         title: 'Questionnaire',
-        subheading: question.qSet,
+        qSet: question.qSet,
         question: question.question, 
         label: question.label,
         qType: question.qType,
         qid: question._id,
-        numUnans: req.session.unanswered.length        
+        numUnans: req.session.unanswered.length,
+        storiesPrompt:  question.storiesPrompt       
       }
       //append suggested answers if they exist (mongoose creates empty array it seems even if query returns nothing for answers key)
       //if (typeof question.answers !== 'undefined' && question.answers.length > 0){
@@ -196,9 +217,9 @@ exports.questionnaire = function ( req, res ){
          
       //}
       //if autocomplete info exists, overwrite answers to that
-      console.log(encodeURIComponent(question.autocomplete))
+      //console.log(encodeURIComponent(question.autocomplete))
       if(typeof question.autocomplete !== 'undefined' && question.autocomplete.length > 0){
-      console.log("autocomplete")
+      //console.log("autocomplete")
         pageOptions['answers']= encodeURIComponent(question.autocomplete);
       }
       //append validation logic if present

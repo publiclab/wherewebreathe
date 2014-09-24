@@ -107,25 +107,29 @@ else{%>
     })
     .done(function(response) {  
       console.log("ok")
-      if(<%=storiesPrompt%>){
-        console.log("<%=storiesPrompt%>")
-       //does story already exist?
-       $.get( '/checkStoryExists/<%= qSet %>')
-        .fail(function(response) {
-          console.log("fail")
-        })
-        .done(function(response) {  
-        console.log(response);
-        //if already story, dont prompt to tell story
-        if (response){window.location.href ='/questionnaire/';}
-        else{window.location.href ='/stories/<%= qSet %>';}
-        })
-      }
-      else{
-        window.location.href ='/questionnaire/';
-      }
+      checkStoryPrompt(function(){window.location.href ='/questionnaire/';})
+      
     } )    
    
+  }
+  function checkStoryPrompt(cb){
+    if(<%=storiesPrompt%>){
+      console.log("<%=storiesPrompt%>")
+     //does story already exist?
+     $.get( '/checkStoryExists/<%= qSet %>')
+      .fail(function(response) {
+        console.log("fail")
+      })
+      .done(function(response) {  
+      console.log(response);
+      //if already story, dont prompt to tell story
+      if (response){window.location.href ='/questionnaire/';}
+      else{window.location.href ='/stories/<%= qSet %>';}
+      })
+    }
+    else{
+      cb();
+    }
   }
     $(function(){
     //make sure if other answer, text box for other answer not empty
@@ -190,8 +194,8 @@ else{%>
             console.log("response not 'ok'")
             window.location.replace("/questionnaire/"+response)           
           }
-          else{
-            window.location.replace("/questionnaire ")        
+          else{   
+            checkStoryPrompt(function(){window.location.replace("/questionnaire ")})    
           }
         });
     });

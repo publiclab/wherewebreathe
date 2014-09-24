@@ -61,7 +61,7 @@ var QuestionSchema = new Schema({
   placeholder: String,//placeholder for text input
   qSet: String,//question set
   autocomplete: Array,// array of suggested answers,
-  storiesPrompt: Boolean//if true prompts user to tell story upon skip or answer
+  storiesPrompt: Boolean//if true prompts user to tell story upon skip or answer (for questions with conditional questions asked based on the answer, if the question prompts the user to tell their story (true), then each conditional question will also need storiesPrompt to be set to true
 });
 
 var StoryPromptSchema = new Schema({

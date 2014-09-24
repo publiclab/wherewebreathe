@@ -9,20 +9,31 @@
         <li><%= seedQuestions[i] %></li>
     <% } %>
 </ul>
-    <textarea placeholder="Type your health story here" required></textarea>
-    <br> 
-    <button class="btn btn-primary" type="button" onclick="saveStory()">Share</button>
-    <a href="#" onclick="window.location.href ='/questionnaire/'">skip</a> | <a href="#" onclick="alert('unlinked')">privacy</a>
+    <form id="frmStory">
+      <textarea id="story" placeholder="Type your health story here" required></textarea>
+      <br> 
+      <input  class="btn btn-primary" type="submit" value="Share">
+      <a href="#" onclick="window.location.href ='/questionnaire/'">skip</a> | <a href="#" onclick="alert('unlinked')">privacy</a>
+    </form>
   </div>
 </div>
 <script>
-function saveStory(){
-   $.post( '/savestory')
+  $('#frmStory').submit(function(event){
+    console.log("here");
+    //prevent actual submit, but HTML5 validation triggers
+    event.preventDefault();
+    var options = {
+      story: $('#story').val(), 
+      qSet: "<%= qSet %>"
+    };
+    $.post( '/savestory', options)
     .fail(function(response) {
       console.log("fail")
     })
     .done(function(response) {  
-      console.log("ok")
+      console.log("ok");
+      //return to questionnaire
+      window.location.href ='/questionnaire/'
     })      
-  }
+  })
 </script>

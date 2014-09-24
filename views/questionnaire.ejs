@@ -109,7 +109,17 @@ else{%>
       console.log("ok")
       if(<%=storiesPrompt%>){
         console.log("<%=storiesPrompt%>")
-        window.location.href ='/stories/<%= qSet %>';
+       //does story already exist?
+       $.get( '/checkStoryExists/<%= qSet %>')
+        .fail(function(response) {
+          console.log("fail")
+        })
+        .done(function(response) {  
+        console.log(response);
+        //if already story, dont prompt to tell story
+        if (response){window.location.href ='/questionnaire/';}
+        else{window.location.href ='/stories/<%= qSet %>';}
+        })
       }
       else{
         window.location.href ='/questionnaire/';
@@ -181,9 +191,7 @@ else{%>
             window.location.replace("/questionnaire/"+response)           
           }
           else{
-          //window.location.replace("/questionnaire ")
-          //check if last q in question set
-         
+            window.location.replace("/questionnaire ")        
           }
         });
     });

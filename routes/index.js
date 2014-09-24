@@ -5,6 +5,7 @@ var Answer = require('../models/db').answer;
 var authenticateUser = require('./authUser');
 var User = require('../models/db').user;
 var StoryPrompt = require('../models/db').storyPrompt;
+var Story = require('../models/db').story;
 var generateUnanswered = require('./generateUnanswered');
 var csv = require('express-csv')
 
@@ -20,6 +21,26 @@ function removeFromUnansweredSession(req, qid, cb){
     cb();
   }
 }
+exports.checkStoryExists = function(req, res){
+  //authenticateUser(req, res, function(){ 
+  //check if user has already entered a story for a qSet
+  console.log(req.params.qSet+" : "+req.user._id);
+    Story.findOne({qSet: req.params.qSet, uid: req.user._id}, function (err, story){
+      if (err){
+        return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 627)")
+      } //end if err
+      var response;
+      console.log(story);
+      if (story) {
+        response = true;
+      }
+      else{
+        response = false;
+      } 
+      res.send(200, response);
+    }) ;//end find
+ //});// end auth user
+};
 exports.skipQ = function(req, res){
   authenticateUser(req, res, function(){ 
     if (req.params.skipq !== undefined && req.params.skipq !== "0"){
@@ -35,7 +56,6 @@ exports.skipQ = function(req, res){
 };
 exports.storiesPrompt = function(req, res){
   authenticateUser(req, res, function(){ 
-  console.log(req.params.qSet);
       StoryPrompt.findOne({qSet: req.params.qSet}, function ( err, prompt){
         if (err){
           return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 624)")
@@ -44,14 +64,23 @@ exports.storiesPrompt = function(req, res){
           return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 625)")
         } 
         console.log(prompt)
-        res.render('stories-prompt', { title: 'Tell your story', user : req.user, heading: prompt.heading, subheading: prompt.subheading, seedQuestions: prompt.seedQuestions}); 
-      });   //end find
-    
+        res.render('stories-prompt', { title: 'Tell your story', user : req.user, heading: prompt.heading, subheading: prompt.subheading, seedQuestions: prompt.seedQuestions, qSet: req.params.qSet}); 
+      });   //end find    
   });
 };
 exports.saveStory = function(req, res){
-  authenticateUser(req, res, function(){    
+  authenticateUser(req, res, function(){ 
+  var story = new Story({
+    uid: req.user._id, 
+    qSet: req.body.qSet,
+    story: req.body.story
+  }); 
+  story.save( function(err, data){
+    if (err) {
+      return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 626)")     
+    }    
     res.send(200)
+  })//end story save
   });//end auth user
 };
 exports.index = function(req, res){

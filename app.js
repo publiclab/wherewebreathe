@@ -76,6 +76,7 @@ app.get('/narratives', routes.narratives);
 app.post('/narrativesData', routes.narrativesData);
 app.get('/questionnaire', routes.questionnaire);
 app.get('/stories/:qSet', routes.storiesPrompt);
+app.get('/checkStoryExists/:qSet', routes.checkStoryExists);
 app.post('/skipq/:skipq', routes.skipQ);
 app.post('/savestory', routes.saveStory);
 //app.get('/questionnaire/:skipq', routes.questionnaire);

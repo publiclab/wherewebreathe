@@ -71,6 +71,12 @@ var StoryPromptSchema = new Schema({
   qSet: String//unique, question set that the story is linked to
 });
 
+var StorySchema = new Schema({
+  //uid and qSet together will be unique, like a composite key
+  uid: Schema.Types.ObjectId, //user ID
+  qSet: String,//links to question set
+  story: String
+})
 //module.exports = userDB.model('Account', Account);
 
 module.exports = {
@@ -79,6 +85,7 @@ module.exports = {
     answer: userDB.model('answer', AnswerSchema),
     question: userDB.model('question', QuestionSchema),
     passReset: userDB.model('passReset', PassReset),
-    storyPrompt: userDB.model('storyPrompt', StoryPromptSchema)
+    storyPrompt: userDB.model('storyPrompt', StoryPromptSchema),
+    story: userDB.model('story', StorySchema) 
 };
 

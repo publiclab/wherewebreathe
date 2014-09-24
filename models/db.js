@@ -64,6 +64,13 @@ var QuestionSchema = new Schema({
   storiesPrompt: Boolean//if true prompts user to tell story upon skip or answer
 });
 
+var StoryPromptSchema = new Schema({
+  heading: String, //the heading of the stories page
+  subheading: String,//subheading on stories page
+  seedQuestions: Array, //questions to encourage user to tell story
+  qSet: String//unique, question set that the story is linked to
+});
+
 //module.exports = userDB.model('Account', Account);
 
 module.exports = {
@@ -72,5 +79,6 @@ module.exports = {
     answer: userDB.model('answer', AnswerSchema),
     question: userDB.model('question', QuestionSchema),
     passReset: userDB.model('passReset', PassReset),
+    storyPrompt: userDB.model('storyPrompt', StoryPromptSchema)
 };
 

@@ -1,8 +1,28 @@
 <% layout('layout') -%>
-
-<div class="well well-info">
-  <h3>Topic: <%= qSet %></h3>
-  <button class="btn btn-lg btn-primary" type="button">Share</button>
-  <a href="#" onclick="window.location.href ='/questionnaire/'">skip</a>
-  
+<% stylesheet('/stylesheets/questionnaire.css'), stylesheet('/stylesheets/stories.css')%>
+<div id="divQ">
+  <div class="well well-info">
+    <h3><%= heading %></h3>
+    <h4><%= subheading %></h4>
+    <ul>
+    <% for(var i=0; i<seedQuestions.length; i++) { %>
+        <li><%= seedQuestions[i] %></li>
+    <% } %>
+</ul>
+    <textarea placeholder="Type your health story here" required></textarea>
+    <br> 
+    <button class="btn btn-primary" type="button" onclick="saveStory()">Share</button>
+    <a href="#" onclick="window.location.href ='/questionnaire/'">skip</a> | <a href="#" onclick="alert('unlinked')">privacy</a>
+  </div>
 </div>
+<script>
+function saveStory(){
+   $.post( '/savestory')
+    .fail(function(response) {
+      console.log("fail")
+    })
+    .done(function(response) {  
+      console.log("ok")
+    })      
+  }
+</script>

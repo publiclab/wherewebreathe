@@ -4,6 +4,7 @@ var Question = require('../models/db').question;
 var Answer = require('../models/db').answer;
 var authenticateUser = require('./authUser');
 var User = require('../models/db').user;
+var StoryPrompt = require('../models/db').storyPrompt;
 var generateUnanswered = require('./generateUnanswered');
 var csv = require('express-csv')
 
@@ -20,7 +21,6 @@ function removeFromUnansweredSession(req, qid, cb){
   }
 }
 exports.skipQ = function(req, res){
-console.log("skip")
   authenticateUser(req, res, function(){ 
     if (req.params.skipq !== undefined && req.params.skipq !== "0"){
       removeFromUnansweredSession(req, req.params.skipq,
@@ -29,10 +29,30 @@ console.log("skip")
           req.session.skip = true;  
           res.send(200);
         }
-      ); 
-       
+      );        
     } 
   });
+};
+exports.storiesPrompt = function(req, res){
+  authenticateUser(req, res, function(){ 
+  console.log(req.params.qSet);
+      StoryPrompt.findOne({qSet: req.params.qSet}, function ( err, prompt){
+        if (err){
+          return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 624)")
+        } //end if err
+        if (!prompt) {
+          return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 625)")
+        } 
+        console.log(prompt)
+        res.render('stories-prompt', { title: 'Tell your story', user : req.user, heading: prompt.heading, subheading: prompt.subheading, seedQuestions: prompt.seedQuestions}); 
+      });   //end find
+    
+  });
+};
+exports.saveStory = function(req, res){
+  authenticateUser(req, res, function(){    
+    res.send(200)
+  });//end auth user
 };
 exports.index = function(req, res){
   req.session.returnTo = req.path;
@@ -101,8 +121,8 @@ exports.narrativesData = function(req, res){
       if (!questions) {
         return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 621)")
       }  
-      Answer.find({qid: questions._id}, function(err, results){
-      });
+      //Answer.find({qid: questions._id}, function(err, results){
+      //});///does this line do anything or should we axe it? commented out on Sep 23
       Answer.aggregate([
         {$match: { qid: questions._id}},
         { $group: {
@@ -167,11 +187,7 @@ exports.narrativesData = function(req, res){
     }); //end Question.find
   });//end auth user
 }
-exports.storiesPrompt = function(req, res){
-  authenticateUser(req, res, function(){ 
-    res.render('stories-prompt', { title: 'Tell your story', user : req.user, qSet: req.params.qSet});
-  });
-};
+
 exports.questionnaire = function ( req, res ){
   authenticateUser(req, res, function(){  
     //deal with if there is get param for skipq or not

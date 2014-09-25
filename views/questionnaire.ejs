@@ -190,6 +190,7 @@ else{%>
         })
         .done(function(response) {       
           //if response isnt 'OK', it should contain a number for the next conditional question
+          //also if there is a conditional question, stories dont get prompted to be told
           if(response !== "OK"){
             console.log("response not 'ok'")
             window.location.replace("/questionnaire/"+response)           

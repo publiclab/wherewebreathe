@@ -1,5 +1,10 @@
 instructions to import questions
-1. use terminal to navigate to folger containing questions json file
+1. use terminal to navigate to folder containing questions json file
 2. type this commend (not in the mongo shell, in the terminal shell): mongoimport -d wherewebreathe -c questions --type json --file questionsCollection.json --upsert
 3. check that upsert (overwrite) worked
 
+
+How to export from mongo
+
+1.cd to folder you want export file to live in
+2. run: mongoexport -d wherewebreathe -c questions --out questionsDATE.json

@@ -47,7 +47,8 @@ NewUser.plugin(passportLocalMongoose, {usernameField: "email"});
 var AnswerSchema = new Schema({
   qid: Schema.Types.ObjectId,
   uid: Schema.Types.ObjectId,
-  a: String
+  a: String,
+  qSet: String//added in later iteration so can create summary of answered by qSet on dashboard
   
 }); 
 var QuestionSchema = new Schema({

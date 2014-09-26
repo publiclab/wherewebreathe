@@ -21,6 +21,102 @@ function removeFromUnansweredSession(req, qid, cb){
     cb();
   }
 }
+exports.dashboard = function(req, res){
+  authenticateUser(req, res, function(){ 
+    Answer.aggregate([
+        {$match: {}},
+        { $group: {
+            _id: '$qSet', 
+            count: {$sum: 1}
+        }}
+      ], function(err, results){ 
+        if (err){
+            return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 628)")
+        } //end if err
+        if (!results) {
+          return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 629)")
+        } 
+        var housingA = 0;
+        var symptomsA = 0;
+        var mitigationA = 0; 
+        var otherA = 0;
+        var demographicsA = 0;
+        console.log("Answers: ");
+        console.log(results);
+        for (i in results){
+          if(results[i]._id == "Household"){
+          housingA = results[i].count
+          }
+          if(results[i]._id == "Symptoms"){
+          symptomsA = results[i].count
+          }
+          if(results[i]._id == "Mitigation"){
+          mitigationA = results[i].count
+          }
+          if(results[i]._id == "Other"){
+          otherA = results[i].count
+          }
+          if(results[i]._id == "Demographics"){
+          demographicsA = results[i].count
+          }
+        }  
+        Question.aggregate([
+          {$match: {}},
+          { $group: {
+              _id: '$qSet', 
+              count: {$sum: 1}
+          }}
+          ], function(err, questions){ 
+            if (err){
+                return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 630)")
+            } //end if err
+            if (!questions) {
+                return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 631)")
+            } 
+            var housingQ = 0;
+            var symptomsQ = 0;
+            var mitigationQ = 0; 
+            var otherQ = 0;
+            var demographicsQ = 0;
+            console.log("questions: ");
+            console.log(questions)
+            for (i in questions){
+              if(questions[i]._id == "Household"){
+              housingQ = questions[i].count
+              }
+              if(questions[i]._id == "Symptoms"){
+              symptomsQ = questions[i].count
+              }
+              if(questions[i]._id == "Mitigation"){
+              mitigationQ = questions[i].count
+              }
+              if(questions[i]._id == "Other"){
+              otherQ = questions[i].count
+              }
+              if(questions[i]._id == "Demographics"){
+              demographicsQ = questions[i].count
+              }
+            }   
+            console.log("here");      
+        var options = { 
+          title: 'Dashboard', 
+          user : req.user, 
+          housingA: housingA,
+          symptomsA: symptomsA,
+          mitigationA: mitigationA, 
+          otherA: otherA, 
+          demographicsA: demographicsA,
+          housingQ: housingQ,
+          symptomsQ: symptomsQ,
+          mitigationQ: mitigationQ, 
+          otherQ: otherQ, 
+          demographicsQ: demographicsQ     
+        }
+        res.render('dashboard', options);       
+    })
+   });  //end Question aggregate 
+  });//end AnswerAggregate?
+};
 exports.checkStoryExists = function(req, res){
   //authenticateUser(req, res, function(){ 
   //check if user has already entered a story for a qSet
@@ -303,6 +399,7 @@ exports.answer = function ( req, res ){
   var qid = req.body.qid;
   var uid= req.user._id; 
   var a = req.body.answer;
+  var qSet = req.body.qSet //added later so can create summary of answered by qSet on dashboard
   console.log(a);
     if (!a) {
       return res.send(400, "Your answer shouldnt be blank")     
@@ -324,7 +421,7 @@ exports.answer = function ( req, res ){
     }
     //check if answer isnt too short or too long, and doesnt have any crazy characters
     // could read specific validation loged from questions table, but probably overkill
-    if(! /^[A-Za-z0-9_ .-:(),;?&'\/]{1,50}$/.test(a)){ 
+    if(! /^[A-Za-z0-9_ .:(),;?&'\/-]{1,50}$/.test(a)){ 
       return res.send(400, "Your answer, '"+a+"', looks either too long or too short, or has characters that arent allowed.") 
     } 
     //no validation arrors, continue on...
@@ -332,7 +429,8 @@ exports.answer = function ( req, res ){
      var ans = new Answer({
         qid: qid,
         uid: uid, 
-        a: a
+        a: a,
+        qSet: qSet
       });
       ans.save( function(err, data){
         if (err) {

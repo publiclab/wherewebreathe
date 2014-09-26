@@ -160,7 +160,7 @@ else{%>
     $('#frmAns').submit(function(event){
       //prevent actual submit, but HTML5 validation triggers
       event.preventDefault();
-      var options = {qid: "<%= qid %>"};
+      var options = {qid: "<%= qid %>", qSet: "<%= qSet %>"};
       //if the input is a radio, get val
       var input = "<%=qType%>"
       //get value from other: text box if other selected, make sure not blank

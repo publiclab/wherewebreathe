@@ -1,0 +1,56 @@
+#title, .page-header{
+  display: none;
+}
+.container{
+max-width: 1000px;
+}
+.circle{
+  width:120px;
+  height:120px;
+  border-radius:60px;
+  font-size:20px;
+  color:#fff;
+  line-height:120px;
+  text-align:center;
+  margin: 10px;
+}
+.lblCircle{
+  text-align: center;
+  width: 100%;
+  margin: 10px;
+}
+.disabled{
+  color: lightgrey;
+  margin: 10px 0;
+}
+.hint{
+  font-size: x-small;
+}
+.somespace{
+  margin: 10px 0;
+}
+.housing{
+  background:red;
+  border:red 3px solid;
+}
+.symptoms{
+  background:green;
+  border:green 3px solid;
+}
+.mitigation{
+  background:orange;
+  border:orange 3px solid;
+}
+.other{
+  background:blue;
+  border:blue 3px solid;
+}
+.demographics{
+  background:magenta;
+  border:magenta 3px solid;
+  font-size: 16px;
+}
+.unanswered{
+  background:#fff;
+  color: #000;
+}

@@ -1,0 +1,77 @@
+<% layout('/layout') -%>
+<% stylesheet('/stylesheets/dashboard.css')%>
+<div class="container">
+  <div class="row row-centered">
+    <div class="col-xs-6 col-md-2">
+      <div class="circle housing <%if(housingA <=0){%>unanswered<%}%>">Housing</div>
+      <div class='lblCircle'>
+        <p><%=housingA%> of <%=housingQ%> Questions</p>
+        <%if(housingA >0){%>
+        <a href="#" class="somespace">Visit the forum</a>
+        <button  class="btn btn-primary somespace" type="button">Resume</button>
+        
+        <%}else{%>
+        <div class="disabled">Visit the forum</div>
+        <div class="disabled hint">Answer questions to read others' stories in the forum</div>
+        <%}%>
+      </div><!--end lblCircle-->
+    </div>
+    <div class="col-xs-6 col-md-2">
+      <div class="circle symptoms <%if(symptomsA <=0){%>unanswered<%}%>">Symptoms</div>
+      <div class='lblCircle'>
+        <p><%=symptomsA%> of <%=symptomsQ%> Questions</p>
+        <%if(symptomsA >0){%>
+        <a href="#" class="somespace">Visit the forum</a>
+        <button  class="btn btn-primary somespace" type="button">Resume</button>
+        
+        <%}else{%>
+        <div class="disabled">Visit the forum</div>
+        <div class="disabled hint">Answer questions to read others' stories in the forum</div>
+        <%}%>
+      </div><!--end lblCircle-->
+    </div>
+    <div class="col-xs-6 col-md-2">
+      <div class="circle mitigation <%if(mitigationA <=0){%>unanswered<%}%>">Mitigation</div>
+      <div class='lblCircle'>
+        <p><%=mitigationA%> of <%=mitigationQ%> Questions</p>
+        <%if(mitigationA >0){%>
+        <a href="#" class="somespace">Visit the forum</a>
+        <button  class="btn btn-primary somespace" type="button">Resume</button>
+        
+        <%}else{%>
+        <div class="disabled">Visit the forum</div>
+        <div class="disabled hint">Answer questions to read others' stories in the forum</div>
+        <%}%>        
+      </div><!--end lblCircle-->
+    </div>
+    <div class="col-xs-6 col-md-2">
+      <div class="circle other <%if(otherA <=0){%>unanswered<%}%>">Other</div>
+      <div class='lblCircle'>
+        <p><%=otherA%> of <%=otherQ%> Questions</p>
+        <%if(otherA >0){%>
+        <a href="#" class="somespace">Visit the forum</a>
+        <button  class="btn btn-primary somespace" type="button">Resume</button>
+        
+        <%}else{%>
+        <div class="disabled">Visit the forum</div>
+        <div class="disabled hint">Answer questions to read others' stories in the forum</div>
+        <%}%>        
+      </div><!--end lblCircle-->
+    </div>
+    <div class="col-xs-6 col-md-2">
+      <div class="circle demographics <%if(demographicsA <=0){%>unanswered<%}%>">Demographics</div>
+      <div class='lblCircle'>
+        <p><%=demographicsA%> of <%=demographicsQ%> Questions</p>
+        <%if(demographicsA >0){%>
+        <a href="#" class="somespace">Visit the forum</a>
+        <button  class="btn btn-primary somespace" type="button">Resume</button>
+        
+        <%}else{%>
+        <div class="disabled">Visit the forum</div>
+        <div class="disabled hint">Answer questions to read others' stories in the forum</div>
+        <%}%>
+      </div><!--end lblCircle-->
+    </div>    
+  </div>
+</div>
+

@@ -180,8 +180,14 @@ exports.saveStory = function(req, res){
   });//end auth user
 };
 exports.index = function(req, res){
-  req.session.returnTo = req.path;
-  res.render('index', { title: 'Home', user : req.user});
+  //if user not logged in send to index, else send to dashboard
+  if (!req.user){
+    req.session.returnTo = req.path;
+    res.render('index', { title: 'Home', user : req.user});
+  }
+  else{
+    res.redirect('/dashboard');
+  }
 };
 exports.welcome = function(req, res){
   authenticateUser(req, res, function(){ 

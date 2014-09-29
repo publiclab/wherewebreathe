@@ -3,7 +3,7 @@
 <!--<% script('//code.jquery.com/ui/1.11.1/jquery-ui.js') -%> suspect that this is legacy somehow-->
 <!--jquery-ui.css used for what? autocomplete?-->
 <% stylesheet('/stylesheets/questionnaire.css'), stylesheet('//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css')%>
-<%if (qSet == "Symptoms"){%>
+<%if (qSet == "Symptoms" || qSet == "Symptoms (conditional questions)"){%>
 <div id="divQ" class="panel panel-success">
   <div class="panel-heading">
     <h3 class="panel-title">Questions about your health symptoms</h3>

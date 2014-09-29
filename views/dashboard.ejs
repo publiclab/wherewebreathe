@@ -4,13 +4,17 @@
   <div class="row row-centered">
     <div class="col-xs-6 col-md-2">
       <div class="circle housing <%if(housingA <=0){%>unanswered<%}%>">Housing</div>
-      <div class='lblCircle'>
+      <div class='lblCircle'>       
+        <%if(housingA != 0 &&housingA == housingQ){%>
+         <p>Section Complete</p>
+         <a href="#" class="somespace">Visit the forum</a>
+         <div class="somespace"><i class="fa fa-check fa-2x"></i></div>
+        <%}else if(housingA >0){%>
         <p><%=housingA%> of <%=housingQ%> Questions</p>
-        <%if(housingA >0){%>
         <a href="#" class="somespace">Visit the forum</a>
-        <button  class="btn btn-primary somespace" type="button">Resume</button>
-        
-        <%}else{%>
+        <a href="/goback"<button  class="btn btn-primary somespace" type="button">Resume</button></a>
+        <%}else{%> 
+        <p><%=housingA%> of <%=housingQ%> Questions</p>
         <div class="disabled">Visit the forum</div>
         <div class="disabled hint">Answer questions to read others' stories in the forum</div>
         <%}%>
@@ -18,13 +22,17 @@
     </div>
     <div class="col-xs-6 col-md-2">
       <div class="circle symptoms <%if(symptomsA <=0){%>unanswered<%}%>">Symptoms</div>
-      <div class='lblCircle'>
+      <div class='lblCircle'>       
+        <%if(symptomsA != 0 &&symptomsA == symptomsQ){%>
+         <p>Section Complete</p>
+         <a href="#" class="somespace">Visit the forum</a>
+         <div class="somespace"><i class="fa fa-check fa-2x"></i></div>
+        <%}else if(symptomsA >0){%>
         <p><%=symptomsA%> of <%=symptomsQ%> Questions</p>
-        <%if(symptomsA >0){%>
         <a href="#" class="somespace">Visit the forum</a>
-        <button  class="btn btn-primary somespace" type="button">Resume</button>
-        
-        <%}else{%>
+        <a href="/goback"<button  class="btn btn-primary somespace" type="button">Resume</button></a>
+        <%}else{%> 
+        <p><%=symptomsA%> of <%=symptomsQ%> Questions</p>
         <div class="disabled">Visit the forum</div>
         <div class="disabled hint">Answer questions to read others' stories in the forum</div>
         <%}%>
@@ -32,41 +40,53 @@
     </div>
     <div class="col-xs-6 col-md-2">
       <div class="circle mitigation <%if(mitigationA <=0){%>unanswered<%}%>">Mitigation</div>
-      <div class='lblCircle'>
+      <div class='lblCircle'>       
+        <%if(mitigationA != 0 && mitigationA == mitigationQ){%>
+         <p>Section Complete</p>
+         <a href="#" class="somespace">Visit the forum</a>
+         <div class="somespace"><i class="fa fa-check fa-2x"></i></div>
+        <%}else if(mitigationA >0){%>
         <p><%=mitigationA%> of <%=mitigationQ%> Questions</p>
-        <%if(mitigationA >0){%>
         <a href="#" class="somespace">Visit the forum</a>
-        <button  class="btn btn-primary somespace" type="button">Resume</button>
-        
-        <%}else{%>
+        <a href="/goback"<button  class="btn btn-primary somespace" type="button">Resume</button></a>
+        <%}else{%> 
+        <p><%=mitigationA%> of <%=mitigationQ%> Questions</p>
         <div class="disabled">Visit the forum</div>
         <div class="disabled hint">Answer questions to read others' stories in the forum</div>
-        <%}%>        
+        <%}%>
       </div><!--end lblCircle-->
     </div>
     <div class="col-xs-6 col-md-2">
       <div class="circle other <%if(otherA <=0){%>unanswered<%}%>">Other</div>
-      <div class='lblCircle'>
+      <div class='lblCircle'>       
+        <%if(otherA != 0 &&otherA == otherQ){%>
+         <p>Section Complete</p>
+         <a href="#" class="somespace">Visit the forum</a>
+         <div class="somespace"><i class="fa fa-check fa-2x"></i></div>
+        <%}else if(otherA >0){%>
         <p><%=otherA%> of <%=otherQ%> Questions</p>
-        <%if(otherA >0){%>
         <a href="#" class="somespace">Visit the forum</a>
-        <button  class="btn btn-primary somespace" type="button">Resume</button>
-        
-        <%}else{%>
+        <a href="/goback"<button  class="btn btn-primary somespace" type="button">Resume</button></a>
+        <%}else{%> 
+        <p><%=otherA%> of <%=otherQ%> Questions</p>
         <div class="disabled">Visit the forum</div>
         <div class="disabled hint">Answer questions to read others' stories in the forum</div>
-        <%}%>        
+        <%}%>
       </div><!--end lblCircle-->
     </div>
     <div class="col-xs-6 col-md-2">
       <div class="circle demographics <%if(demographicsA <=0){%>unanswered<%}%>">Demographics</div>
-      <div class='lblCircle'>
+      <div class='lblCircle'>       
+        <%if(demographicsA != 0 && demographicsA == demographicsQ){%>
+         <p>Section Complete</p>
+         <a href="#" class="somespace">Visit the forum</a>
+         <div class="somespace"><i class="fa fa-check fa-2x"></i></div>
+        <%}else if(demographicsA >0){%>
         <p><%=demographicsA%> of <%=demographicsQ%> Questions</p>
-        <%if(demographicsA >0){%>
         <a href="#" class="somespace">Visit the forum</a>
-        <button  class="btn btn-primary somespace" type="button">Resume</button>
-        
-        <%}else{%>
+        <a href="/goback"<button  class="btn btn-primary somespace" type="button">Resume</button></a>
+        <%}else{%> 
+        <p><%=demographicsA%> of <%=demographicsQ%> Questions</p>
         <div class="disabled">Visit the forum</div>
         <div class="disabled hint">Answer questions to read others' stories in the forum</div>
         <%}%>

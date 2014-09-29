@@ -21,101 +21,107 @@ function removeFromUnansweredSession(req, qid, cb){
     cb();
   }
 }
+function getDashStats(req, cb){
+Answer.aggregate([
+    {$match: {}},
+    { $group: {
+        _id: '$qSet', 
+        count: {$sum: 1}
+    }}
+  ], function(err, results){ 
+    if (err){
+        return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 628)")
+    } //end if err
+    if (!results) {
+      return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 629)")
+    } 
+    var housingA = 0;
+    var symptomsA = 0;
+    var mitigationA = 0; 
+    var otherA = 0;
+    var demographicsA = 0;
+    //console.log("Answers: ");
+    //console.log(results);
+    for (i in results){
+      if(results[i]._id == "Household"){
+      housingA = results[i].count
+      }
+      if(results[i]._id == "Symptoms"){
+      symptomsA = results[i].count
+      }
+      if(results[i]._id == "Mitigation"){
+      mitigationA = results[i].count
+      }
+      if(results[i]._id == "Other"){
+      otherA = results[i].count
+      }
+      if(results[i]._id == "Demographics"){
+      demographicsA = results[i].count
+      }
+    }  
+    Question.aggregate([
+      {$match: {}},
+      { $group: {
+          _id: '$qSet', 
+          count: {$sum: 1}
+      }}
+      ], function(err, questions){ 
+        if (err){
+            return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 630)")
+        } //end if err
+        if (!questions) {
+            return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 631)")
+        } 
+        var housingQ = 0;
+        var symptomsQ = 0;
+        var mitigationQ = 0; 
+        var otherQ = 0;
+        var demographicsQ = 0;
+        //console.log("questions: ");
+        //console.log(questions)
+        for (i in questions){
+          if(questions[i]._id == "Household"){
+          housingQ = questions[i].count
+          }
+          if(questions[i]._id == "Symptoms"){
+          symptomsQ = questions[i].count
+          }
+          if(questions[i]._id == "Mitigation"){
+          mitigationQ = questions[i].count
+          }
+          if(questions[i]._id == "Other"){
+          otherQ = questions[i].count
+          }
+          if(questions[i]._id == "Demographics"){
+          demographicsQ = questions[i].count
+          }
+        }   
+             
+    var options = { 
+      title: 'Home', 
+      user : req.user, 
+      housingA: housingA,
+      symptomsA: symptomsA,
+      mitigationA: mitigationA, 
+      otherA: otherA, 
+      demographicsA: demographicsA,
+      housingQ: housingQ,
+      symptomsQ: symptomsQ,
+      mitigationQ: mitigationQ, 
+      otherQ: otherQ, 
+      demographicsQ: demographicsQ     
+    }
+    return cb(options);       
+});
+}); 
+}
 exports.dashboard = function(req, res){
   authenticateUser(req, res, function(){ 
-    Answer.aggregate([
-        {$match: {}},
-        { $group: {
-            _id: '$qSet', 
-            count: {$sum: 1}
-        }}
-      ], function(err, results){ 
-        if (err){
-            return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 628)")
-        } //end if err
-        if (!results) {
-          return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 629)")
-        } 
-        var housingA = 0;
-        var symptomsA = 0;
-        var mitigationA = 0; 
-        var otherA = 0;
-        var demographicsA = 0;
-        console.log("Answers: ");
-        console.log(results);
-        for (i in results){
-          if(results[i]._id == "Household"){
-          housingA = results[i].count
-          }
-          if(results[i]._id == "Symptoms"){
-          symptomsA = results[i].count
-          }
-          if(results[i]._id == "Mitigation"){
-          mitigationA = results[i].count
-          }
-          if(results[i]._id == "Other"){
-          otherA = results[i].count
-          }
-          if(results[i]._id == "Demographics"){
-          demographicsA = results[i].count
-          }
-        }  
-        Question.aggregate([
-          {$match: {}},
-          { $group: {
-              _id: '$qSet', 
-              count: {$sum: 1}
-          }}
-          ], function(err, questions){ 
-            if (err){
-                return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 630)")
-            } //end if err
-            if (!questions) {
-                return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 631)")
-            } 
-            var housingQ = 0;
-            var symptomsQ = 0;
-            var mitigationQ = 0; 
-            var otherQ = 0;
-            var demographicsQ = 0;
-            console.log("questions: ");
-            console.log(questions)
-            for (i in questions){
-              if(questions[i]._id == "Household"){
-              housingQ = questions[i].count
-              }
-              if(questions[i]._id == "Symptoms"){
-              symptomsQ = questions[i].count
-              }
-              if(questions[i]._id == "Mitigation"){
-              mitigationQ = questions[i].count
-              }
-              if(questions[i]._id == "Other"){
-              otherQ = questions[i].count
-              }
-              if(questions[i]._id == "Demographics"){
-              demographicsQ = questions[i].count
-              }
-            }   
-            console.log("here");      
-        var options = { 
-          title: 'Dashboard', 
-          user : req.user, 
-          housingA: housingA,
-          symptomsA: symptomsA,
-          mitigationA: mitigationA, 
-          otherA: otherA, 
-          demographicsA: demographicsA,
-          housingQ: housingQ,
-          symptomsQ: symptomsQ,
-          mitigationQ: mitigationQ, 
-          otherQ: otherQ, 
-          demographicsQ: demographicsQ     
-        }
-        res.render('dashboard', options);       
-    })
-   });  //end Question aggregate 
-  });//end AnswerAggregate?
+    getDashStats(req, function(options){
+      console.log(options);
+      res.render('dashboard', options);
+    });  
+  });
 };
 exports.checkStoryExists = function(req, res){
   //authenticateUser(req, res, function(){ 
@@ -190,8 +196,17 @@ exports.index = function(req, res){
   }
 };
 exports.welcome = function(req, res){
+  //authenticateUser(req, res, function(){ 
+  //res.render('welcome', { title: 'Home', user : req.user, tour: 'yes'});
+  //});
   authenticateUser(req, res, function(){ 
-  res.render('welcome', { title: 'Home', user : req.user, tour: 'yes'});
+  console.log("weloer");
+    getDashStats(req, function(options){
+    console.log("gsd")
+      options['tour'] = "yes";
+      console.log(options);
+      res.render('welcome', options);
+    });  
   });
 };
 exports.about = function(req, res){

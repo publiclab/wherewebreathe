@@ -96,7 +96,43 @@ Answer.aggregate([
           demographicsQ = questions[i].count
           }
         }   
-             
+       Story.aggregate([
+      {$match: {}},
+      { $group: {
+          _id: '$qSet', 
+          count: {$sum: 1}
+      }}
+      ], function(err, stories){ 
+        if (err){
+            return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 632)")
+        } //end if err
+        if (!stories) {
+            //return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 633)")
+        } 
+        //console.log("stories");
+        //console.log(stories);  
+        var housingF = 0;
+        var symptomsF = 0;
+        var mitigationF = 0; 
+        var otherF = 0;
+        var demographicsF = 0; 
+        for (i in stories){
+          if(stories[i]._id == "Household"){
+          housingF = stories[i].count
+          }
+          if(stories[i]._id == "Symptoms"){
+          symptomsF = stories[i].count
+          }
+          if(stories[i]._id == "Mitigation"){
+          mitigationF = stories[i].count
+          }
+          if(stories[i]._id == "Other"){
+          otherF = stories[i].count
+          }
+          if(stories[i]._id == "Demographics"){
+          demographicsF = stories[i].count
+          }
+        }   
     var options = { 
       title: 'Home', 
       user : req.user, 
@@ -109,16 +145,22 @@ Answer.aggregate([
       symptomsQ: symptomsQ,
       mitigationQ: mitigationQ, 
       otherQ: otherQ, 
-      demographicsQ: demographicsQ     
+      demographicsQ: demographicsQ,
+      housingF: housingF,
+      symptomsF: symptomsF,
+      mitigationF: mitigationF, 
+      otherF: otherF, 
+      demographicsF: demographicsF     
     }
-    return cb(options);       
-});
+    console.log(options);
+    return cb(options);  
+    });  //end stories agg   
+  });
 }); 
 }
 exports.dashboard = function(req, res){
   authenticateUser(req, res, function(){ 
     getDashStats(req, function(options){
-      console.log(options);
       res.render('dashboard', options);
     });  
   });

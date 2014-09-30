@@ -23,7 +23,7 @@ function removeFromUnansweredSession(req, qid, cb){
 }
 function getDashStats(req, cb){
 Answer.aggregate([
-    {$match: {}},
+    {$match: {uid: req.user._id}},
     { $group: {
         _id: '$qSet', 
         count: {$sum: 1}

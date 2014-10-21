@@ -14,11 +14,16 @@
   </div>
 </div>
 <script>
-function getChart(progression){
+function getChart(qSet, progression){
+/*progression:  to control is a user clicks the prev or next link, value is 1 or -1, and is used to get the current charts index and progress it forward or backward
+qSet: to limit charts from a particular dataset
+*/
   $( ".alert" ).fadeOut();
   $('#previous').show();
   $('#next').show();
-  var options = {pass: 1, id: 1, token : 1}
+  //var options = {pass: 1, id: 1, token : 1}; these params seem to be unsued, commented out Oct 1 14
+  var options = {qSet: qSet};
+  //if user clicks previous or next
   if (progression){
     options['progression'] = progression;
   }
@@ -103,8 +108,8 @@ $(function($) {
   $('#chart').innerWidth($('#chartParent').innerWidth())
   
    //event.preventDefault();
-    getChart()
-    $('#previous').click(function(){getChart(-1)});
-    $('#next').click(function(){getChart(1)});
+    getChart("Household")
+    $('#previous').click(function(){getChart("Household",-1)});
+    $('#next').click(function(){getChart("Household", 1)});
 });
 </script>

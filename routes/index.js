@@ -275,49 +275,61 @@ exports.narratives = function(req, res){
 };
 exports.narrativesData = function(req, res){
   authenticateUser(req, res, function(){ 
-  //keep track of which chart user is looking at to determine sequence
-    if(!req.session.graphIndex){
-      req.session.graphIndex = 0
-    }
-    var questionsForShowing = [1,2,3,4,5,6,7,9, 1000, 1001, 10, 1002, 1003, 11, 1004, 1005, 12, 1006, 1007, 13, 1008, 1009, 14, 1010, 1011, 15, 1012, 1013, 16, 1014, 1015, 17, 1016, 1017, 18, 1018, 1019, 19, 1020, 1021, 20, 1022, 1023, 21, 1024, 1025, 22, 1026, 1027, 23, 1028, 1029, 24, 1030, 1031, 25, 1038, 1039, 26, 1036, 1037, 27, 1034, 1035, 28, 29, 30]
-    //if user clicks previous or next question (value will either be 1 or -1)
-    if(req.body.progression){
-      var newIndex = req.session.graphIndex + Number(req.body.progression);
-      //make sure to block progression if it progresses the index beyond the array length
-      if(newIndex< questionsForShowing.length){
-        req.session.graphIndex = newIndex;
-      }
-      else{
-        res.send(400, "Oops! Looks like that is the last question.");
-      }
-      if(newIndex<0){
-        req.session.graphIndex = 0
-        res.send(400, "Oops! Looks like that is the first question.");
-      }
-    }
-    //control if next or previous question hrefs are shown
-    var next = true; 
-    var previous = true;
-    if(req.session.graphIndex == 0){
-    previous = false}
-    else if(req.session.graphIndex == (questionsForShowing.length -1)){next = false}
-    qOrder = questionsForShowing[req.session.graphIndex];
-    Question.findOne({order: qOrder}, function ( err, questions){
+    var qSet = req.body.qSet
+    Question.find({qSet: qSet},'_id qSet question graphType order',{sort:{order: 1}},  function ( err, questions){
       if (err){
         return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 620)")
       } //end if err
       if (!questions) {
         return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 621)")
       }  
-      //Answer.find({qid: questions._id}, function(err, results){
+      //console.log(questions);
+    //store cookie on current question order. 
+        //purpose: determine previous, next links. 
+        //side effect: keeps track of last graph user saw, so when return to forum page it is the same as it was left in terms of graphs shown.
+    //console.log("order: "+questions[0].order);
+    if(!req.session.order){
+      req.session.order = {"Householdx": 400};
+    }
+   
+      console.log(req.session.order) 
+      //if this qSet doesnt have an order set for it, set it to the first q in the qset
+      if(!req.session.order[qSet]){
+        req.session.order[qSet] = questions[0].order;
+      }
+     //control if next or previous question hrefs are shown
+      var next = true; 
+      var previous = false;
+      //if user clicks previous or next question (value will either be 1 or -1)
+      if(req.body.progression){
+        req.session.order[qSet] += Number(req.body.progression);      
+      }
+      console.log(req.session.order)     
+      for (q in questions){
+        if(questions[q].order == req.session.order[qSet]){
+          var qid = questions[q]._id
+          var question = questions[q].question
+          var graphType = questions[q].graphType
+          if(q !=0){previous = true}
+          if(q == questions.length-1){next = false}
+        }
+      }
+     // console.log("previous: "+previous+", next: "+next);
       //});///does this line do anything or should we axe it? commented out on Sep 23
+      //console.log(qid+" : QID ")
       Answer.aggregate([
-        {$match: { qid: questions._id}},
+        {$match: { qid: qid}},
         { $group: {
             _id: '$a', 
             count: {$sum: 1}
         }}
       ], function(err, results){ 
+      if (err){
+        return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 634)")
+      } //end if err
+      if (!results) {
+        return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 635)")}
+        console.log(results)
       //loop through results and append colour
       //palett inspired by http://www.colourlovers.com/palette/1663477/A_Thousand_Rainbows
       var otherCount = 0
@@ -343,27 +355,23 @@ exports.narrativesData = function(req, res){
           else if (results[i]._id == "Yes, sometimes"){
             object.color = "#048091";        
           }
-          //use colors in palette (rest will be randomly assigned)
-          //else if(palette.length >0){
-          //  object.color = palette[0];
-          //  palette.splice(0, 1)
-          //}
           modifiedResults.push(object);
         }
       }
-              //push other on to modifiedResults if exists
+       //push other on to modifiedResults if exists
         if (otherCount > 0){
           modifiedResults.push({_id: "Other", color: "#C0C0C0", count: otherCount})
         }
       if(results.length<=0){
+      console.log(results.length)
         var answers = "no data"
       }
       else{
         answers = modifiedResults
       }
       response = {
-        question: questions.question,
-        graphType: questions.graphType,
+        question: question,
+        graphType: graphType,
         answers: answers,
         previous: previous,
         next: next  
@@ -403,7 +411,7 @@ exports.questionnaire = function ( req, res ){
       }//end if question
 
       var question = questions[0];
-      console.log(question.storiesPrompt );
+      //console.log(question.storiesPrompt );
       pageOptions = {
         user : req.user,
         title: 'Questionnaire',

@@ -9,3 +9,6 @@ How to export from mongo
 
 1.cd to folder you want export file to live in
 2. run: mongoexport -d wherewebreathe -c questions --out questionsDATE.json
+
+ mongoexport -d wherewebreathe -c storyprompts --out storypromptsDATE.json
+

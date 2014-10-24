@@ -38,12 +38,25 @@
 }
 #previous, #next{
   font-size: 17px;
-  padding-top: 15px;
-  
+  padding-top: 15px; 
 }
 #chart div.xAxis div.tickLabel 
-{    
-   
-    width: 50px;
-    
+{      
+  width: 50px;   
+}
+.storiesHeading{
+  font-size: x-large;
+}
+.username{
+  font-size: large;
+}
+.story{
+  color: #799998;
+}
+.storyParent{
+  margin:7px 0;
+}
+.well{
+  background-color: #F3FAFA;
+  border-color: #BFE7E6;
 }

@@ -75,8 +75,10 @@ var StoryPromptSchema = new Schema({
 var StorySchema = new Schema({
   //uid and qSet together will be unique, like a composite key
   uid: Schema.Types.ObjectId, //user ID
+  uname: String, //user name
   qSet: String,//links to question set
-  story: String
+  story: String,
+  comments: Array
 })
 //module.exports = userDB.model('Account', Account);
 

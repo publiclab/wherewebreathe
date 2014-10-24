@@ -1,6 +1,11 @@
 <% layout('/layout') -%>
 <% script('/javascripts/flot/jquery.flot.min.js'), script('/javascripts/flot/jquery.flot.categories.min.js') -%>
 <% stylesheet('/stylesheets/narratives.css')%>
+<h1>Topic 1: House and Household</h1>
+<div class="well">
+  <div class='storiesHeading' id='householdTitle'></div>
+  <div id='householdStories'></div>
+</div>
 <div class="panel panel-default">
   <div class="panel-body">
     <h2 id="question"></h2>
@@ -104,12 +109,39 @@ $(function($) {
     $('#next').html('next question <i class="fa fa-angle-right"></i>');
     $('#previous').html('<i class="fa fa-angle-left"></i> previous question');
   }*/
+  //load chart data
   //check #chartParent width and set chart width based on it. 
   $('#chart').innerWidth($('#chartParent').innerWidth())
+  getChart("Household")
+  $('#previous').click(function(){getChart("Household",-1)});
+  $('#next').click(function(){getChart("Household", 1)});
   
-   //event.preventDefault();
-    getChart("Household")
-    $('#previous').click(function(){getChart("Household",-1)});
-    $('#next').click(function(){getChart("Household", 1)});
+  //load stories divs (this was designed this way thinking that there would be an index page showing stories from all question sets)
+  var x = [
+    {titleDiv: '#householdTitle', storyURL: "/stories/Household", storiesDiv: '#householdStories' }
+  ]
+  for (i in x){
+    console.log(x[i])
+    $(x[i].titleDiv).html('You and X other people have helped the public to better understand this issue. Explore their stories to find someone with similar experiences, or <a href="'+x[i].storyURL+'"> share your own story >></a>');
+    getStories(x[i].storiesDiv)
+
+  }//end for i
+  
+  function getStories(div){
+    //div paramater is storiesDiv or the div that the results will be apppended to
+    $.get("/narrativesStories?qSet=Household")
+     .fail(function(response) {
+        console.log( "error" );
+      })
+      .done(function(response) {
+        for (j in response){
+          var html = "<div class='storyParent'>"
+            html+= "<div><span class='username'>"+response[j].uname+"</span>   <span class='story'>'"+response[j].story+"'</span></div>"
+            html += "<div>"+response[j].comments+" comments | <a href='#'>Hear their story >></a></div>"
+          html+= "</div>"
+          $(div).append(html);
+        }
+      });  
+  }//end getstories
 });
 </script>

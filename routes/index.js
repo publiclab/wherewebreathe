@@ -199,6 +199,7 @@ exports.skipQ = function(req, res){
   });
 };
 exports.storiesPrompt = function(req, res){
+  req.session.returnTo = req.path;
   authenticateUser(req, res, function(){ 
       StoryPrompt.findOne({qSet: req.params.qSet}, function ( err, prompt){
         if (err){
@@ -216,8 +217,10 @@ exports.saveStory = function(req, res){
   authenticateUser(req, res, function(){ 
   var story = new Story({
     uid: req.user._id, 
+    uname: req.user.username,
     qSet: req.body.qSet,
-    story: req.body.story
+    story: req.body.story,
+    comments: []
   }); 
   story.save( function(err, data){
     if (err) {
@@ -273,6 +276,35 @@ exports.narratives = function(req, res){
     res.render('narratives', { title: 'Forums', user : req.user});
   });
 };
+exports.narrativesStories = function(req, res){
+  authenticateUser(req, res, function(){ 
+  var qSet = req.query.qSet;
+  Story.find({qSet: qSet},'uname story comments',{sort:{_id: -1}}, function ( err, stories){
+    if (err){
+      return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 620)")
+    } //end if err
+    if (!stories) {
+      return res.send(200, "no stories")
+    }  //end if no results 
+    var modStories = []//for some reason I cant fully edit stories, maybe its a Mongoose thing?
+    for (i in stories){
+    console.log(stories[i].comments.length)
+      var obj = {};
+      obj["comments"] = stories[i].comments.length;
+      obj["uname"] = stories[i].uname;
+      if(stories[i].story.length >50){
+        obj["story"] = stories[i].story.substring(0,50)+"...";
+      }
+      else{
+        obj["story"] = stories[i].story;
+      }
+      modStories.push(obj);
+    }
+    console.log(modStories); 
+    res.send(200, modStories);
+  });//end stories find
+  })//end auth
+}//end narrativesStories
 exports.narrativesData = function(req, res){
   authenticateUser(req, res, function(){ 
     var qSet = req.body.qSet
@@ -288,11 +320,9 @@ exports.narrativesData = function(req, res){
         //purpose: determine previous, next links. 
         //side effect: keeps track of last graph user saw, so when return to forum page it is the same as it was left in terms of graphs shown.
     //console.log("order: "+questions[0].order);
-    if(!req.session.order){
-      req.session.order = {"Householdx": 400};
-    }
-   
-      console.log(req.session.order) 
+      if(!req.session.order){
+        req.session.order = {};
+      }
       //if this qSet doesnt have an order set for it, set it to the first q in the qset
       if(!req.session.order[qSet]){
         req.session.order[qSet] = questions[0].order;

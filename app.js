@@ -73,8 +73,9 @@ app.post('/privacy', login.privacy_post);
 app.get('/', routes.index);
 app.get('/welcome', routes.welcome);
 app.get('/dashboard', routes.dashboard);
-app.get('/narratives', routes.narratives);
-app.post('/narrativesData', routes.narrativesData);
+app.get('/forums/:qSet', routes.narratives);
+app.post('/narrativesData', routes.narrativesData);//this should be get when cleaning up code?
+app.get('/narrativesStories', routes.narrativesStories);
 app.get('/questionnaire', routes.questionnaire);
 app.get('/stories/:qSet', routes.storiesPrompt);
 app.get('/checkStoryExists/:qSet', routes.checkStoryExists);

@@ -4,7 +4,8 @@ var NewUser = require('../models/db').newuser;
 var PassReset = require('../models/db').passReset;
 var nodemailer = require("nodemailer");
 var validate = require('./validate');
-var authenticateUser = require('./authUser');
+var authenticateUser = require('./authUser').authUser;
+var getUsername = require('./authUser').getUsername
 var generateUnanswered = require('./generateUnanswered');
 
 function returnTo(res, req, message){
@@ -23,14 +24,14 @@ function returnTo(res, req, message){
     delete req.session.returnTo
   }
   else{
-    res.render('index', { title: 'Home', user : req.user, message: msg});
+    res.render('index', { title: 'Home', user : getUsername(req), message: msg});
   }
 }
 /********************************************************************************************
 REGISTRATION AND EMAIL VERIFICAITON
 *********************************************************************************************/
 exports.register_get = function(req, res) {
-  var pageOptions = { title: "Join Where We Breathe", user : req.user, regErr: []};
+  var pageOptions = { title: "Join Where We Breathe", user : getUsername(req), regErr: []};
   var temp = req.flash('info');
     if(temp.length > 0){
       pageOptions['message'] =  {text: temp[0], msgType: temp[1]}
@@ -95,7 +96,7 @@ exports.register_post = function(req, res) {
     //if any error messages   
     if (errorMsgs.length > 0){
           //there are errors
-          var pageOptions = { title: "Join Where We Breathe", user : req.user, regErr: errorMsgs};
+          var pageOptions = { title: "Join Where We Breathe", user : getUsername(req), regErr: errorMsgs};
           return res.render('login/register', pageOptions);
         }//end if no errors
      else{
@@ -109,7 +110,7 @@ exports.register_post = function(req, res) {
         }), txtPass, function(err, user) {
           if (err) {
             console.log("user registration error: " +err);
-            var pageOptions = { title: "Join Where We Breathe", user : req.user, regErr: [err] };
+            var pageOptions = { title: "Join Where We Breathe", user : getUsername(req), regErr: [err] };
             return res.render('login/register', pageOptions);
           }
           else{
@@ -128,7 +129,7 @@ exports.register_post = function(req, res) {
             };
             var mail = require("nodemailer").mail;
             mail(mailOptions);
-            res.render('message', { title: 'Almost done!', user : req.user, message: {text:"An email with an account verification link has been sent to you. Please follow the instructions in the email to complete your account registration", msgType: "alert-success"} });
+            res.render('message', { title: 'Almost done!', user : getUsername(req), message: {text:"An email with an account verification link has been sent to you. Please follow the instructions in the email to complete your account registration", msgType: "alert-success"} });
           }//end else       
         });
       });//end rendomBytes  
@@ -158,12 +159,12 @@ exports.verify_get =  function(req, res) {
       verified.save(function(err) {
         if (err) {throw err}
         else{
-          res.render('login/login', {title: "Login", user : req.user, message:  {text: "Your account registration in now complete. Please login.", msgType: "alert-success" }});
+          res.render('login/login', {title: "Login", user : getUsername(req), message:  {text: "Your account registration in now complete. Please login.", msgType: "alert-success" }});
         }
       });      
     }
     else{
-      res.render('message', { title: 'Oops!', user : req.user, message: {text:"That verification code has expired. If you registered more than a day ago, try registering again, and clicking the verify link that is emailed to you right away.", msgType: "alert-danger"} });
+      res.render('message', { title: 'Oops!', user : getUsername(req), message: {text:"That verification code has expired. If you registered more than a day ago, try registering again, and clicking the verify link that is emailed to you right away.", msgType: "alert-danger"} });
     }
   });
 }
@@ -207,7 +208,7 @@ exports.login_get = function(req, res) {
     if(temp.length > 0){
       pageOptions['message'] =  {text: temp[0], msgType: temp[1]}
     } 
-  res.render('login/login', { title: 'Login', user : req.user, message: message });
+  res.render('login/login', { title: 'Login', user : getUsername(req), message: message });
 }; 
 exports.logout =  function(req, res) {
       req.logout();
@@ -217,7 +218,7 @@ exports.logout =  function(req, res) {
 PASSWORD RECOVERY
 ******************************************************************/
 exports.forgotpass_get =  function(req, res) {
-  res.render('login/forgotpass', { title: 'Forgotten Password', user : req.user, message: null });
+  res.render('login/forgotpass', { title: 'Forgotten Password', user : getUsername(req), message: null });
 }
 exports.forgotpass_post =  function(req, res) {
   var txtEmail = req.body.email.trim();
@@ -272,7 +273,7 @@ exports.forgotpass_post =  function(req, res) {
           });
         });
         //message check your email for a link to reset your password. 
-        //res.render('login/message', { title: 'Please check your email', user : req.user, message: {text:"An email with a link to reset your password has been sent to your email address", msgType: "alert-success"} });
+        //res.render('login/message', { title: 'Please check your email', user : getUsername(req), message: {text:"An email with a link to reset your password has been sent to your email address", msgType: "alert-success"} });
       }
     });//end passREsetFind
   });
@@ -288,16 +289,16 @@ exports.resetpass_get =  function(req, res) {
         //if not token or token doesnt align with id
         message = { text: 'That link has expired or is invalid.', msgType: "alert-danger"}
       }
-      res.render('login/resetpass', { title: 'Reset Password', user : req.user, id: req.params.id, token: req.params.token, message: message } );//end res.render  
+      res.render('login/resetpass', { title: 'Reset Password', user : getUsername(req), id: req.params.id, token: req.params.token, message: message } );//end res.render  
     });//end user.find()///    
   }//end if params...
   else if(req.user){
-    res.render('login/resetpass', { title: 'Change Password', user : req.user, id: null, token: null }); 
+    res.render('login/resetpass', { title: 'Change Password', user : getUsername(req), id: null, token: null }); 
   }
   else{
     //send 'em to the login page with a message
     req.session.returnTo = "/resetpass"
-    res.render('login/login', { title: 'Login', user : req.user, message: { text: 'You need to login to reset your password OR have a valid password reset link.', msgType: "alert-danger"} });    
+    res.render('login/login', { title: 'Login', user : getUsername(req), message: { text: 'You need to login to reset your password OR have a valid password reset link.', msgType: "alert-danger"} });    
   }
 }
 exports.resetpass_post =  function(req, res) {
@@ -307,32 +308,34 @@ exports.resetpass_post =  function(req, res) {
   if(passErr){
     return res.send(400, passErr);
   }
-    
-  var txtId = req.body.id;
+  var userID = req.body.id;
   var txtToken = req.body.token;
   //console.log(req.body.id + ":"+ req.body.token);
   //if not logged in, require token, if logged in use id from user to search for a user
   var query;
   if (!req.user){
-    if (!txtId || ! txtToken){return res.send(400, "If you arent logged in to your account, you cannot change your password without a valid password reset link (which you can obtain by clicking on the 'forgotten password' link on the login screen.")};
-   query = {uid: txtId, passReset: txtToken};
+  console.log("not logged in");
+    if (!userID || ! txtToken){return res.send(400, "If you arent logged in to your account, you cannot change your password without a valid password reset link (which you can obtain by clicking on the 'forgotten password' link on the login screen.")};
+   query = {uid: userID, passReset: txtToken};
   }
   else{
+  console.log("not logged in");
     query = {uid: req.user.id}
+    userID = req.user.id
     //console.log("id" + req.user.id);
   }
   //console.log(query);
   PassReset.findOneAndRemove(query, function(error, user){
-    console.log(user)
     if(error){
       return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 816)");
     }
-    else if(user){
+    //user will return null if this is password change vs a pass reset....
+    //else if(user){
       //create a new user just to get access to the mongoose-passport .setPassword function (couldnt figure out how to implememt mongoose model methods on query results, so this is the slightly convoluted workaround. 
       var tempUser = new User();
       tempUser.setPassword(txtPass, function(err, stuff){
         //remove passReset field, update salt and hash fields from tempUser
-        User.findByIdAndUpdate(user.uid, {hash: tempUser.hash, salt: tempUser.salt}, function(err, results){
+        User.findByIdAndUpdate(userID, {hash: tempUser.hash, salt: tempUser.salt}, function(err, results){
           if (err) {
             return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 817)");
           }
@@ -342,7 +345,7 @@ exports.resetpass_post =  function(req, res) {
           res.send(200);
         });
       });//end setPassword
-    }//end else if
+    //}//end else if
   }); //end find()
 }
 
@@ -363,11 +366,11 @@ exports.privacy_get = function(req, res) {
  User.findOne({_id: req.user._id}, function (err, result) {
   if (err){
     req.logout();
-    return res.render('login/login', {title: "Login", user : req.user, message:  {text: "Something went wrong on our side of things. Please try logging in again to edit your privacy settings. (Error ID: 818)", msgType: "alert-success" }});
+    return res.render('login/login', {title: "Login", user : getUsername(req), message:  {text: "Something went wrong on our side of things. Please try logging in again to edit your privacy settings. (Error ID: 818)", msgType: "alert-success" }});
   } //end if err
   res.render('login/privacy', { 
             title: 'Privacy Settings', 
-            user : req.user, 
+            user : getUsername(req), 
             message: message, 
             visPublic: result.visPublic
             }); 

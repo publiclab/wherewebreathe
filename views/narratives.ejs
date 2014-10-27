@@ -3,8 +3,20 @@
 <% stylesheet('/stylesheets/narratives.css')%>
 <h1>Topic 1: House and Household</h1>
 <div class="well">
-  <div class='storiesHeading' id='householdTitle'></div>
-  <div id='householdStories'></div>
+  <div id='storiesHeading'>
+  You and X other people have helped the public to better understand this issue. Explore their stories to find someone with similar experiences, or <a href="/stories/<%= qSet %>"> share your own story >></a>
+  </div>
+  <% for (i in stories){%>  
+    <div class='storyParent'>
+    <div>
+      <span class='username'><%=stories[i].uname%></span>   
+      <span class='story'><%=stories[i].story%></span>
+    </div>
+    <div>
+      <%=stories[i].comments%> comments | <a href='/stories/<%=qSet%>'>Hear their story >></a>
+    </div>
+  </div>
+  <%}%>
 </div>
 <div class="panel panel-default">
   <div class="panel-body">
@@ -104,6 +116,7 @@ qSet: to limit charts from a particular dataset
         });//end done?
 }//end function getChart()
 $(function($) {
+
 /*//if not small screensize, make next and previous labels more descriptive
   if($(window).innerWidth()>400){
     $('#next').html('next question <i class="fa fa-angle-right"></i>');
@@ -116,32 +129,6 @@ $(function($) {
   $('#previous').click(function(){getChart("Household",-1)});
   $('#next').click(function(){getChart("Household", 1)});
   
-  //load stories divs (this was designed this way thinking that there would be an index page showing stories from all question sets)
-  var x = [
-    {titleDiv: '#householdTitle', storyURL: "/stories/Household", storiesDiv: '#householdStories' }
-  ]
-  for (i in x){
-    console.log(x[i])
-    $(x[i].titleDiv).html('You and X other people have helped the public to better understand this issue. Explore their stories to find someone with similar experiences, or <a href="'+x[i].storyURL+'"> share your own story >></a>');
-    getStories(x[i].storiesDiv)
-
-  }//end for i
-  
-  function getStories(div){
-    //div paramater is storiesDiv or the div that the results will be apppended to
-    $.get("/narrativesStories?qSet=Household")
-     .fail(function(response) {
-        console.log( "error" );
-      })
-      .done(function(response) {
-        for (j in response){
-          var html = "<div class='storyParent'>"
-            html+= "<div><span class='username'>"+response[j].uname+"</span>   <span class='story'>'"+response[j].story+"'</span></div>"
-            html += "<div>"+response[j].comments+" comments | <a href='#'>Hear their story >></a></div>"
-          html+= "</div>"
-          $(div).append(html);
-        }
-      });  
-  }//end getstories
+ 
 });
 </script>

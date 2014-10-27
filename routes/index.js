@@ -2,12 +2,14 @@ var mongoose = require( 'mongoose' );
 var Schema = mongoose.Schema;
 var Question = require('../models/db').question;
 var Answer = require('../models/db').answer;
-var authenticateUser = require('./authUser');
+var authenticateUser = require('./authUser').authUser;
+var getUsername = require('./authUser').getUsername
 var User = require('../models/db').user;
 var StoryPrompt = require('../models/db').storyPrompt;
 var Story = require('../models/db').story;
 var generateUnanswered = require('./generateUnanswered');
 var csv = require('express-csv')
+
 
 function removeFromUnansweredSession(req, qid, cb){
   var temp = req.session.unanswered;
@@ -135,7 +137,7 @@ Answer.aggregate([
         }   
     var options = { 
       title: 'Home', 
-      user : req.user, 
+      user : getUsername(req), 
       housingA: housingA,
       symptomsA: symptomsA,
       mitigationA: mitigationA, 
@@ -209,7 +211,7 @@ exports.storiesPrompt = function(req, res){
           return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 625)")
         } 
         console.log(prompt)
-        res.render('stories-prompt', { title: 'Tell your story', user : req.user, heading: prompt.heading, subheading: prompt.subheading, seedQuestions: prompt.seedQuestions, qSet: req.params.qSet}); 
+        res.render('stories-prompt', { title: 'Tell your story', user : getUsername(req), heading: prompt.heading, subheading: prompt.subheading, seedQuestions: prompt.seedQuestions, qSet: req.params.qSet}); 
       });   //end find    
   });
 };
@@ -234,7 +236,7 @@ exports.index = function(req, res){
   //if user not logged in send to index, else send to dashboard
   if (!req.user){
     req.session.returnTo = req.path;
-    res.render('index', { title: 'Home', user : req.user});
+    res.render('index', { title: 'Home', user : getUsername(req)});
   }
   else{
     res.redirect('/dashboard');
@@ -242,7 +244,7 @@ exports.index = function(req, res){
 };
 exports.welcome = function(req, res){
   //authenticateUser(req, res, function(){ 
-  //res.render('welcome', { title: 'Home', user : req.user, tour: 'yes'});
+  //res.render('welcome', { title: 'Home', user : getUsername(req), tour: 'yes'});
   //});
   authenticateUser(req, res, function(){ 
   console.log("weloer");
@@ -256,15 +258,15 @@ exports.welcome = function(req, res){
 };
 exports.about = function(req, res){
   req.session.returnTo = req.path;
-  res.render('about', { title: 'About Where We Breathe', user : req.user});
+  res.render('about', { title: 'About Where We Breathe', user : getUsername(req)});
 };
 exports.knowledgebase = function(req, res){
   req.session.returnTo = req.path;
-  res.render('knowledge-base', { title: 'Knowledge base', user : req.user});
+  res.render('knowledge-base', { title: 'Knowledge base', user : getUsername(req)});
 };
 exports.vinhud = function(req, res){
   req.session.returnTo = req.path;
-  res.render('vinhud', { title: 'Am I looking for a VIN or a HUD number?', user : req.user});
+  res.render('vinhud', { title: 'Am I looking for a VIN or a HUD number?', user : getUsername(req)});
 };
 exports.goBackSkipped = function(req, res){
   generateUnanswered(req, function(){   
@@ -273,12 +275,7 @@ exports.goBackSkipped = function(req, res){
 };
 exports.narratives = function(req, res){
   authenticateUser(req, res, function(){ 
-    res.render('narratives', { title: 'Forums', user : req.user});
-  });
-};
-exports.narrativesStories = function(req, res){
-  authenticateUser(req, res, function(){ 
-  var qSet = req.query.qSet;
+  var qSet = req.params.qSet;
   Story.find({qSet: qSet},'uname story comments',{sort:{_id: -1}}, function ( err, stories){
     if (err){
       return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 620)")
@@ -300,10 +297,18 @@ exports.narrativesStories = function(req, res){
       }
       modStories.push(obj);
     }
-    console.log(modStories); 
-    res.send(200, modStories);
+    //console.log(modStories);
+    //console.log(qSet)
+    res.render('narratives', { title: 'Forums', user : getUsername(req), stories: modStories, qSet: qSet}); 
+    //res.send(200, modStories);
   });//end stories find
   })//end auth
+  //authenticateUser(req, res, function(){ 
+  //  res.render('narratives', { title: 'Forums', user : getUsername(req)});
+  //});
+};
+exports.narrativesStories = function(req, res){
+
 }//end narrativesStories
 exports.narrativesData = function(req, res){
   authenticateUser(req, res, function(){ 
@@ -428,22 +433,22 @@ exports.questionnaire = function ( req, res ){
     } 
     //if user has answered and not skipped all questions in db
     else if (req.session.unanswered.length <= 0 && !req.session.skip){
-      return res.render('message', { title: 'Questionnaire complete!', user : req.user, message: {text:"Thank you! You have answered all of the survey questions.", msgType: "alert-success"}});
+      return res.render('message', { title: 'Questionnaire complete!', user : getUsername(req), message: {text:"Thank you! You have answered all of the survey questions.", msgType: "alert-success"}});
     }
     //if user has skipped some questions
     else if(req.session.unanswered.length <= 0 && req.session.skip) {
-      return res.render('go-back-to-skipped', { title: 'Questionnaire complete!', user : req.user, message: {text:"You have reached the end of the survey, but you skipped some questions. You may go back and answer them if you would like.", msgType: "alert-warning"}});
+      return res.render('go-back-to-skipped', { title: 'Questionnaire complete!', user : getUsername(req), message: {text:"You have reached the end of the survey, but you skipped some questions. You may go back and answer them if you would like.", msgType: "alert-warning"}});
     }
     Question.find(query, function ( err, questions){     
       //if question not found
       if (questions.length <= 0){
-        return res.render('message', { title: 'Oops!', user : req.user, message: {text:"It doesn't look like there is a question there yet", msgType: "alert-danger"} });
+        return res.render('message', { title: 'Oops!', user : getUsername(req), message: {text:"It doesn't look like there is a question there yet", msgType: "alert-danger"} });
       }//end if question
 
       var question = questions[0];
       //console.log(question.storiesPrompt );
       pageOptions = {
-        user : req.user,
+        user : getUsername(req),
         title: 'Questionnaire',
         qSet: question.qSet,
         question: question.question, 
@@ -564,7 +569,7 @@ DATA DOWNLOAD
 ***********************************************************************/ 
 exports.download =  function(req, res) {
   req.session.returnTo = req.path;
-  res.render('download', { title: 'Export Where We Breathe Data', user : req.user});
+  res.render('download', { title: 'Export Where We Breathe Data', user : getUsername(req)});
 }  
 exports.exportData =  function(req, res) {
 req.session.returnTo = req.path;

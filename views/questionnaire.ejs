@@ -121,10 +121,10 @@ else{%>
         console.log("fail")
       })
       .done(function(response) {  
-      console.log(response);
+      alert(response);
       //if already story, dont prompt to tell story
       if (response){window.location.href ='/questionnaire/';}
-      else{window.location.href ='/stories/<%= qSet %>';}
+      else{window.location.href ='/stories/<%= qSet %>/questionnaire';}
       })
     }
     else{

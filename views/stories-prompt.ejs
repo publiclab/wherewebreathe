@@ -32,8 +32,12 @@
     })
     .done(function(response) {  
       console.log("ok");
-      //return to questionnaire
-      window.location.href ='/questionnaire/'
+      //go to forums 
+      var redir = '/Forums/'+"<%= qSet %>"
+      console.log('<%=returnTo%>');
+      redir += "/<%=returnTo%>"
+      console.log(redir);
+      window.location.href = redir
     })      
   })
 </script>

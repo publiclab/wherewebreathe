@@ -211,7 +211,9 @@ exports.storiesPrompt = function(req, res){
           return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 625)")
         } 
         console.log(prompt)
-        res.render('stories-prompt', { title: 'Tell your story', user : getUsername(req), heading: prompt.heading, subheading: prompt.subheading, seedQuestions: prompt.seedQuestions, qSet: req.params.qSet}); 
+        var options = { title: 'Tell your story', user : getUsername(req), heading: prompt.heading, subheading: prompt.subheading, seedQuestions: prompt.seedQuestions, qSet: req.params.qSet}
+        options["returnTo"] = req.params.returnTo||"";
+        res.render('stories-prompt', options); 
       });   //end find    
   });
 };
@@ -297,9 +299,11 @@ exports.narratives = function(req, res){
       }
       modStories.push(obj);
     }
-    //console.log(modStories);
-    //console.log(qSet)
-    res.render('narratives', { title: 'Forums', user : getUsername(req), stories: modStories, qSet: qSet}); 
+    var options = { title: 'Forums', user : getUsername(req), stories: modStories, qSet: qSet}
+    options["returnTo"] = req.params.returnTo||null;
+
+    console.log(options)
+    res.render('narratives', options); 
     //res.send(200, modStories);
   });//end stories find
   })//end auth

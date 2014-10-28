@@ -60,3 +60,6 @@
   background-color: #F3FAFA;
   border-color: #BFE7E6;
 }
+h1{
+  display:inline;/*make room for #btnQ*/
+}

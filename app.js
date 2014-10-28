@@ -74,9 +74,11 @@ app.get('/', routes.index);
 app.get('/welcome', routes.welcome);
 app.get('/dashboard', routes.dashboard);
 app.get('/forums/:qSet', routes.narratives);
+app.get('/forums/:qSet/:returnTo', routes.narratives);
 app.post('/narrativesData', routes.narrativesData);//this should be get when cleaning up code?
 app.get('/narrativesStories', routes.narrativesStories);
 app.get('/stories/:qSet', routes.storiesPrompt);
+app.get('/stories/:qSet/:returnTo', routes.storiesPrompt);
 app.get('/checkStoryExists/:qSet', routes.checkStoryExists);
 app.post('/skipq/:skipq', routes.skipQ);
 app.post('/savestory', routes.saveStory);

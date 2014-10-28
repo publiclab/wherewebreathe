@@ -23,9 +23,11 @@
           <div class="hint">(<%=housingF%> contribution<%if(housingF!=1){%>s<%}%>)</div>
         </div>
         <div class="disabledx hint">Answer questions to read others' stories in the forum</div>
+                <a href="reorderUnanswered/Household"<button  class="btn btn-primary somespace" type="button">Start Survey</button></a>
         <%}%>
       </div><!--end lblCircle-->
     </div>
+    
     <div class="col-xs-6 col-md-2">
       <div class="circle symptoms <%if(symptomsA <=0){%>unanswered<%}%>">Symptoms</div>
       <div class='lblCircle'>       
@@ -47,9 +49,12 @@
           <div class="hint">(<%=symptomsF%> contribution<%if(symptomsF!=1){%>s<%}%>)</div>
         </div>
         <div class="disabledx hint">Answer questions to read others' stories in the forum</div>
+        <a href="reorderUnanswered/Symptoms"<button  class="btn btn-primary somespace" type="button">Start Survey</button></a>
         <%}%>
       </div><!--end lblCircle-->
     </div>
+    
+    
     <div class="col-xs-6 col-md-2">
       <div class="circle mitigation <%if(mitigationA <=0){%>unanswered<%}%>">Mitigation</div>
       <div class='lblCircle'>       
@@ -64,16 +69,19 @@
         <a href="/forums/Mitigation" class="somespace">Visit the forum
           <div class="hint">(<%=mitigationF%> contribution<%if(mitigationF!=1){%>s<%}%>)</div>
         </a>
-        <a href="/goback"<button  class="btn btn-primary somespace" type="button">Resume</button></a>
+        <a href="reorderUnanswered/Mitigation"<button  class="btn btn-primary somespace" type="button">Resume</button></a>
         <%}else{%> 
         <p><%=mitigationA%> of <%=mitigationQ%> Questions</p>
         <div class="disabledx">Visit the forum
           <div class="hint">(<%=mitigationF%> contribution<%if(mitigationF!=1){%>s<%}%>)</div>
         </div>
         <div class="disabledx hint">Answer questions to read others' stories in the forum</div>
+        <a href="reorderUnanswered/Mitigation"<button  class="btn btn-primary somespace" type="button">Start Survey</button></a>
         <%}%>
       </div><!--end lblCircle-->
     </div>
+    
+    
     <div class="col-xs-6 col-md-2">
       <div class="circle other <%if(otherA <=0){%>unanswered<%}%>">Indicators</div>
       <div class='lblCircle'>       
@@ -88,16 +96,19 @@
         <a href="/forums/Other" class="somespace">Visit the forum
          <div class="hint">(<%=otherF%> contribution<%if(otherF!=1){%>s<%}%>)</div>
         </a>
-        <a href="/goback"<button  class="btn btn-primary somespace" type="button">Resume</button></a>
+        <a href="reorderUnanswered/Other"<button  class="btn btn-primary somespace" type="button">Resume</button></a>
         <%}else{%> 
         <p><%=otherA%> of <%=otherQ%> Questions</p>
         <div class="disabledx">Visit the forum
          <div class="hint">(<%=otherF%> contribution<%if(otherF!=1){%>s<%}%>)</div>
         </div>
         <div class="disabledx hint">Answer questions to read others' stories in the forum</div>
+        <a href="reorderUnanswered/Other"<button  class="btn btn-primary somespace" type="button">Start Survey</button></a>
         <%}%>
       </div><!--end lblCircle-->
     </div>
+    
+    
     <div class="col-xs-6 col-md-2">
       <div class="circle demographics <%if(demographicsA <=0){%>unanswered<%}%>">Demographics</div>
       <div class='lblCircle'>       
@@ -112,13 +123,14 @@
         <a href="Demographics" class="somespace">Visit the forum
          <div class="hint">(<%=demographicsF%> contribution<%if(demographicsF!=1){%>s<%}%>)</div>
         </a>
-        <a href="/goback"<button  class="btn btn-primary somespace" type="button">Resume</button></a>
+        <a href="reorderUnanswered/Demographics"<button  class="btn btn-primary somespace" type="button">Resume</button></a>
         <%}else{%> 
         <p><%=demographicsA%> of <%=demographicsQ%> Questions</p>
         <div class="disabledx">Visit the forum
          <div class="hint">(<%=demographicsF%> contribution<%if(demographicsF!=1){%>s<%}%>)</div>
         </div>
         <div class="disabledx hint">Answer questions to read others' stories in the forum</div>
+        <a href="reorderUnanswered/Demographics"<button  class="btn btn-primary somespace" type="button">Start Survey</button></a>
         <%}%>
       </div><!--end lblCircle-->
     </div>    

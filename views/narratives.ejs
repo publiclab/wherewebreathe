@@ -125,9 +125,9 @@ $(function($) {
   //load chart data
   //check #chartParent width and set chart width based on it. 
   $('#chart').innerWidth($('#chartParent').innerWidth())
-  getChart("Household")
-  $('#previous').click(function(){getChart("Household",-1)});
-  $('#next').click(function(){getChart("Household", 1)});
+  getChart("<%=qSet%>")
+  $('#previous').click(function(){getChart("<%=qSet%>",-1); return false;});// return false prevents scroll to top of page 
+  $('#next').click(function(){getChart("<%=qSet%>", 1); return false;});
   
  
 });

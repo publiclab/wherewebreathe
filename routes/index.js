@@ -418,17 +418,50 @@ exports.narrativesData = function(req, res){
     }); //end Question.find
   });//end auth user
 }
+exports.reorderUnanswered = function (req, res){
+  authenticateUser(req, res, function(){ 
+//pushes unanswered questions to front of queue of a certain qSet or question set
+    //if (req.params.qSet){
+      //if there is a qSet parameter (linked to from dashboard), find first question in qSet's id, move all ids in unanswered session array that are preceeding to end of array
 
+      Question.find({qSet : req.params.qSet},"_id order",{sort:{order: 1}}, function ( err, questions){ 
+        if (err) {
+          return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 636)")
+        }
+        console.log(questions) 
+        var inQset  = []// a temp array to hold unanswered questions that are within a questionset
+         // console.log(req.session.unanswered[i])
+          for(j in questions){
+            //get index position of question in unanswered array
+            var unansIndex = req.session.unanswered.indexOf(String(questions[j]._id));
+            //if questionset question in unanswered, store in temp array of matches
+            if (unansIndex !=-1){
+            inQset.push(req.session.unanswered[unansIndex]);
+            //remove matches from unanswered array, will add matched to front later
+            req.session.unanswered.splice(unansIndex, 1)
+            }
+          } //end for j         
+        console.log(inQset)
+        
+        req.session.unanswered = inQset.concat(req.session.unanswered);
+        //now that unanswer is reordered continue on to questionnaire
+        res.redirect("/questionnaire")
+      });//end findOne qSet
+      
+   // }//if req.params.qSet
+   });//end auth
+}
 exports.questionnaire = function ( req, res ){
   authenticateUser(req, res, function(){  
-    //deal with if there is get param for skipq or not
+    /*//deal with if there is get param for skipq or not
     if (req.params.skipq !== undefined && req.params.skipq !== "0"){
       removeFromUnansweredSession(req, req.params.skipq); 
       req.session.skip = true;   
-    } 
-    var query =  {_id: req.session.unanswered[0]};
+    } */
+
+    var query =  {_id: req.session.unanswered[0]}
     //if conditional question prompted by answer to another question
-    if (req.params.nextq){
+    if (req.params.nextq && (req.params.nextq != "0" )){
       query = {order: req.params.nextq};
     } 
     //if user has answered and not skipped all questions in db

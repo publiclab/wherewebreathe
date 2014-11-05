@@ -7,6 +7,9 @@ fieldset {
   font-size: small;
   margin-bottom:10px;
 }*/
+#regMsg{
+  display: none;
+}
 #lnkLogin{
   margin-bottom:10px;
 }
@@ -24,4 +27,13 @@ margin-top: 8px;
     border-left: whitesmoke thin solid;
   }
 
+}
+#usernameErr{
+  color:#a94442;
+  background-color: #f2dede;
+  padding: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  font-size: x-small;
 }

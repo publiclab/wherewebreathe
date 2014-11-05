@@ -69,6 +69,8 @@ app.get('/resetpass/:id/:token', login.resetpass_get);
 app.post('/resetpass', login.resetpass_post);
 app.get('/privacy', login.privacy_get);
 app.post('/privacy', login.privacy_post);
+app.get('/checkusername', login.checkUsername);
+app.get('/getrandomusername', login.getRandomUsername);
 
 app.get('/', routes.index);
 app.get('/welcome', routes.welcome);
@@ -94,7 +96,7 @@ app.get('/exportData', routes.exportData);
 app.get('/download', routes.download);
 
 
-app.get('/test', routes.test);
+app.post('/test', routes.test);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

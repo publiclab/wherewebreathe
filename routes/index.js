@@ -670,6 +670,6 @@ req.session.returnTo = req.path;
 TEST - remove later
 ***********************************************************************/   
 exports.test =  function(req, res) {
-
+  console.log(req.body)
 }
 

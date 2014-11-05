@@ -37,7 +37,7 @@ There were the following errors:
   </div> 
   <div class="form-group">
     <label for="username">Desired Username:</label>
-    <span id='usernameErr'>sfda</span>
+    <span id='usernameErr'></span>
     <button type="button" id='btnRandomName' class="pull-right btn btn-warning btn-xs">Generate Random Username</button>
     <input type="text" name="username" id="username" placeholder="Enter Username (min. 3 characters)" class="form-control" pattern="^[A-Za-z0-9_.-@]{3,30}$" required maxlength="30" title="Your username must be 3 to 30 characters in length and may contain letters, numbers, or . - @ _ characters.">
   </div>
@@ -136,78 +136,11 @@ support@wherewebreathe.org</a></div>
           .done(function(response) {
             console.log(response)
             if(response != "ok"){
-            $('#usernameErr').show().html(response);
+              $('#usernameErr').show().html(response);
             }
           });        
       });
-  //if there is an error message scroll to it.(legacy)
-  /*<% if(regErr.length > 0){ %> 
-    console.log("scroll")
-    $('html, body').animate({
-      scrollTop: $("#regMsg").offset().top - $('#menu').outerHeight()}, 600);
-    });
-  <%} %>*/
+
 </script>
 
-  <!--<label for="username">Are you human? (sorry: spam filtering!)</label>
-  <fieldset>
-    <div class="radio">
-      <label>
-        <input type="radio" name="human1" value="food">
-        I eat food
-      </label>
-    </div>
-    <div class="radio">
-      <label>
-        <input type="radio" name="human1" value="robot">
-        I am a robot
-      </label>
-    </div>
-  </fieldset>
-  <fieldset>
-    <div class="radio">
-      <label>
-        <input type="radio" name="human2" value="earth">
-        I live on Earth
-      </label>
-    </div>
-    <div class="radio">
-      <label>
-        <input type="radio" name="human2"value="cpu">
-        I am a central processing unit
-      </label>
-    </div>
-  </fieldset>
-  <fieldset>
-    <div class="radio">
-      <label>
-        <input type="radio" name="human3" value="water">
-        I drink water
-      </label>
-    </div>
-    <div class="radio">
-      <label>
-        <input type="radio" name="human3" value="computer">
-        I am a computer
-      </label>
-    </div>
-  </fieldset> 
-  <fieldset>
-    <div class="radio">
-      <label>
-        <input type="radio" name="human4" id="optionsRadios1" value="heart">
-        I have a heart
-      </label>
-    </div>
-    <div class="radio">
-      <label>
-        <input type="radio" name="human4" id="optionsRadios2" value="robot">
-        I am a central processing unit
-      </label>
-    </div>
-  </fieldset> 
-  <div class="form-group">
-  <label for="empty">Don't write anything here if you're a real person:</label>
-    <textarea name="empty" class="form-control"></textarea>
-  </div>
-  -->
+ 

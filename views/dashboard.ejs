@@ -2,7 +2,8 @@
 <% stylesheet('/stylesheets/dashboard.css')%>
 <div class="container">
   <div class="row row-centered">
-    <div class="col-xs-6 col-md-4">
+    <div class=" col-xs-12 col-sm-6 col-md-6 col-lg-4">
+      <div class="topic">
       <div class="circle housing <%if(housingA <=0){%>unanswered<%}%>">Housing</div>
       <div class='lblCircle'>       
         <%if(housingA != 0 &&housingA == housingQ){%>
@@ -26,9 +27,11 @@
                 <a href="reorderUnanswered/Household"<button  class="btn btn-primary somespace" type="button">Start Survey</button></a>
         <%}%>
       </div><!--end lblCircle-->
+      </div><!--end div topic-->
     </div>
     
-    <div class="col-xs-6 col-md-4">
+    <div class=" col-xs-12 col-sm-6 col-md-6 col-lg-4">
+      <div class="topic">
       <div class="circle symptoms <%if(symptomsA <=0){%>unanswered<%}%>">Symptoms</div>
       <div class='lblCircle'>       
         <%if(symptomsA != 0 &&symptomsA == symptomsQ){%>
@@ -52,10 +55,12 @@
         <a href="reorderUnanswered/Symptoms"<button  class="btn btn-primary somespace" type="button">Start Survey</button></a>
         <%}%>
       </div><!--end lblCircle-->
+      </div><!--end div topic-->
     </div>
     
     
-    <div class="col-xs-6 col-md-4">
+    <div class=" col-xs-12 col-sm-6 col-md-6 col-lg-4">
+      <div class="topic">
       <div class="circle mitigation <%if(mitigationA <=0){%>unanswered<%}%>">Mitigation</div>
       <div class='lblCircle'>       
         <%if(mitigationA != 0 && mitigationA == mitigationQ){%>
@@ -79,10 +84,12 @@
         <a href="reorderUnanswered/Mitigation"<button  class="btn btn-primary somespace" type="button">Start Survey</button></a>
         <%}%>
       </div><!--end lblCircle-->
+      </div><!--end div topic-->
     </div>
     
     
-    <div class="col-xs-6 col-md-4">
+    <div class=" col-xs-12 col-sm-6 col-md-6 col-lg-4">
+      <div class="topic">
       <div class="circle other <%if(otherA <=0){%>unanswered<%}%>">Indicators</div>
       <div class='lblCircle'>       
         <%if(otherA != 0 &&otherA == otherQ){%>
@@ -106,10 +113,12 @@
         <a href="reorderUnanswered/Other"<button  class="btn btn-primary somespace" type="button">Start Survey</button></a>
         <%}%>
       </div><!--end lblCircle-->
+      </div><!--end div topic-->
     </div>
     
     
-    <div class="col-xs-6 col-md-4">
+    <div class=" col-xs-12 col-sm-6 col-md-6 col-lg-4">
+      <div class="topic">
       <div class="circle demographics <%if(demographicsA <=0){%>unanswered<%}%>">Demographics</div>
       <div class='lblCircle'>       
         <%if(demographicsA != 0 && demographicsA == demographicsQ){%>
@@ -133,6 +142,7 @@
         <a href="reorderUnanswered/Demographics"<button  class="btn btn-primary somespace" type="button">Start Survey</button></a>
         <%}%>
       </div><!--end lblCircle-->
+      </div><!--end div topic-->
     </div>    
   </div>
 </div>

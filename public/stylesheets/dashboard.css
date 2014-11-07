@@ -57,6 +57,15 @@ max-width: 1000px;
 .fa-check{
   color: green;
 }
-.divTopic{
-  text-align: center;
+.topic{
+  border: solid thin lightgrey;
+  min-width: 200px;
+  margin: 0 50px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  background-color: #f8f8f8;
+}
+.col-xs-12{
+  margin-bottom: 15px;
 }

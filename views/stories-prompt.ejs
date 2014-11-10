@@ -1,0 +1,43 @@
+<% layout('layout') -%>
+<% stylesheet('/stylesheets/questionnaire.css'), stylesheet('/stylesheets/stories.css')%>
+<div id="divQ">
+  <div class="well well-info">
+    <h3><%= heading %></h3>
+    <h4><%= subheading %></h4>
+    <ul>
+    <% for(var i=0; i<seedQuestions.length; i++) { %>
+        <li><%= seedQuestions[i] %></li>
+    <% } %>
+</ul>
+    <form id="frmStory">
+      <textarea id="story" placeholder="Type your health story here" required></textarea>
+      <br> 
+      <input  class="btn btn-primary" type="submit" value="Share">
+      <a href="#" onclick="window.location.href ='/questionnaire/'">skip</a> | <a href="#" onclick="alert('unlinked')">privacy</a>
+    </form>
+  </div>
+</div>
+<script>
+  $('#frmStory').submit(function(event){
+    console.log("here");
+    //prevent actual submit, but HTML5 validation triggers
+    event.preventDefault();
+    var options = {
+      story: $('#story').val(), 
+      qSet: "<%= qSet %>"
+    };
+    $.post( '/savestory', options)
+    .fail(function(response) {
+      console.log("fail")
+    })
+    .done(function(response) {  
+      console.log("ok");
+      //go to forums 
+      var redir = '/Forums/'+"<%= qSet %>"
+      console.log('<%=returnTo%>');
+      redir += "/<%=returnTo%>"
+      console.log(redir);
+      window.location.href = redir
+    })      
+  })
+</script>

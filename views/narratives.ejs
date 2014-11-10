@@ -1,6 +1,26 @@
 <% layout('/layout') -%>
 <% script('/javascripts/flot/jquery.flot.min.js'), script('/javascripts/flot/jquery.flot.categories.min.js') -%>
 <% stylesheet('/stylesheets/narratives.css')%>
+<% if(returnTo){%>
+  <button class="btn btn-danger pull-right btnQ">Return to survey</button>
+<%}%>
+<h1>Topic 1: House and Household</h1>
+<div class="well">
+  <div id='storiesHeading'>
+  You and X other people have helped the public to better understand this issue. Explore their stories to find someone with similar experiences, or <a href="/stories/<%= qSet %>"> share your own story >></a>
+  </div>
+  <% for (i in stories){%>  
+    <div class='storyParent'>
+    <div>
+      <span class='username'><%=stories[i].uname%></span>   
+      <span class='story'><%=stories[i].story%></span>
+    </div>
+    <div>
+      <%=stories[i].comments%> comments | <a href='/fullstory/<%=stories[i]._id%>'>Hear their story >></a>
+    </div>
+  </div>
+  <%}%>
+</div>
 <div class="panel panel-default">
   <div class="panel-body">
     <h2 id="question"></h2>
@@ -13,12 +33,20 @@
     <a href="#" id="next" class="pull-right">next question <i class="fa fa-angle-right"></i></a>
   </div>
 </div>
+<% if(returnTo){%>
+  <button class="btn btn-danger pull-right btnQ">Return to survey</button>
+<%}%>
 <script>
-function getChart(progression){
+function getChart(qSet, progression){
+/*progression:  to control is a user clicks the prev or next link, value is 1 or -1, and is used to get the current charts index and progress it forward or backward
+qSet: to limit charts from a particular dataset
+*/
   $( ".alert" ).fadeOut();
   $('#previous').show();
   $('#next').show();
-  var options = {pass: 1, id: 1, token : 1}
+  //var options = {pass: 1, id: 1, token : 1}; these params seem to be unsued, commented out Oct 1 14
+  var options = {qSet: qSet};
+  //if user clicks previous or next
   if (progression){
     options['progression'] = progression;
   }
@@ -94,17 +122,20 @@ function getChart(progression){
         });//end done?
 }//end function getChart()
 $(function($) {
+    $('.btnQ').click(function() { console.log("<%=returnTo%>");window.location = "/<%=returnTo%>"; })
+
 /*//if not small screensize, make next and previous labels more descriptive
   if($(window).innerWidth()>400){
     $('#next').html('next question <i class="fa fa-angle-right"></i>');
     $('#previous').html('<i class="fa fa-angle-left"></i> previous question');
   }*/
+  //load chart data
   //check #chartParent width and set chart width based on it. 
   $('#chart').innerWidth($('#chartParent').innerWidth())
+  getChart("<%=qSet%>")
+  $('#previous').click(function(){getChart("<%=qSet%>",-1); return false;});// return false prevents scroll to top of page 
+  $('#next').click(function(){getChart("<%=qSet%>", 1); return false;});
   
-   //event.preventDefault();
-    getChart()
-    $('#previous').click(function(){getChart(-1)});
-    $('#next').click(function(){getChart(1)});
+ 
 });
 </script>

@@ -1,0 +1,63 @@
+<% layout('/layout') -%>
+<% stylesheet('/stylesheets/fullstory.css')%>
+<%
+  var month = ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."]
+%>
+<div id="storyUname" class="name">
+  <%= storyUname%>
+  <div class="date pull-right">
+  <%= _id.getTimestamp().getUTCDate()%> <%= month[_id.getTimestamp().getMonth()]%> <%= _id.getTimestamp().getUTCFullYear()%>
+  </div>
+</div>
+<div class="well">
+
+  <div>
+    <%= story%>
+  </div>
+</div><!-- end class well-->
+<div class="comments">
+<div id='commentCount'>
+  <%= comments.length %> comment<%if (comments.length !=1){ %>s<%}%>
+</div>
+<% for (var i=0; i < comments.length; i++){%>
+<div class="name">
+  <%=comments[i].uname%>
+  <div class="date pull-right">
+    <%= comments[i]._id.getTimestamp().getUTCDate()%> <%= month[comments[i]._id.getTimestamp().getMonth()]%> <%= comments[i]._id.getTimestamp().getUTCFullYear()%>
+  </div>
+</div>
+<div class="comment">
+  <%=comments[i].comment%>
+</div>
+<%}%>
+</div><!--end div comments-->
+<form id="frmComment">
+  <div class="form-group">
+    <label for="comment">Comment:</label>
+    <textarea required class="form-control" rows="4" id="comment" maxlength='5000'></textarea>
+    <br>
+    <input  class="btn btn-primary" type="submit" value="Comment"> 
+  </div>
+</form>
+<script>
+$('#frmComment').submit(function(event){
+  event.preventDefault();
+  $( ".alert" ).remove();
+  $.post( '/comment', {comment: $('#comment').val(), _id: '<%= _id%>'})
+    .fail(function(response) {
+      console.log("fail");
+      handleMsg(response.responseText)
+    })
+    .done(function(response) {  
+      //refresh  
+      window.location.reload();
+      $('#comment').val("");  
+    }) 
+});
+$(function() {
+
+
+});
+
+</script>
+

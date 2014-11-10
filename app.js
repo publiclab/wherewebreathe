@@ -69,14 +69,26 @@ app.get('/resetpass/:id/:token', login.resetpass_get);
 app.post('/resetpass', login.resetpass_post);
 app.get('/privacy', login.privacy_get);
 app.post('/privacy', login.privacy_post);
+app.get('/checkusername', login.checkUsername);
+app.get('/getrandomusername', login.getRandomUsername);
 
 app.get('/', routes.index);
 app.get('/welcome', routes.welcome);
-app.get('/narratives', routes.narratives);
-app.post('/narrativesData', routes.narrativesData);
-app.get('/questionnaire', routes.questionnaire);
-app.get('/questionnaire/:skipq', routes.questionnaire);
-app.get('/questionnaire/:skipq/:nextq', routes.questionnaire); 
+app.get('/dashboard', routes.dashboard);
+app.get('/forums/:qSet', routes.narratives);
+app.get('/forums/:qSet/:returnTo', routes.narratives);
+app.post('/narrativesData', routes.narrativesData);//this should be get when cleaning up code?
+//app.get('/narrativesStories', routes.narrativesStories);
+app.get('/stories/:qSet', routes.storiesPrompt);
+app.get('/stories/:qSet/:returnTo', routes.storiesPrompt);
+app.get('/checkStoryExists/:qSet', routes.checkStoryExists);
+app.post('/comment', routes.comment);
+app.get('/fullstory/:_id', routes.fullstory);
+app.post('/skipq/:skipq', routes.skipQ);
+app.post('/savestory', routes.saveStory);
+app.get('/questionnaire', routes.questionnaire); 
+app.get('/questionnaire/:nextq', routes.questionnaire); 
+app.get('/reorderUnanswered/:qSet', routes.reorderUnanswered);
 app.get('/goback', routes.goBackSkipped);
 app.post( '/answer', routes.answer );
 app.get('/about', routes.about);
@@ -84,10 +96,9 @@ app.get('/knowledge-base', routes.knowledgebase);
 app.get('/vinhud', routes.vinhud);
 app.get('/exportData', routes.exportData);
 app.get('/download', routes.download);
-//app.get('/questionnaire_cat', routes.questionnaire_cat);
-//app.get('/users', user.list);
 
-app.get('/test', routes.test);
+
+app.post('/test', routes.test);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

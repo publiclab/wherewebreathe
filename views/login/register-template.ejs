@@ -1,5 +1,6 @@
 <% stylesheet('stylesheets/register.css') -%>
 <% script('javascripts/validateFieldMatch.js') -%>
+<div id="main">
 <h1>Sign Up</h1>
 <div class="panel panel-info">
   <div class="panel-heading">
@@ -12,8 +13,10 @@
     <p>If you choose to make your data public, anyone will be able to read your story to learn about indoor air contamination in mobile homes.</p>
   </div>
 </div>
-<form class='register' role="form" action="/register" method="post">
-<% if(regErr.length > 0){ %>
+<form id='frmRegister' role="form">
+<div id='regMsg' class="alert alert-danger" role="alert">
+</div>
+<!--<% if(regErr.length > 0){ %>
 <div id='regMsg' class="alert alert-danger" role="alert">
 There were the following errors:
   <ul>
@@ -22,7 +25,7 @@ There were the following errors:
     <% }); %>
   </ul>
 </div>
-<% } %>
+<% } %>-->
         <!--<div class='sublabel'>Your username and password both must be 3-30 characters and may contain letters, numbers, spaces, or . - @ characters.</div>-->
   <div class="form-group">
     <label for="email">Email:</label>
@@ -31,10 +34,12 @@ There were the following errors:
   <div class="form-group">
     <label for="email2">Re-type Email:</label>
     <input type="email" name="email2" placeholder="you@email.com" class="form-control" required oninput="validateMatch(this, 'email', 'The two emails must match.')">
-  </div>  
+  </div> 
   <div class="form-group">
     <label for="username">Desired Username:</label>
-    <input type="text" name="username" placeholder="Enter Username (min. 3 characters)" class="form-control" pattern="^[A-Za-z0-9_.-@]{3,30}$" required maxlength="30" title="Your username must be 3 to 30 characters in length and may contain letters, numbers, or . - @ _ characters.">
+    <span id='usernameErr'></span>
+    <button type="button" id='btnRandomName' class="pull-right btn btn-warning btn-xs">Generate Random Username</button>
+    <input type="text" name="username" id="username" placeholder="Enter Username (min. 3 characters)" class="form-control" pattern="^[A-Za-z0-9_.-@]{3,30}$" required maxlength="30" title="Your username must be 3 to 30 characters in length and may contain letters, numbers, or . - @ _ characters.">
   </div>
   <div class="form-group">
     <label for="password">Password:</label>
@@ -47,11 +52,11 @@ There were the following errors:
   <div class="form-group">
     <label for="HID">VIN or HUD:</label>
     <a href="/vinhud"> Need help finding your VIN or HUD?</a>
-    <input type="text" name="HID" placeholder="E.g.: PFS877437 or 1NL1VTR2961054291 (please remove spaces and dashes)" class="form-control" required pattern="(^((?=[^iIoOqQ])\w){17}$)|(^\w{3}[0-9]{6,7}$)" title="What you entered does not look like a VIN or HUD. Please double check your records and try removing spaces and dashes.">
+    <input type="text" name="HID" id='HID' placeholder="E.g.: PFS877437 or 1NL1VTR2961054291 (please remove spaces and dashes)" class="form-control" required pattern="(^((?=[^iIoOqQ])\w){17}$)|(^\w{3}[0-9]{6,7}$)" title="What you entered does not look like a VIN or HUD. Please double check your records and try removing spaces and dashes.">
   </div>
   <div class="form-group">
     <label for="password2">I am at least 18 years old:</label>
-    <input type="checkbox" name="eighteen" value="18" required>
+    <input type="checkbox" name="eighteen" id="eighteen" value="18" required>
   </div>
   <button type="submit" class="btn btn-default">Submit</button>&nbsp;
   <a href="/">
@@ -59,76 +64,83 @@ There were the following errors:
 </form>
 <div id='bugs'>Having trouble with the registration form? Contact us at <a href="mailto:support@wherewebreathe.org?Subject=Registration bugs" target="_top">
 support@wherewebreathe.org</a></div>
+</div><!--end div id=main-->
 <script>
   $(function(){
-  //if there is an error message scroll to it.
-  <% if(regErr.length > 0){ %>
-  console.log("scroll")
-    $('html, body').animate({
-      scrollTop: $("#regMsg").offset().top - $('#menu').outerHeight()}, 600);
-    });
-  <%} %>
-  });
+    $('#frmRegister').submit(function(event){
+      $('#errList').remove()
+       $('#regMsg').hide();
+      event.preventDefault();
+      console.log("hereee");
+      var parameters = {
+        username : $('#username').val(),
+        email : $('#email').val(),
+        password : $('#password').val(),
+        HID : $('#HID').val(),
+        eighteen : $('#eighteen').val()
+      }
+      $.post( '/register',parameters)
+        .fail(function(response) {
+          console.log("/register fail");
+        })
+        .done(function(response) {
+          //$( ".alert" ).remove();
+          if(response.error){
+            console.log(response.error);
+            console.log("scroll")
+            $('html, body').animate({
+            scrollTop: $("#regMsg").offset().top - $('#menu').outerHeight()}, 600); 
+            $('#regMsg').show(); 
+            var errHtml = '<ul id="errList">';
+            for (i in response.error){
+              errHtml+= '<li>'+response.error[i]+'</li>';
+            }
+            errHtml += '</ul>';
+            $('#regMsg').html(errHtml); 
+          }
+          else{
+             console.log("success");
+             var html = '<h1>Almost done! Please verify your account.</h1>'
+             html += '<div class="alert alert-success" role="alert">An email with an account verification link has been sent to you. Please follow the instructions in the email to complete your account registration</div>'
+            $( "#main, #homeDiv" ).remove();
+            $( html ).insertAfter( ".page-header" );
+
+          }
+        });
+      });
+
+      });
+      
+    //random user name generator
+    $('#btnRandomName').click(function(event){
+      $('#usernameErr').hide();
+      $.get( '/getrandomusername')
+        .fail(function(response) {
+          console.log("username check failed")
+          $('#usernameErr').show().html("random username generator failed")
+        })
+        .done(function(response) {
+          //console.log(response)
+          $('#username').val(response);
+          
+        });
+      });
+      
+      //check common username  
+      $('#username').focusout(function(event){
+        $('#usernameErr').hide();
+        $.get( '/checkusername',{username: $('#username').val()})
+          .fail(function(response) {
+            console.log("username check failed")
+          })
+          .done(function(response) {
+            console.log(response)
+            if(response != "ok"){
+              $('#usernameErr').show().html(response);
+            }
+          });        
+      });
+
 </script>
-  <!--<label for="username">Are you human? (sorry: spam filtering!)</label>
-  <fieldset>
-    <div class="radio">
-      <label>
-        <input type="radio" name="human1" value="food">
-        I eat food
-      </label>
-    </div>
-    <div class="radio">
-      <label>
-        <input type="radio" name="human1" value="robot">
-        I am a robot
-      </label>
-    </div>
-  </fieldset>
-  <fieldset>
-    <div class="radio">
-      <label>
-        <input type="radio" name="human2" value="earth">
-        I live on Earth
-      </label>
-    </div>
-    <div class="radio">
-      <label>
-        <input type="radio" name="human2"value="cpu">
-        I am a central processing unit
-      </label>
-    </div>
-  </fieldset>
-  <fieldset>
-    <div class="radio">
-      <label>
-        <input type="radio" name="human3" value="water">
-        I drink water
-      </label>
-    </div>
-    <div class="radio">
-      <label>
-        <input type="radio" name="human3" value="computer">
-        I am a computer
-      </label>
-    </div>
-  </fieldset> 
-  <fieldset>
-    <div class="radio">
-      <label>
-        <input type="radio" name="human4" id="optionsRadios1" value="heart">
-        I have a heart
-      </label>
-    </div>
-    <div class="radio">
-      <label>
-        <input type="radio" name="human4" id="optionsRadios2" value="robot">
-        I am a central processing unit
-      </label>
-    </div>
-  </fieldset> 
-  <div class="form-group">
-  <label for="empty">Don't write anything here if you're a real person:</label>
-    <textarea name="empty" class="form-control"></textarea>
-  </div>
-  -->
+
+ 

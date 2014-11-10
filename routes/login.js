@@ -4,9 +4,30 @@ var NewUser = require('../models/db').newuser;
 var PassReset = require('../models/db').passReset;
 var nodemailer = require("nodemailer");
 var validate = require('./validate');
-var authenticateUser = require('./authUser');
+var authenticateUser = require('./authUser').authUser;
+var getUsername = require('./authUser').getUsername
 var generateUnanswered = require('./generateUnanswered');
+function checkCommonName(username){
+  var commonnames = require('./common-names')
+  var username = username.toLowerCase();
+  var containsCommon = false;
+  var name;
 
+  for (i in commonnames){
+  //console.log(username.indexOf(commonnames[i]));
+    if (username.indexOf(commonnames[i])>-1) { 
+      console.log(commonnames[i])
+      containsCommon = true;
+      name = commonnames[i]
+      break 
+    }
+  } 
+  if(containsCommon){
+  return "Your username contains the text, '"+name+"'. Please choose another username that does not contain a common name. (this is an extra step to maintain your anonymity)"
+  }else{
+    return "ok"
+  }  
+}
 function returnTo(res, req, message){
   //console.log(req.session);
   if (message){msg = message;}
@@ -23,14 +44,39 @@ function returnTo(res, req, message){
     delete req.session.returnTo
   }
   else{
-    res.render('index', { title: 'Home', user : req.user, message: msg});
+    res.render('index', { title: 'Home', user : getUsername(req), message: msg});
   }
 }
 /********************************************************************************************
-REGISTRATION AND EMAIL VERIFICAITON
+REGISTRATION, EMAIL VERIFICAITON, checkUsername
 *********************************************************************************************/
+exports.checkUsername =  function(req, res){
+  var status = checkCommonName(req.query.username);
+  res.send(200, status)
+}
+exports.getRandomUsername =  function(req, res){
+  //generate random username
+  //check that not already taken
+  //check that not a common name
+  var Chance = require('chance');
+  // Instantiate Chance so it can be used
+  var chance = new Chance();
+  getName()
+  function getName(){
+    var candidateName = chance.word({syllables: 3})
+    console.log(candidateName);
+    console.log(checkCommonName(candidateName) );
+    if (checkCommonName(candidateName) != 'ok'){
+      getName();
+    }else{
+      res.send(200,candidateName)
+    }
+    
+  }
+}
+
 exports.register_get = function(req, res) {
-  var pageOptions = { title: "Join Where We Breathe", user : req.user, regErr: []};
+  var pageOptions = { title: "Join Where We Breathe", user : getUsername(req), regErr: []};
   var temp = req.flash('info');
     if(temp.length > 0){
       pageOptions['message'] =  {text: temp[0], msgType: temp[1]}
@@ -47,96 +93,100 @@ exports.register_post = function(req, res) {
   var txtEmail = req.body.email.trim();
   var txtHID = req.body.HID.trim();
   var txtPass = req.body.password.trim();
- console.log( errorMsgs);
+  console.log( errorMsgs);
  //check if username is taken
-  User.find({username: txtUsername}, function ( err, username){
-  var usernameErr = "The username, '"+txtUsername+"', already exists, please try another.";
-  var emailErrMsg ="The email, '"+txtEmail+"', is already being used.";
-  //check if username is taken
-    if (username.length > 0){
-      errorMsgs.push(usernameErr);
-    }
-    //check if email is taken
-    User.find({email: txtEmail}, function ( err, email){
-    if (email.length > 0){
-      errorMsgs.push(emailErrMsg);
+ checksAndMakeNewUser();
+   function checksAndMakeNewUser(){
+    //this code is a bit out of control with nesting, so I am throwing it into a function to be called when done making sure proposed username doesnt contain a common name
+    User.find({username: txtUsername}, function ( err, username){
+    var usernameErr = "The username, '"+txtUsername+"', already exists, please try another.";
+    var emailErrMsg ="The email, '"+txtEmail+"', is already being used.";
+    //check if username is taken
+      if (username.length > 0){
+        errorMsgs.push(usernameErr);
       }
-      //check if username is taken in unverified accounts table
-      NewUser.find({username: txtUsername}, function ( err, newusername){
-        if (newusername.length > 0){
-          errorMsgs.push(usernameErr);
+      //check if email is taken
+      User.find({email: txtEmail}, function ( err, email){
+      if (email.length > 0){
+        errorMsgs.push(emailErrMsg);
         }
-        //check if email is taken in unverified accounts table
-        NewUser.find({email: txtEmail}, function ( err, newemail){
-          if (newemail.length > 0){
-            //if email exists, return error message
-            errorMsgs.push(emailErrMsg);
+        //check if username is taken in unverified accounts table
+        NewUser.find({username: txtUsername}, function ( err, newusername){
+          if (newusername.length > 0){
+            errorMsgs.push(usernameErr);
           }
-      
-      //check form input again serve-side
-      //console.log(errorMsgs);
-       //over 18
-       console.log("Eighteen: "+req.body.eighteen)
-    if(req.body.eighteen != "18"){ errorMsgs.push("You must be over 18 to register")}; 
-      //username
-    if(! /^[A-Za-z0-9_.-@]{3,30}$/.test(txtUsername)){ errorMsgs.push("Your username must be 3 to 30 characters in length and may contain letters, numbers, or . - @ _ characters.")}; 
-    //email
-    var emailErr = validate.email(txtEmail);
-    if(emailErr){
-      errorMsgs.push(emailErr)
-    }  
-    //VIN/HUD
-    if(! /(^((?=[^iIoOqQ])\w){17}$)|(^\w{3}[0-9]{6,7}$)/.test(txtHID)){ errorMsgs.push("'"+txtHID+ "' does not look like a VIN or HUD. Please double check your records and try removing spaces.")}; 
-    //password
-    var passErr = validate.password(txtPass);
-    if(passErr){
-      errorMsgs.push(passErr)
-    };  
-    //if any error messages   
-    if (errorMsgs.length > 0){
-          //there are errors
-          var pageOptions = { title: "Join Where We Breathe", user : req.user, regErr: errorMsgs};
-          return res.render('login/register', pageOptions);
-        }//end if no errors
-     else{
-      require('crypto').randomBytes(48, function(ex, buf) {
-        var token = buf.toString('hex');
-        NewUser.register(new NewUser({ 
-          username : txtUsername,
-          email: txtEmail,
-          HID: txtHID,
-          token: token 
-        }), txtPass, function(err, user) {
-          if (err) {
-            console.log("user registration error: " +err);
-            var pageOptions = { title: "Join Where We Breathe", user : req.user, regErr: [err] };
-            return res.render('login/register', pageOptions);
-          }
-          else{
-            //grab returnTo page from cookie
-
-            // this emailing solution is temporary for phase 1 development!!!! nodemailer has better options that require existing emails/domains
-            var mailText = "You have one more step before your account with WhereWeBreathe.org is registered. \r\n\r\n";
-            mailText += "Please click the link below to verify your email. \r\n\r\n";
-            mailText += "http://"+req.headers.host+"/verify/"+token;
-            var transport = nodemailer.createTransport("direct", {debug: true});
-            var   mailOptions = {
-              from: "noreply@wherewebreathe.org",
-              to: txtEmail,
-              subject: "[TESTING] user verification email",
-              text: mailText
-            };
-            var mail = require("nodemailer").mail;
-            mail(mailOptions);
-            res.render('message', { title: 'Almost done!', user : req.user, message: {text:"An email with an account verification link has been sent to you. Please follow the instructions in the email to complete your account registration", msgType: "alert-success"} });
-          }//end else       
-        });
-      });//end rendomBytes  
-     }//end else
-             });//end newusers find email
-      });//end newusers find username
-    });//end email User.find()
-  });//end username User.find()
+          //check if email is taken in unverified accounts table
+          NewUser.find({email: txtEmail}, function ( err, newemail){
+            if (newemail.length > 0){
+              //if email exists, return error message
+              errorMsgs.push(emailErrMsg);
+            }
+        
+        //check form input again serve-side
+        //console.log(errorMsgs);
+         //over 18
+         console.log("Eighteen: "+req.body.eighteen)
+      if(req.body.eighteen != "18"){ errorMsgs.push("You must be over 18 to register")}; 
+        //username
+      if(! /^[A-Za-z0-9_.-@]{3,30}$/.test(txtUsername)){ errorMsgs.push("Your username must be 3 to 30 characters in length and may contain letters, numbers, or . - @ _ characters.")}; 
+      //email
+      var emailErr = validate.email(txtEmail);
+      if(emailErr){
+        errorMsgs.push(emailErr)
+      }  
+      //VIN/HUD
+      if(! /(^((?=[^iIoOqQ])\w){17}$)|(^\w{3}[0-9]{6,7}$)/.test(txtHID)){ errorMsgs.push("'"+txtHID+ "' does not look like a VIN or HUD. Please double check your records and try removing spaces.")}; 
+      //password
+      var passErr = validate.password(txtPass);
+      if(passErr){
+        errorMsgs.push(passErr)
+      };  
+      //if any error messages   
+      if (errorMsgs.length > 0){
+            //there are errors
+            //var pageOptions = { title: "Join Where We Breathe", user : getUsername(req), regErr: errorMsgs};
+            //return res.render('login/register', pageOptions);
+            return res.send(200, {error: errorMsgs})
+          }//end if no errors
+       else{
+        require('crypto').randomBytes(48, function(ex, buf) {
+          var token = buf.toString('hex');
+          NewUser.register(new NewUser({ 
+            username : txtUsername,
+            email: txtEmail,
+            HID: txtHID,
+            token: token 
+          }), txtPass, function(err, user) {
+            if (err) {
+              console.log("user registration error: " +err);
+              //var pageOptions = { title: "Join Where We Breathe", user : getUsername(req), regErr: [err] };
+              //return res.render('login/register', pageOptions);
+              return res.send(400, {error:"Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 821)"});
+            }
+            else{
+              // this emailing solution is temporary for phase 1 development!!!! nodemailer has better options that require existing emails/domains
+              var mailText = "You have one more step before your account with WhereWeBreathe.org is registered. \r\n\r\n";
+              mailText += "Please click the link below to verify your email. \r\n\r\n";
+              mailText += "http://"+req.headers.host+"/verify/"+token;
+              var transport = nodemailer.createTransport("direct", {debug: true});
+              var   mailOptions = {
+                from: "noreply@wherewebreathe.org",
+                to: txtEmail,
+                subject: "[TESTING] user verification email",
+                text: mailText
+              };
+              var mail = require("nodemailer").mail;
+              mail(mailOptions);
+              res.send(200);
+            }//end else       
+          });
+        });//end rendomBytes  
+       }//end else
+               });//end newusers find email
+        });//end newusers find username
+      });//end email User.find()
+    });//end username User.find()
+   }//end checksAndMakeNewUser()  
 };//end exports.register_postUser
 
 //verify new users' emails
@@ -158,12 +208,12 @@ exports.verify_get =  function(req, res) {
       verified.save(function(err) {
         if (err) {throw err}
         else{
-          res.render('login/login', {title: "Login", user : req.user, message:  {text: "Your account registration in now complete. Please login.", msgType: "alert-success" }});
+          res.render('login/login', {title: "Login", user : getUsername(req), message:  {text: "Your account registration in now complete. Please login.", msgType: "alert-success" }});
         }
       });      
     }
     else{
-      res.render('message', { title: 'Oops!', user : req.user, message: {text:"That verification code has expired. If you registered more than a day ago, try registering again, and clicking the verify link that is emailed to you right away.", msgType: "alert-danger"} });
+      res.render('message', { title: 'Oops!', user : getUsername(req), message: {text:"That verification code has expired. If you registered more than a day ago, try registering again, and clicking the verify link that is emailed to you right away.", msgType: "alert-danger"} });
     }
   });
 }
@@ -207,7 +257,7 @@ exports.login_get = function(req, res) {
     if(temp.length > 0){
       pageOptions['message'] =  {text: temp[0], msgType: temp[1]}
     } 
-  res.render('login/login', { title: 'Login', user : req.user, message: message });
+  res.render('login/login', { title: 'Login', user : getUsername(req), message: message });
 }; 
 exports.logout =  function(req, res) {
       req.logout();
@@ -217,7 +267,7 @@ exports.logout =  function(req, res) {
 PASSWORD RECOVERY
 ******************************************************************/
 exports.forgotpass_get =  function(req, res) {
-  res.render('login/forgotpass', { title: 'Forgotten Password', user : req.user, message: null });
+  res.render('login/forgotpass', { title: 'Forgotten Password', user : getUsername(req), message: null });
 }
 exports.forgotpass_post =  function(req, res) {
   var txtEmail = req.body.email.trim();
@@ -272,7 +322,7 @@ exports.forgotpass_post =  function(req, res) {
           });
         });
         //message check your email for a link to reset your password. 
-        //res.render('login/message', { title: 'Please check your email', user : req.user, message: {text:"An email with a link to reset your password has been sent to your email address", msgType: "alert-success"} });
+        //res.render('login/message', { title: 'Please check your email', user : getUsername(req), message: {text:"An email with a link to reset your password has been sent to your email address", msgType: "alert-success"} });
       }
     });//end passREsetFind
   });
@@ -288,16 +338,16 @@ exports.resetpass_get =  function(req, res) {
         //if not token or token doesnt align with id
         message = { text: 'That link has expired or is invalid.', msgType: "alert-danger"}
       }
-      res.render('login/resetpass', { title: 'Reset Password', user : req.user, id: req.params.id, token: req.params.token, message: message } );//end res.render  
+      res.render('login/resetpass', { title: 'Reset Password', user : getUsername(req), id: req.params.id, token: req.params.token, message: message } );//end res.render  
     });//end user.find()///    
   }//end if params...
   else if(req.user){
-    res.render('login/resetpass', { title: 'Change Password', user : req.user, id: null, token: null }); 
+    res.render('login/resetpass', { title: 'Change Password', user : getUsername(req), id: null, token: null }); 
   }
   else{
     //send 'em to the login page with a message
     req.session.returnTo = "/resetpass"
-    res.render('login/login', { title: 'Login', user : req.user, message: { text: 'You need to login to reset your password OR have a valid password reset link.', msgType: "alert-danger"} });    
+    res.render('login/login', { title: 'Login', user : getUsername(req), message: { text: 'You need to login to reset your password OR have a valid password reset link.', msgType: "alert-danger"} });    
   }
 }
 exports.resetpass_post =  function(req, res) {
@@ -307,32 +357,34 @@ exports.resetpass_post =  function(req, res) {
   if(passErr){
     return res.send(400, passErr);
   }
-    
-  var txtId = req.body.id;
+  var userID = req.body.id;
   var txtToken = req.body.token;
   //console.log(req.body.id + ":"+ req.body.token);
   //if not logged in, require token, if logged in use id from user to search for a user
   var query;
   if (!req.user){
-    if (!txtId || ! txtToken){return res.send(400, "If you arent logged in to your account, you cannot change your password without a valid password reset link (which you can obtain by clicking on the 'forgotten password' link on the login screen.")};
-   query = {uid: txtId, passReset: txtToken};
+  console.log("not logged in");
+    if (!userID || ! txtToken){return res.send(400, "If you arent logged in to your account, you cannot change your password without a valid password reset link (which you can obtain by clicking on the 'forgotten password' link on the login screen.")};
+   query = {uid: userID, passReset: txtToken};
   }
   else{
+  console.log("not logged in");
     query = {uid: req.user.id}
+    userID = req.user.id
     //console.log("id" + req.user.id);
   }
   //console.log(query);
   PassReset.findOneAndRemove(query, function(error, user){
-    console.log(user)
     if(error){
       return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 816)");
     }
-    else if(user){
+    //user will return null if this is password change vs a pass reset....
+    //else if(user){
       //create a new user just to get access to the mongoose-passport .setPassword function (couldnt figure out how to implememt mongoose model methods on query results, so this is the slightly convoluted workaround. 
       var tempUser = new User();
       tempUser.setPassword(txtPass, function(err, stuff){
         //remove passReset field, update salt and hash fields from tempUser
-        User.findByIdAndUpdate(user.uid, {hash: tempUser.hash, salt: tempUser.salt}, function(err, results){
+        User.findByIdAndUpdate(userID, {hash: tempUser.hash, salt: tempUser.salt}, function(err, results){
           if (err) {
             return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 817)");
           }
@@ -342,7 +394,7 @@ exports.resetpass_post =  function(req, res) {
           res.send(200);
         });
       });//end setPassword
-    }//end else if
+    //}//end else if
   }); //end find()
 }
 
@@ -363,11 +415,11 @@ exports.privacy_get = function(req, res) {
  User.findOne({_id: req.user._id}, function (err, result) {
   if (err){
     req.logout();
-    return res.render('login/login', {title: "Login", user : req.user, message:  {text: "Something went wrong on our side of things. Please try logging in again to edit your privacy settings. (Error ID: 818)", msgType: "alert-success" }});
+    return res.render('login/login', {title: "Login", user : getUsername(req), message:  {text: "Something went wrong on our side of things. Please try logging in again to edit your privacy settings. (Error ID: 818)", msgType: "alert-success" }});
   } //end if err
   res.render('login/privacy', { 
             title: 'Privacy Settings', 
-            user : req.user, 
+            user : getUsername(req), 
             message: message, 
             visPublic: result.visPublic
             }); 

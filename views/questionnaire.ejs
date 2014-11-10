@@ -1,14 +1,16 @@
 <% layout('layout') -%>
-<% script('/javascripts/flot/jquery.flot.min.js'), script('/javascripts/flot/jquery.flot.categories.min.js'), script('//code.jquery.com/ui/1.11.1/jquery-ui.js') -%>
+<!--temp removed scripts : script('/javascripts/flot/jquery.flot.min.js'), script('/javascripts/flot/jquery.flot.categories.min.js'), probably arent used-->
+<!--<% script('//code.jquery.com/ui/1.11.1/jquery-ui.js') -%> suspect that this is legacy somehow-->
+<!--jquery-ui.css used for what? autocomplete?-->
 <% stylesheet('/stylesheets/questionnaire.css'), stylesheet('//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css')%>
-<%if (subheading == "symptoms"){%>
+<%if (qSet == "Symptoms" || qSet == "Symptoms (conditional questions)"){%>
 <div id="divQ" class="panel panel-success">
   <div class="panel-heading">
     <h3 class="panel-title">Questions about your health symptoms</h3>
   </div>
 <% } 
 
-else if (subheading == "housing-unit"){%>
+else if (qSet == "Household"){%>
 <div id="divQ" class="panel panel-info">
   <div class="panel-heading">
     <h3 class="panel-title">Questions about your housing-unit</h3>
@@ -91,19 +93,48 @@ else{%>
       </div>
       <div class="pull-left">
         <input  class="btn btn-primary" type="submit" value="Submit">
-        <input class="btn btn-default" type="button" value="Skip" onclick="window.location.href ='/questionnaire/<%= qid %>';"> 
+        <input class="btn btn-default" type="button" value="Skip" onclick="skip()"> 
       </div>
     </form>
   </div>
 </div>
 <div class='text-center center-block'>Approximately <strong><span class='text-success'><%= numUnans %></span></strong> questions left.</div>
   <script>
+  function skip(){
+   $.post( '/skipq/<%= qid %>')
+    .fail(function(response) {
+      console.log("fail")
+    })
+    .done(function(response) {  
+      console.log("ok")
+      checkStoryPrompt(function(){window.location.href ='/questionnaire/';})
+      
+    } )    
+   
+  }
+  function checkStoryPrompt(cb){
+    if(<%=storiesPrompt%>){
+      console.log("<%=storiesPrompt%>")
+     //does story already exist?
+     $.get( '/checkStoryExists/<%= qSet %>')
+      .fail(function(response) {
+        console.log("fail")
+      })
+      .done(function(response) {  
+      //if already story, dont prompt to tell story
+      if (response){window.location.href ='/questionnaire/';}
+      else{window.location.href ='/stories/<%= qSet %>/questionnaire';}
+      })
+    }
+    else{
+      cb();
+    }
+  }
     $(function(){
     //make sure if other answer, text box for other answer not empty
       $('input[type=radio]').change(function(){
         if ($('input[name=answer]:checked').val() == "Other:"){
           $('input[name=othAns]').prop('required', true).focus();
-
         }
         else{
         $('input[name=othAns]').prop('required', false);
@@ -115,8 +146,8 @@ else{%>
           scrollTop: $("#divQ").offset().top - $('#menu').outerHeight()}, 600);
       }
       
-      //if text input, checck if possible answers and set up autocomplete
-      console.log(decodeURIComponent("<%= answers %>"))
+      //if text input, check if possible answers and set up autocomplete
+      //console.log(decodeURIComponent("<%= answers %>"))
       if ($('input[name=answer]').attr("type") == 'text'){
         <%if (answers.length >0){%>
           $('input[name=answer]').autocomplete({
@@ -128,7 +159,7 @@ else{%>
     $('#frmAns').submit(function(event){
       //prevent actual submit, but HTML5 validation triggers
       event.preventDefault();
-      var options = {qid: "<%= qid %>"};
+      var options = {qid: "<%= qid %>", qSet: "<%= qSet %>"};
       //if the input is a radio, get val
       var input = "<%=qType%>"
       //get value from other: text box if other selected, make sure not blank
@@ -158,12 +189,13 @@ else{%>
         })
         .done(function(response) {       
           //if response isnt 'OK', it should contain a number for the next conditional question
+          //also if there is a conditional question, stories dont get prompted to be told
           if(response !== "OK"){
             console.log("response not 'ok'")
-            window.location.replace("/questionnaire/0/"+response)           
+            window.location.replace("/questionnaire/"+response)           
           }
-          else{
-          window.location.replace("/questionnaire ")
+          else{   
+            checkStoryPrompt(function(){window.location.replace("/questionnaire ")})    
           }
         });
     });

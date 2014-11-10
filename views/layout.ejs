@@ -168,10 +168,10 @@
     $( ".alert" ).remove();
     var html = '<div id="layoutMsg" class="alert '+alertType+'" role="alert">'+message+'</div>'
     $( html ).insertAfter( alertPos );
-    if($(window).height() <= 400){
+    //if($(window).height() <= 400){
       $('html, body').animate({
       scrollTop: $("#layoutMsg").offset().top - $('#menu').outerHeight()}, 600);
-    }
+    //}
   }  
   </script>
 </html>

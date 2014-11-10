@@ -16,7 +16,7 @@
       <span class='story'><%=stories[i].story%></span>
     </div>
     <div>
-      <%=stories[i].comments%> comments | <a href='/stories/<%=qSet%>'>Hear their story >></a>
+      <%=stories[i].comments%> comments | <a href='/fullstory/<%=stories[i]._id%>'>Hear their story >></a>
     </div>
   </div>
   <%}%>
@@ -123,6 +123,7 @@ qSet: to limit charts from a particular dataset
 }//end function getChart()
 $(function($) {
     $('.btnQ').click(function() { console.log("<%=returnTo%>");window.location = "/<%=returnTo%>"; })
+
 /*//if not small screensize, make next and previous labels more descriptive
   if($(window).innerWidth()>400){
     $('#next').html('next question <i class="fa fa-angle-right"></i>');

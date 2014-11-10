@@ -78,7 +78,11 @@ var StorySchema = new Schema({
   uname: String, //user name
   qSet: String,//links to question set
   story: String,
-  comments: Array
+  comments: [{
+    uId: Schema.Types.ObjectId,
+    uname: String,
+    comment: String
+  }]
 })
 //module.exports = userDB.model('Account', Account);
 

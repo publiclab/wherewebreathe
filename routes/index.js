@@ -234,6 +234,52 @@ exports.saveStory = function(req, res){
   })//end story save
   });//end auth user
 };
+exports.fullstory = function(req, res){
+  authenticateUser(req, res, function(){ 
+    Story.findOne({_id: req.params._id},'uname qSet story comments _id', function (err, story){
+      if (err){
+        return res.render('message', { title: 'Oops!', user : getUsername(req), message: {text:"Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 637)", msgType: "alert-danger"} });
+      } //end if err
+      if(!story){
+        console.log("fdsfdsnull");
+       return res.render('message', { title: 'Oops!', user : getUsername(req), message: {text:"There doesnt appear to be a story here", msgType: "alert-danger"} });
+      }
+      else{
+        var options = { 
+          title: 'TEMP', 
+          user : getUsername(req),
+          _id: story._id,
+          story: story.story, 
+          storyUname: story.uname,
+          comments: story.comments        
+        }
+        console.log(options)
+        res.render('fullstory', options);
+      }
+    });//end story.findOne
+  });
+}//end fullstory
+exports.comment = function(req, res){
+  if(!req.user){
+  return res.send(400, "It looks like you have been logged out. Please log in again to submit your comment");
+  }
+  var comment = req.body.comment;
+  Story.findByIdAndUpdate(req.body._id, { $push: { comments: {
+    uId: req.user._id,
+    uname: req.user.username,
+    comment: req.body.comment.substring(0,5000)
+  } }}, function (err, results) {
+  if (err){
+    return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 638)") 
+  }
+  if(!results){
+   return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 639)") 
+  }
+  else{
+  res.send(200)
+  }
+  });//end find by ID and update
+};
 exports.index = function(req, res){
   //if user not logged in send to index, else send to dashboard
   if (!req.user){
@@ -278,7 +324,7 @@ exports.goBackSkipped = function(req, res){
 exports.narratives = function(req, res){
   authenticateUser(req, res, function(){ 
   var qSet = req.params.qSet;
-  Story.find({qSet: qSet},'uname story comments',{sort:{_id: -1}}, function ( err, stories){
+  Story.find({qSet: qSet},'uname story comments _id',{sort:{_id: -1}}, function ( err, stories){
     if (err){
       return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 620)")
     } //end if err
@@ -291,6 +337,7 @@ exports.narratives = function(req, res){
       var obj = {};
       obj["comments"] = stories[i].comments.length;
       obj["uname"] = stories[i].uname;
+      obj["_id"] = stories[i]._id;
       if(stories[i].story.length >50){
         obj["story"] = stories[i].story.substring(0,50)+"...";
       }
@@ -311,9 +358,6 @@ exports.narratives = function(req, res){
   //  res.render('narratives', { title: 'Forums', user : getUsername(req)});
   //});
 };
-exports.narrativesStories = function(req, res){
-
-}//end narrativesStories
 exports.narrativesData = function(req, res){
   authenticateUser(req, res, function(){ 
     var qSet = req.body.qSet
@@ -537,7 +581,7 @@ exports.questionnaire = function ( req, res ){
 exports.answer = function ( req, res ){
   //make sure user logged in 
   if(!req.user){
-    return res.send(400, "It looks like you have been logged out. please log in again to submit your answer")
+    return res.send(400, "It looks like you have been logged out. Please log in again to submit your answer")
   }
   var qid = req.body.qid;
   var uid= req.user._id; 
@@ -670,6 +714,14 @@ req.session.returnTo = req.path;
 TEST - remove later
 ***********************************************************************/   
 exports.test =  function(req, res) {
-  console.log(req.body)
+  var Chance = require('chance');
+  var chance = new Chance();
+  var i = 0;
+  while(i<=100){
+  var candidateName = chance.word({syllables: 3})
+  console.log(candidateName);
+  i ++;
+  }
+  
 }
 

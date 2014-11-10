@@ -236,7 +236,7 @@ exports.saveStory = function(req, res){
 };
 exports.fullstory = function(req, res){
   authenticateUser(req, res, function(){ 
-    Story.findOne({_id: req.params._id},'uname qSet story comments _id', function (err, story){
+    Story.findOne({_id: req.params._id},'uname qSet story comments _id qSet', function (err, story){
       if (err){
         return res.render('message', { title: 'Oops!', user : getUsername(req), message: {text:"Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 637)", msgType: "alert-danger"} });
       } //end if err
@@ -246,7 +246,7 @@ exports.fullstory = function(req, res){
       }
       else{
         var options = { 
-          title: 'TEMP', 
+          title: story.qSet + " Stories", 
           user : getUsername(req),
           _id: story._id,
           story: story.story, 

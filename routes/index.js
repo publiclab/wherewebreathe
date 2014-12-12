@@ -23,8 +23,16 @@ function removeFromUnansweredSession(req, qid, cb){
     cb();
   }
 }
+
 function getDashStats(req, cb){
-Answer.aggregate([
+
+  var topics = [{_id: "Household",    title:'Household',    questions: 0, answers: 0, stories: 0 },
+                {_id: "Symptoms",     title:'Symptoms',     questions: 0, answers: 0, stories: 0 },
+                {_id: "Mitigation",   title:'Mitigation',   questions: 0, answers: 0, stories: 0 },
+                {_id: "Other",        title:'Indicators',   questions: 0, answers: 0, stories: 0 },
+                {_id: "Demographics", title:'Demographics', questions: 0, answers: 0, stories: 0 }]
+
+  Answer.aggregate([
     {$match: {uid: req.user._id}},
     { $group: {
         _id: '$qSet', 
@@ -37,73 +45,37 @@ Answer.aggregate([
     if (!results) {
       return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 629)")
     } 
-    var housingA = 0;
-    var symptomsA = 0;
-    var mitigationA = 0; 
-    var otherA = 0;
-    var demographicsA = 0;
-    //console.log("Answers: ");
-    //console.log(results);
-    for (i in results){
-      if(results[i]._id == "Household"){
-      housingA = results[i].count
+    for (i in results) {
+      for (t in topics) {
+        if (topics[t]._id == results[i]._id) topics[t].answers = results[i].count
       }
-      if(results[i]._id == "Symptoms"){
-      symptomsA = results[i].count
-      }
-      if(results[i]._id == "Mitigation"){
-      mitigationA = results[i].count
-      }
-      if(results[i]._id == "Other"){
-      otherA = results[i].count
-      }
-      if(results[i]._id == "Demographics"){
-      demographicsA = results[i].count
-      }
-    }  
+    }
+
     Question.aggregate([
-      {$match: {}},
+      { $match: {}},
       { $group: {
-          _id: '$qSet', 
-          count: {$sum: 1}
+        _id: '$qSet', 
+        count: {$sum: 1}
       }}
-      ], function(err, questions){ 
-        if (err){
-            return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 630)")
-        } //end if err
-        if (!questions) {
-            return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 631)")
-        } 
-        var housingQ = 0;
-        var symptomsQ = 0;
-        var mitigationQ = 0; 
-        var otherQ = 0;
-        var demographicsQ = 0;
-        //console.log("questions: ");
-        //console.log(questions)
-        for (i in questions){
-          if(questions[i]._id == "Household"){
-          housingQ = questions[i].count
-          }
-          if(questions[i]._id == "Symptoms"){
-          symptomsQ = questions[i].count
-          }
-          if(questions[i]._id == "Mitigation"){
-          mitigationQ = questions[i].count
-          }
-          if(questions[i]._id == "Other"){
-          otherQ = questions[i].count
-          }
-          if(questions[i]._id == "Demographics"){
-          demographicsQ = questions[i].count
-          }
-        }   
-       Story.aggregate([
-      {$match: {}},
-      { $group: {
-          _id: '$qSet', 
-          count: {$sum: 1}
-      }}
+    ], function(err, questions){ 
+      if (err){
+          return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 630)")
+      } //end if err
+      if (!questions) {
+          return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 631)")
+      } 
+      for (i in questions) {
+        for (t in topics) {
+          if (topics[t]._id == questions[i]._id) topics[t].questions = questions[i].count
+        }
+      }
+ 
+      Story.aggregate([
+        {$match: {}},
+        { $group: {
+            _id: '$qSet', 
+            count: {$sum: 1}
+        }}
       ], function(err, stories){ 
         if (err){
             return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 632)")
@@ -111,55 +83,25 @@ Answer.aggregate([
         if (!stories) {
             //return res.send(400, "Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 633)")
         } 
-        //console.log("stories");
-        //console.log(stories);  
-        var housingF = 0;
-        var symptomsF = 0;
-        var mitigationF = 0; 
-        var otherF = 0;
-        var demographicsF = 0; 
-        for (i in stories){
-          if(stories[i]._id == "Household"){
-          housingF = stories[i].count
+        for (i in stories) {
+          for (t in topics) {
+            if (topics[t]._id == stories[i]._id) topics[t].stories = stories[i].count
           }
-          if(stories[i]._id == "Symptoms"){
-          symptomsF = stories[i].count
-          }
-          if(stories[i]._id == "Mitigation"){
-          mitigationF = stories[i].count
-          }
-          if(stories[i]._id == "Other"){
-          otherF = stories[i].count
-          }
-          if(stories[i]._id == "Demographics"){
-          demographicsF = stories[i].count
-          }
-        }   
-    var options = { 
-      title: 'Home', 
-      user : getUsername(req), 
-      housingA: housingA,
-      symptomsA: symptomsA,
-      mitigationA: mitigationA, 
-      otherA: otherA, 
-      demographicsA: demographicsA,
-      housingQ: housingQ,
-      symptomsQ: symptomsQ,
-      mitigationQ: mitigationQ, 
-      otherQ: otherQ, 
-      demographicsQ: demographicsQ,
-      housingF: housingF,
-      symptomsF: symptomsF,
-      mitigationF: mitigationF, 
-      otherF: otherF, 
-      demographicsF: demographicsF     
-    }
-    console.log(options);
-    return cb(options);  
-    });  //end stories agg   
-  });
-}); 
+        }
+
+console.log(topics)
+      
+        var options = { 
+          title: 'Home', 
+          user : getUsername(req), 
+          topics: topics
+        }
+        return cb(options);  
+      });  //end stories agg   
+    });
+  }); 
 }
+
 exports.dashboard = function(req, res){
   authenticateUser(req, res, function(){ 
     getDashStats(req, function(options){
@@ -167,6 +109,7 @@ exports.dashboard = function(req, res){
     });  
   });
 };
+
 exports.checkStoryExists = function(req, res){
   //authenticateUser(req, res, function(){ 
   //check if user has already entered a story for a qSet
@@ -187,6 +130,7 @@ exports.checkStoryExists = function(req, res){
     }) ;//end find
  //});// end auth user
 };
+
 exports.skipQ = function(req, res){
   authenticateUser(req, res, function(){ 
     if (req.params.skipq !== undefined && req.params.skipq !== "0"){
@@ -200,6 +144,7 @@ exports.skipQ = function(req, res){
     } 
   });
 };
+
 exports.storiesPrompt = function(req, res){
   req.session.returnTo = req.path;
   authenticateUser(req, res, function(){ 
@@ -217,6 +162,7 @@ exports.storiesPrompt = function(req, res){
       });   //end find    
   });
 };
+
 exports.saveStory = function(req, res){
   authenticateUser(req, res, function(){ 
   var story = new Story({
@@ -234,6 +180,7 @@ exports.saveStory = function(req, res){
   })//end story save
   });//end auth user
 };
+
 exports.fullstory = function(req, res){
   authenticateUser(req, res, function(){ 
     Story.findOne({_id: req.params._id},'uname qSet story comments _id qSet', function (err, story){
@@ -259,6 +206,7 @@ exports.fullstory = function(req, res){
     });//end story.findOne
   });
 }//end fullstory
+
 exports.comment = function(req, res){
   if(!req.user){
   return res.send(400, "It looks like you have been logged out. Please log in again to submit your comment");
@@ -280,6 +228,7 @@ exports.comment = function(req, res){
   }
   });//end find by ID and update
 };
+
 exports.index = function(req, res){
   //if user not logged in send to index, else send to dashboard
   if (!req.user){
@@ -290,6 +239,7 @@ exports.index = function(req, res){
     res.redirect('/dashboard');
   }
 };
+
 exports.welcome = function(req, res){
   //authenticateUser(req, res, function(){ 
   //res.render('welcome', { title: 'Home', user : getUsername(req), tour: 'yes'});
@@ -304,23 +254,28 @@ exports.welcome = function(req, res){
     });  
   });
 };
+
 exports.about = function(req, res){
   req.session.returnTo = req.path;
   res.render('about', { title: 'About Where We Breathe', user : getUsername(req)});
 };
+
 exports.knowledgebase = function(req, res){
   req.session.returnTo = req.path;
   res.render('knowledge-base', { title: 'Knowledge base', user : getUsername(req)});
 };
+
 exports.vinhud = function(req, res){
   req.session.returnTo = req.path;
   res.render('vinhud', { title: 'Am I looking for a VIN or a HUD number?', user : getUsername(req)});
 };
+
 exports.goBackSkipped = function(req, res){
   generateUnanswered(req, function(){   
     res.redirect('/questionnaire');
   });//end gen unanswered
 };
+
 exports.narratives = function(req, res){
   authenticateUser(req, res, function(){ 
   var qSet = req.params.qSet;
@@ -358,6 +313,7 @@ exports.narratives = function(req, res){
   //  res.render('narratives', { title: 'Forums', user : getUsername(req)});
   //});
 };
+
 exports.narrativesData = function(req, res){
   authenticateUser(req, res, function(){ 
     var qSet = req.body.qSet
@@ -466,6 +422,7 @@ exports.narrativesData = function(req, res){
     }); //end Question.find
   });//end auth user
 }
+
 exports.reorderUnanswered = function (req, res){
   authenticateUser(req, res, function(){ 
 //pushes unanswered questions to front of queue of a certain qSet or question set
@@ -499,6 +456,7 @@ exports.reorderUnanswered = function (req, res){
    // }//if req.params.qSet
    });//end auth
 }
+
 exports.questionnaire = function ( req, res ){
   authenticateUser(req, res, function(){  
     /*//deal with if there is get param for skipq or not
@@ -577,6 +535,7 @@ exports.questionnaire = function ( req, res ){
     });
   });//end auth user
 };
+
 //append answers into answers collection
 exports.answer = function ( req, res ){
   //make sure user logged in 
@@ -645,6 +604,7 @@ exports.answer = function ( req, res ){
   });
     
 }
+
 /**********************************************************************
 DATA DOWNLOAD
 ***********************************************************************/ 
@@ -710,6 +670,7 @@ req.session.returnTo = req.path;
     });
   });//end Q.find
 }
+
 /**********************************************************************
 TEST - remove later
 ***********************************************************************/   

@@ -13,10 +13,24 @@ body{
   height: 100%;
   background-color: #f8f8f8;
 }
-h1,h2,h3,h4,h5,h6,.navbar-brand{
+h1,h2,h3,h4,h5,h6{
   font-family: Junction Light,Junction,Helvetica Neue,Helvetica,Arial,sans-serif;
   line-height: 150%;
 }
+
+.navbar-header{
+  padding-top:10px;
+}
+.navbar-brand{
+  font-size:26px;
+  font-family: Junction Light,Junction,Helvetica Neue,Helvetica,Arial,sans-serif;
+}
+.navbar-nav{
+  font-size:18px;
+  padding-top:12px;
+  font-family: Junction,Helvetica Neue,Helvetica,Arial,sans-serif;
+}
+
 .userMenu, #divLogin{
   margin-right: 20px;
 }
@@ -24,12 +38,13 @@ h1,h2,h3,h4,h5,h6,.navbar-brand{
   font-size: 38px;
 }
 .content{
-  margin-top: -20px;/*override navbar margin*/
+  margin-top: -10px;/*override navbar margin*/
   padding-top: 20px;/*override navbar margin*/
   background-color: #fff;
   padding-bottom: 20px;
 }
 .footer{
+  color:#888;
   border-top: 1px solid #e7e7e7;
   clear: both;
   margin: 0;
@@ -73,6 +88,7 @@ figcaption{
     padding-right: 5px;
   }
 }
+
 /*override the bootstrap cuttoff point for the nav collapse*/
 @media (max-width: 800px) {
     .navbar-header {

@@ -5,67 +5,78 @@
 max-width: 1000px;
 }
 .circle{
-  width:150px;
-  height:150px;
-  border-radius:75px;
+  width:170px;
+  height:170px;
+  border-radius:85px;
   font-size:20px;
   color:#fff;
   line-height:150px;
   text-align:center;
-  margin: 10px auto;
+  padding-top:5px;
+  margin: 10px auto 14px;
+  font-family: Junction Light,Junction,Helvetica Neue,Helvetica,Arial,sans-serif;
 }
 .lblCircle{
+  font-size:12px;
   text-align: center;
   width: 100%;
-  margin-bottom: 15px;
+  margin-bottom: 18px;
 }
 .disabledx{
-  color: lightgrey;
+  color: #999;
   margin: 10px 0;
 }
-.hint{
-  font-size: x-small;
-}
-.somespace{
-  margin: 10px 0;
-}
-.housing{
-  background:red;
-  border:red 3px solid;
-}
-.symptoms{
-  background:green;
-  border:green 3px solid;
-}
-.mitigation{
-  background:orange;
-  border:orange 3px solid;
-}
-.other{
-  background:blue;
-  border:blue 3px solid;
-}
-.demographics{
-  background:magenta;
-  border:magenta 3px solid;
-  font-size: 16px;
-}
-.unanswered{
-  background:#fff;
-  color: #000;
-}
-.fa-check{
-  color: green;
-}
+
 .topic{
-  border: solid thin lightgrey;
-  min-width: 200px;
-  margin: 0 50px;
+  border: solid thin #ddf;
+  min-width: 220px;
+  padding: 20px;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   border-radius: 10px;
-  background-color: #f8f8f8;
+  margin-bottom:12px;
 }
-.col-xs-12{
-  margin-bottom: 15px;
+.topic p{
+  padding-top:10px;
+  letter-spacing:95%;
+}
+
+.Household{
+  background:#f44;
+  border:#f44 8px solid;
+}
+.Household.unanswered{
+  background:#ffe8e8;
+}
+.Symptoms{
+  background:#3a3;
+  border:#3a3 8px solid;
+}
+.Symptoms.unanswered{
+  background:#dfd;
+}
+.Mitigation{
+  background:orange;
+  border:orange 8px solid;
+}
+.Mitigation.unanswered{
+  background:#ffd;
+}
+.Indicators{
+  background:#66c;
+  border:#66c 8px solid;
+}
+.Indicators.unanswered{
+  background:#e8e8ff;
+}
+.Demographics{
+  background:#83b;
+  border:#83b 8px solid;
+  font-size: 16px;
+}
+.Demographics.unanswered{
+  background:#fdf;
+}
+.unanswered{
+  color: #000;
 }

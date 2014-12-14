@@ -8,7 +8,6 @@
 }
 body{
   font-size: 16px;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   padding-top: 70px;
   height: 100%;
   background-color: #f8f8f8;
@@ -55,9 +54,26 @@ h1,h2,h3,h4,h5,h6{
   font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
 }
 
+ul {
+  list-style-type:square;
+  padding-left:16px;
+}
+
 .panel-info .panel-body {
   background:#eef;
   color:#456;
+}
+.panel-body {
+  padding:30px 15px;
+}
+.panel-body h3 {
+  margin-top:0;
+}
+.question-cat {
+  margin-bottom:14px;
+  text-transform:uppercase;
+  color:#888;
+  font-size:12px;
 }
 
 #login, #btnJoin{

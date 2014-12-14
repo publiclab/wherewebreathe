@@ -4,21 +4,22 @@
 <% if(returnTo){%>
   <button class="btn btn-danger pull-right btnQ">Return to survey</button>
 <%}%>
-<h1>Topic 1: House and Household</h1>
+<h2>House and Household</h2>
 <div class="well">
-  <div id='storiesHeading'>
+  <h4 id='storiesHeading'>
   You and X other people have helped the public to better understand this issue. Explore their stories to find someone with similar experiences, or <a href="/stories/<%= qSet %>"> share your own story >></a>
-  </div>
+  </h4>
   <% for (i in stories){%>  
+    <hr />
     <div class='storyParent'>
-    <div>
-      <span class='username'><%=stories[i].uname%></span>   
-      <span class='story'><%=stories[i].story%></span>
+      <div>
+        <span class='username'><%=stories[i].uname%>:</span>   
+        <span class='story'><%=stories[i].story%></span>
+      </div>
+      <div>
+        <p><small><%=stories[i].comments%> comments | <a href='/fullstory/<%=stories[i]._id%>'>Read their story &raquo;</a></small></p>
+      </div>
     </div>
-    <div>
-      <%=stories[i].comments%> comments | <a href='/fullstory/<%=stories[i]._id%>'>Hear their story >></a>
-    </div>
-  </div>
   <%}%>
 </div>
 <div class="panel panel-default">

@@ -3,26 +3,18 @@
 <!--<% script('//code.jquery.com/ui/1.11.1/jquery-ui.js') -%> suspect that this is legacy somehow-->
 <!--jquery-ui.css used for what? autocomplete?-->
 <% stylesheet('/stylesheets/questionnaire.css'), stylesheet('//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css')%>
-<%if (qSet == "Symptoms" || qSet == "Symptoms (conditional questions)"){%>
-<div id="divQ" class="panel panel-success">
-  <div class="panel-heading">
-    <h3 class="panel-title">Questions about your health symptoms</h3>
-  </div>
-<% } 
 
-else if (qSet == "Household"){%>
-<div id="divQ" class="panel panel-info">
-  <div class="panel-heading">
-    <h3 class="panel-title">Questions about your housing-unit</h3>
-  </div>
-<% } 
-
-else{%>
-<div id="divQ" class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">(Unknown question category)</h3>
-  </div>
+<% if (qSet == "Symptoms" || qSet == "Symptoms (conditional questions)"){%>
+  <p class="question-cat">
+    <a href="/dashboard">Dashboard</a> | Questions about your <b>symptoms</b>
+  </p>
+<% } else if (qSet == "Household") { %>
+  <p class="question-cat">
+    <a href="/dashboard">Dashboard</a> | Questions about your <b>household</b>
+  </p>
 <% } %>
+
+<div id="divQ" class="panel panel-default">
   <div class="panel-body"> 
   <h3  id='h3Question'><%= question %></h3>
     <form id="frmAns" accept-charset="utf-8">
@@ -185,8 +177,7 @@ else{%>
       $.post( '/answer', options)
           .fail(function(response) {
           console.log("fail")
-          handleMsg(response.responseText)
-        })
+          handleMsg(response.responseText) })
         .done(function(response) {       
           //if response isnt 'OK', it should contain a number for the next conditional question
           //also if there is a conditional question, stories dont get prompted to be told

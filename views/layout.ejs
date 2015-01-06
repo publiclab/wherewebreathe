@@ -12,13 +12,13 @@
     <![endif]-->
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="/lib/jquery/dist/jquery.min.js"></script>
+    <script src="/lib/bootstrap-css/js/bootstrap.min.js"></script>
     <script src="/bootstrap-tour-0.9.3/build/js/bootstrap-tour.min.js"></script>
     <%-scripts%>
     <!-- styles -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/lib/bootstrap-css/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/lib/fontawesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="/bootstrap-tour-0.9.3/build/css/bootstrap-tour.min.css">
     <link rel="stylesheet" href="/stylesheets/style.css">
     <%-stylesheets%>
@@ -80,7 +80,7 @@
                         <button type="submit" class="btn btn-primary">Submit</button>
                       </form>
                       <br/>
-                      <a href="/forgotpass">forgotten password</a>
+                      <a href="/forgotpass">Forgot your password?</a>
                     </div>                          
                 <% } %>
                 <% if(user){ %>                         
@@ -97,7 +97,7 @@
                             <a href="/resetpass">Change password</a>
                           </li>
                           <li>
-                            <a id='logout' href="#" onclick="log_out()">logout</a>
+			  <a id='logout' href="#" onclick="log_out()">Log out</a>
                           </li>
                         </ul>
                     </div>                           

@@ -30,8 +30,8 @@
       </div>    
     </div>
     
-    <a href="#" id="previous" class="pull-left"><i class="fa fa-angle-left"></i> previous question</a>
-    <a href="#" id="next" class="pull-right">next question <i class="fa fa-angle-right"></i></a>
+    <a href="#" id="previous" class="btn btn-default pull-left"><i class="fa fa-angle-left"></i> previous</a>
+    <a href="#" id="next" class="btn btn-default pull-right">next <i class="fa fa-angle-right"></i></a>
   </div>
 </div>
 <% if(returnTo){%>
@@ -43,8 +43,8 @@ function getChart(qSet, progression){
 qSet: to limit charts from a particular dataset
 */
   $( ".alert" ).fadeOut();
-  $('#previous').show();
-  $('#next').show();
+  $('#previous').fadeIn();
+  $('#next').fadeIn();
   //var options = {pass: 1, id: 1, token : 1}; these params seem to be unsued, commented out Oct 1 14
   var options = {qSet: qSet};
   //if user clicks previous or next
@@ -61,10 +61,10 @@ qSet: to limit charts from a particular dataset
       		$('#question').html(response.question);
 	        //console.log(response.next);
 	        if(!response.next){
-	          $('#next').hide();
+	          $('#next').fadeOut();
 	        }
 	        if(!response.previous){
-	          $('#previous').hide();
+	          $('#previous').fadeOut();
 	        }
           if(response.answers == "no data"){$('#chart').html("<div id='noData' class='alert alert-warning'>There are no answers for that question yet!</div>")}
           else{

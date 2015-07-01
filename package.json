@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "postinstall": "bower install"
   },
   "dependencies": {
     "express": "3.4.8",
@@ -18,5 +19,8 @@
     "connect-flash": "^0.1.1",
     "express-csv": "^0.6.0",
     "chance": "^0.6.1"
+  },
+  "devDependencies": {
+    "bower": "^1.4.1"
   }
 }

@@ -13,7 +13,6 @@ WhereWeBreathe uses `npm` and `bower` and MongoDB, and is built on ExpressJS and
 
 1. Get the source with `git clone https://github.com/publiclab/wherewebreathe`
 2. From the root directory, run `npm install`
-3. Run `bower install` to install static dependencies.
 
 ##Contributing
 

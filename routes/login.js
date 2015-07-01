@@ -231,6 +231,7 @@ exports.login_post = function(req, res) {
       return res.render('login/confirm', {
         title: 'Confirm your email',
         user: getUsername(req),
+        email: req.body.email,
         token: user.token
       })
     }
@@ -257,8 +258,20 @@ exports.login_post = function(req, res) {
 exports.resend = function(req, res) {
   NewUser.findOne({ email: req.body.email }, function (err, user) {
     if (err) {throw err}
-    
-    user.token
+    if (!user) {
+      return res.render('message', {
+        title: 'Oops!',
+        user : getUsername(req),
+        message: {
+          text: "That email wasn't found in the list of unconfirmed emails."
+            + 'Try logging in normally or register an account.',
+          msgType: 'alert-danger'
+        }
+      });
+    }
+    res.send(200, 'ok actually send the email here:'
+      + req.body.email + ' -> ' + user.token
+    );
   });
 };
 

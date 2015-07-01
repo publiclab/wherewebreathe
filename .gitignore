@@ -2,3 +2,5 @@
 *.swo
 public/lib
 dump*
+public/javascripts/bundle.js
+node_modules

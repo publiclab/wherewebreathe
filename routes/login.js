@@ -230,7 +230,8 @@ exports.login_post = function(req, res) {
     if (user) {
       return res.render('login/confirm', {
         title: 'Confirm your email',
-        user: getUsername(req)
+        user: getUsername(req),
+        token: user.token
       })
     }
     auth(req, res, function (err) {
@@ -251,6 +252,14 @@ exports.login_post = function(req, res) {
         res.redirect('/welcome');
     });
   }
+};
+
+exports.resend = function(req, res) {
+  NewUser.findOne({ email: req.body.email }, function (err, user) {
+    if (err) {throw err}
+    
+    user.token
+  });
 };
 
 exports.login_get = function(req, res) {

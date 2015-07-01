@@ -59,7 +59,7 @@ app.get('/register', login.register_get);
 app.post('/register', login.register_post);
 app.get('/login', login.login_get);
 app.get('/login/:msg/:msgType', login.login_get);
-app.post('/login',passport.authenticate('local', { failureRedirect: '/login/Invalid username or password./alert-danger' }), login.login_post);
+app.post('/login', login.login_post)
 app.post('/logout', login.logout);
 app.get('/verify/:token', login.verify_get);
 app.get('/forgotpass', login.forgotpass_get);

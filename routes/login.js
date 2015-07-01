@@ -220,27 +220,39 @@ exports.verify_get =  function(req, res) {
 /************************************************************************
 LOGIN
 *************************************************************************/
+
+var auth = passport.authenticate('local', {
+  failureRedirect: '/login/Invalid username or password./alert-danger'
+});
 exports.login_post = function(req, res) {
-    generateUnanswered(req, function(){        
-      //if user doesnt have privacy settings yet, redirect to privacy setting page, first save dafaults
-      if(req.user.firstLogin){
-      //console.log("first logion session test: "+req.session.unanswered)
-      User.findByIdAndUpdate(req.user._id,{$unset: {firstLogin: 1 }, visPublic : false},   function(error, results){
-          if(error){throw err}
-          else{ 
-          //console.log(results);
-            //req.flash('info', ['It looks like this it the first time you have logged in. Please take a moment to review your privacy settings before continuing on to the rest of the site.', 'alert-warning'])
-            res.redirect('/welcome');
-            
-            }
-          }); //end user.findbyid...    
-        }//end if user has privacy settings
-        else{
-          //return to sender
-          returnTo(res, req);User
-        }      
-    });//end generateUnanswered funciton
+  NewUser.findOne({ email: req.body.email }, function (err, user) {
+    if (err) {throw err}
+    if (user) {
+      return res.render('login/confirm', {
+        title: 'Confirm your email',
+        user: getUsername(req)
+      })
+    }
+    auth(req, res, function (err) {
+      if (err) throw err;
+      generateUnanswered(req, showlogin);
+    });
+  });
+
+  function showLogin(){
+    //if user doesnt have privacy settings yet, redirect to privacy setting
+    // page, first save dafaults
+    if(!req.user.firstLogin) return returnTo(res, req);
+
+    User.findByIdAndUpdate(req.user._id,{$unset: {firstLogin: 1 }, visPublic : false},
+    function(error, results){
+        if(error){throw err}
+        //req.flash('info', ['It looks like this it the first time you have logged in. Please take a moment to review your privacy settings before continuing on to the rest of the site.', 'alert-warning'])
+        res.redirect('/welcome');
+    });
+  }
 };
+
 exports.login_get = function(req, res) {
   var message;
   //used url paramater for error, next phase could use flash message
@@ -442,6 +454,3 @@ exports.privacy_post = function(req, res) {
       }
   }); //end user.findbyid..
 };
-
-
-

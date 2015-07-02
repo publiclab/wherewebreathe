@@ -16,6 +16,7 @@
     "ejs-locals": "^1.0.2",
     "express": "3.4.8",
     "express-csv": "^0.6.0",
+    "is-valid-email": "0.0.2",
     "mongodb": ">= 0.9.6-7",
     "mongoose": "3.8.1",
     "nodemailer": "^0.7.1",

@@ -3,10 +3,16 @@ var User = require('../models/db').user;
 var NewUser = require('../models/db').newuser;
 var PassReset = require('../models/db').passReset;
 var nodemailer = require("nodemailer");
-var validate = require('./validate');
+
 var authenticateUser = require('./authUser').authUser;
 var getUsername = require('./authUser').getUsername
 var generateUnanswered = require('./generateUnanswered');
+
+var mail = require('../lib/mail.js');
+var validateUser = require('../lib/validate_user.js');
+var validate = require('../lib/validate.js');
+var randomBytes = require('crypto').randomBytes;
+
 function checkCommonName(username){
   var commonnames = require('./common-names')
   var username = username.toLowerCase();
@@ -21,12 +27,12 @@ function checkCommonName(username){
       name = commonnames[i]
       break 
     }
-  } 
+  }
   if(containsCommon){
   return "Your username contains the text, '"+name+"'. Please choose another username that does not contain a common name. (this is an extra step to maintain your anonymity)"
   }else{
     return "ok"
-  }  
+  }
 }
 function returnTo(res, req, message){
   //console.log(req.session);
@@ -78,116 +84,53 @@ exports.getRandomUsername =  function(req, res){
 exports.register_get = function(req, res) {
   var pageOptions = { title: "Join Where We Breathe", user : getUsername(req), regErr: []};
   var temp = req.flash('info');
-    if(temp.length > 0){
-      pageOptions['message'] =  {text: temp[0], msgType: temp[1]}
-    }  
-   
+  if(temp.length > 0){
+    pageOptions['message'] =  {text: temp[0], msgType: temp[1]}
+  }  
   res.render('login/register', pageOptions);
 };
+
 //add new user to DB
 exports.register_post = function(req, res) {
-  //server-side validation
-  var errorMsgs = [];
-  console.log( errorMsgs);
-  var txtUsername = req.body.username.trim();
-  var txtEmail = req.body.email.trim();
-  var txtHID = req.body.HID.trim();
-  var txtPass = req.body.password.trim();
-  console.log( errorMsgs);
- //check if username is taken
- checksAndMakeNewUser();
-   function checksAndMakeNewUser(){
-    //this code is a bit out of control with nesting, so I am throwing it into a function to be called when done making sure proposed username doesnt contain a common name
-    User.find({username: txtUsername}, function ( err, username){
-    var usernameErr = "The username, '"+txtUsername+"', already exists, please try another.";
-    var emailErrMsg ="The email, '"+txtEmail+"', is already being used.";
-    //check if username is taken
-      if (username.length > 0){
-        errorMsgs.push(usernameErr);
-      }
-      //check if email is taken
-      User.find({email: txtEmail}, function ( err, email){
-      if (email.length > 0){
-        errorMsgs.push(emailErrMsg);
-        }
-        //check if username is taken in unverified accounts table
-        NewUser.find({username: txtUsername}, function ( err, newusername){
-          if (newusername.length > 0){
-            errorMsgs.push(usernameErr);
-          }
-          //check if email is taken in unverified accounts table
-          NewUser.find({email: txtEmail}, function ( err, newemail){
-            if (newemail.length > 0){
-              //if email exists, return error message
-              errorMsgs.push(emailErrMsg);
-            }
-        
-        //check form input again serve-side
-        //console.log(errorMsgs);
-         //over 18
-         console.log("Eighteen: "+req.body.eighteen)
-      if(req.body.eighteen != "18"){ errorMsgs.push("You must be over 18 to register")}; 
-        //username
-      if(! /^[A-Za-z0-9_.-@]{3,30}$/.test(txtUsername)){ errorMsgs.push("Your username must be 3 to 30 characters in length and may contain letters, numbers, or . - @ _ characters.")}; 
-      //email
-      var emailErr = validate.email(txtEmail);
-      if(emailErr){
-        errorMsgs.push(emailErr)
-      }  
-      //VIN/HUD
-      if(! /(^((?=[^iIoOqQ])\w){17}$)|(^\w{3}[0-9]{6,7}$)/.test(txtHID)){ errorMsgs.push("'"+txtHID+ "' does not look like a VIN or HUD. Please double check your records and try removing spaces.")}; 
-      //password
-      var passErr = validate.password(txtPass);
-      if(passErr){
-        errorMsgs.push(passErr)
-      };  
-      //if any error messages   
-      if (errorMsgs.length > 0){
-            //there are errors
-            //var pageOptions = { title: "Join Where We Breathe", user : getUsername(req), regErr: errorMsgs};
-            //return res.render('login/register', pageOptions);
-            return res.send(200, {error: errorMsgs})
-          }//end if no errors
-       else{
-        require('crypto').randomBytes(48, function(ex, buf) {
-          var token = buf.toString('hex');
-          NewUser.register(new NewUser({ 
-            username : txtUsername,
-            email: txtEmail,
-            HID: txtHID,
-            token: token 
-          }), txtPass, function(err, user) {
-            if (err) {
-              console.log("user registration error: " +err);
-              //var pageOptions = { title: "Join Where We Breathe", user : getUsername(req), regErr: [err] };
-              //return res.render('login/register', pageOptions);
-              return res.send(400, {error:"Something went wrong on our side of things. Please try again, or contact us to let us know. (Error ID: 821)"});
-            }
-            else{
-              // this emailing solution is temporary for phase 1 development!!!! nodemailer has better options that require existing emails/domains
-              var mailText = "You have one more step before your account with WhereWeBreathe.org is registered. \r\n\r\n";
-              mailText += "Please click the link below to verify your email. \r\n\r\n";
-              mailText += "http://"+req.headers.host+"/verify/"+token;
-              var transport = nodemailer.createTransport("direct", {debug: true});
-              var   mailOptions = {
-                from: "noreply@wherewebreathe.org",
-                to: txtEmail,
-                subject: "[TESTING] user verification email",
-                text: mailText
-              };
-              var mail = require("nodemailer").mail;
-              mail(mailOptions);
-              res.send(200);
-            }//end else       
-          });
-        });//end rendomBytes  
-       }//end else
-               });//end newusers find email
-        });//end newusers find username
-      });//end email User.find()
-    });//end username User.find()
-   }//end checksAndMakeNewUser()  
-};//end exports.register_postUser
+  validateUser(req.body, function (errors, params) {
+    if (errors.length) {
+      return res.send(400, { error: errors });
+    }
+    randomBytes(48, function (ex, buf) {
+      var token = buf.toString('hex');
+      NewUser.register(new NewUser({ 
+        username : params.username,
+        email: params.email,
+        HID: params.HID,
+        token: token 
+      }), params.password, onuser);
+    });
+  });
+
+  function onuser (err, user) {
+    if (err) {
+      console.log('user registration error:', err);
+      return res.send(500, {
+        error: 'Something went wrong on our side of things. Please try'
+          + ' again, or contact us to let us know. (Error ID: 821)'
+      });
+    }
+    var opts = {
+      to: req.body.email,
+      host: req.headers.host || 'localhost',
+      token: user.token
+    };
+    mail.verifyRegister(opts, function (err) {
+      if (err) return res.send(500, {
+        error: 'Email delivery failed: ' + err.message
+      });
+      res.render('login/register_success', {
+        title: 'Where We Breathe: email confirmation necessary',
+        user: getUsername(req)
+      });
+    });
+  }
+};
 
 //verify new users' emails
 exports.verify_get =  function(req, res) {

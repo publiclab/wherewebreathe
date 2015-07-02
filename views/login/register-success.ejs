@@ -1,0 +1,15 @@
+<% layout('../layout') -%>
+<div class="container-fluid">
+  <h1>
+    Almost done! Please verify your account.
+  </h1>
+  <div class="alert alert-success" role="alert">
+    An email with an account verification link has been sent to you.
+    Please follow the instructions in the email to complete your account
+    registration.
+  </div>
+  <div>
+    If you still haven't gotten a confirmation email,
+    <a href="/resend/<%= email %>">click here to resend.</a>
+  </div>
+</div>

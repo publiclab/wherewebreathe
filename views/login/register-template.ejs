@@ -17,7 +17,7 @@
   </div>
 </div>
 <h1>Sign Up</h1>
-<form id='frmRegister' role="form">
+<form id='frmRegister' role="form" method="POST" action="/register">
 <div id='regMsg' class="alert alert-danger" role="alert">
 </div>
 <!--<% if(regErr.length > 0){ %>
@@ -71,50 +71,6 @@ support@wherewebreathe.org</a></div>
 </div><!--end div id=main-->
 <script>
   $(function(){
-    $('#frmRegister').submit(function(event){
-      $('#errList').remove()
-       $('#regMsg').hide();
-      event.preventDefault();
-      console.log("hereee");
-      var parameters = {
-        username : $('#username').val(),
-        email : $('#email').val(),
-        password : $('#password').val(),
-        HID : $('#HID').val(),
-        eighteen : $('#eighteen').val()
-      }
-      $.post( '/register',parameters)
-        .fail(function(response) {
-          console.log("/register fail");
-        })
-        .done(function(response) {
-          //$( ".alert" ).remove();
-          if(response.error){
-            console.log(response.error);
-            console.log("scroll")
-            $('html, body').animate({
-            scrollTop: $("#regMsg").offset().top - $('#menu').outerHeight()}, 600); 
-            $('#regMsg').show(); 
-            var errHtml = '<ul id="errList">';
-            for (i in response.error){
-              errHtml+= '<li>'+response.error[i]+'</li>';
-            }
-            errHtml += '</ul>';
-            $('#regMsg').html(errHtml); 
-          }
-          else{
-             console.log("success");
-             var html = '<h1>Almost done! Please verify your account.</h1>'
-             html += '<div class="alert alert-success" role="alert">An email with an account verification link has been sent to you. Please follow the instructions in the email to complete your account registration</div>'
-            $( "#main, #homeDiv" ).remove();
-            $( html ).insertAfter( ".page-header" );
-
-          }
-        });
-      });
-
-      });
-      
     //random user name generator
     $('#btnRandomName').click(function(event){
       $('#usernameErr').hide();
@@ -144,7 +100,6 @@ support@wherewebreathe.org</a></div>
             }
           });        
       });
-
 </script>
 
  

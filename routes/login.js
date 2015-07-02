@@ -94,7 +94,11 @@ exports.register_get = function(req, res) {
 exports.register_post = function(req, res) {
   validateUser(req.body, function (errors, params) {
     if (errors.length) {
-      return res.send(400, { error: errors });
+      return res.render('errors.ejs', {
+        title: 'Where We Breathe: registration error',
+        user: getUsername(req),
+        errors: errors
+      });
     }
     randomBytes(48, function (ex, buf) {
       var token = buf.toString('hex');
@@ -124,9 +128,10 @@ exports.register_post = function(req, res) {
       if (err) return res.send(500, {
         error: 'Email delivery failed: ' + err.message
       });
-      res.render('login/register_success', {
-        title: 'Where We Breathe: email confirmation necessary',
-        user: getUsername(req)
+      res.render('login/register-success', {
+        title: 'Where We Breathe',
+        user: getUsername(req),
+        email: user.email
       });
     });
   }
@@ -212,10 +217,27 @@ exports.resend = function(req, res) {
         }
       });
     }
-    res.send(200, 'ok actually send the email here:'
-      + req.body.email + ' -> ' + user.token
-    );
+    mail.resendVerifyRegister({
+      to: user.email,
+      host: req.headers.host || 'localhost',
+      token: user.token
+    }, onmail)
   });
+
+  function onmail (err) {
+    if (err) {
+      res.send(500, 'error sending email: ' + err.message);
+    }
+    else res.render('message', {
+      title: 'email sent',
+      user: getUsername(req),
+      message: {
+        text: 'Email sent. Check your inbox and spam folder for'
+          + ' a confirmation link.',
+        msgType: 'alert-success'
+      }
+    });
+  }
 };
 
 exports.login_get = function(req, res) {

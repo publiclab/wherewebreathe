@@ -1,0 +1,7 @@
+<% layout('/layout') -%>
+<!-- todo: remove handle message here in the layout -->
+<div class="container-fluid">
+  <% errors.forEach(function (err) { %>
+    <div><%= err %></div>
+  <% }) %>
+</div>

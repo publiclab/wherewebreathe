@@ -231,11 +231,8 @@ exports.resend = function(req, res) {
     else res.render('message', {
       title: 'email sent',
       user: getUsername(req),
-      message: {
-        text: 'Email sent. Check your inbox and spam folder for'
-          + ' a confirmation link.',
-        msgType: 'alert-success'
-      }
+      message: 'Email sent. Check your inbox and spam folder for'
+        + ' a confirmation link.',
     });
   }
 };
@@ -256,8 +253,13 @@ exports.login_get = function(req, res) {
     if(temp.length > 0){
       pageOptions['message'] =  {text: temp[0], msgType: temp[1]}
     } 
-  res.render('login/login', { title: 'Login', user : getUsername(req), message: message });
+  res.render('login/login', {
+    title: 'Login',
+    user : getUsername(req),
+    message: message.text
+  });
 }; 
+
 exports.logout =  function(req, res) {
       req.logout();
       res.send("logged out")

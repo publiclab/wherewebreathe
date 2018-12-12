@@ -5,16 +5,16 @@ WhereWeBreathe is an open source web application created by Public Lab (http://p
 
 The site lives at WhereWeBreathe.org
 
-##Requirements
+## Requirements
 
 WhereWeBreathe uses `npm` and `bower` and MongoDB, and is built on ExpressJS and Mongoose. 
 
-##Installation
+## Installation
 
 1. Get the source with `git clone https://github.com/publiclab/wherewebreathe`
 2. From the root directory, run `npm install`
 
-##Contributing
+## Contributing
 
 Get in touch with WWB and other Public Lab developers on the **plots-dev** list at http://publiclab.org/lists
 

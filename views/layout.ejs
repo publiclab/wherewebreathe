@@ -137,50 +137,32 @@
   </div>
   </body>
   <script>
-      function log_out(){
+    function log_out(){
       $.post('/logout', function(status){
-      console.log(status);
-      if(status == "logged out"){
-        //window.location=window.location;// like location.reload, but without annoying "to display this page FF must send info that ....." message ... doesnt work in chrome. reload message no longer a prob...
-        window.location.reload()
-      }
-      else{
-      console.error("logout failed");
-      }
-      
+        console.log(status);
+        if (status == "logged out"){
+          //window.location=window.location;// like location.reload, but without annoying "to display this page FF must send info that ....." message ... doesnt work in chrome. reload message no longer a prob...
+          window.location.reload()
+        }
+        else{
+          console.error("logout failed");
+        }
       });
     }
-  $(function(){
-    <% if(message){ %>
-      //if errmessage, show message
-      handleMsg('<%=message.text%>', '<%= message.msgType %>')
-      console.log('<%=message.text%>')
-    <% } %>
-    //$('#logout').click(function(){logout();})
-    $('#btnJoin').click(function() { window.location = '/register'; })
-    
-    //highlight in menu which page active page
-    var url = window.location;
-    // Will only work if string in href matches with location
-    $('ul.nav a[href="'+ url +'"]').parent().addClass('active');
+    $(function(){
+      //$('#logout').click(function(){logout();})
+      $('#btnJoin').click(function() { window.location = '/register'; })
+      
+      //highlight in menu which page active page
+      var url = window.location;
+      // Will only work if string in href matches with location
+      $('ul.nav a[href="'+ url +'"]').parent().addClass('active');
 
-    // Will also work for relative and absolute hrefs
-    $('ul.nav a').filter(function() {
-        return this.href == url;
-    }).parent().addClass('active');
-  })//end on ready 
-  
-  function handleMsg(message, type, pos){
-    var alertType = type || "alert-danger";
-    //a css selector of the element the alert will be positioned after
-    var alertPos = pos || ".page-header" 
-    $( ".alert" ).remove();
-    var html = '<div id="layoutMsg" class="alert '+alertType+'" role="alert">'+message+'</div>'
-    $( html ).insertAfter( alertPos );
-    //if($(window).height() <= 400){
-      $('html, body').animate({
-      scrollTop: $("#layoutMsg").offset().top - $('#menu').outerHeight()}, 600);
-    //}
-  }  
+      // Will also work for relative and absolute hrefs
+      $('ul.nav a').filter(function() {
+          return this.href == url;
+      }).parent().addClass('active');
+    })//end on ready 
   </script>
+  <script src="/javascripts/bundle.js"></script>
 </html>
